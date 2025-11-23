@@ -45,12 +45,10 @@ describe('Rate Limiter Middleware', () => {
 	})
 
 	it('should block requests exceeding the rate limit', async () => {
-		// Make maximum allowed requests (10)
 		for (let i = 0; i < 10; i++) {
 			await request(app).post('/api/email')
 		}
 
-		// This request should be rate limited
 		const response = await request(app).post('/api/email')
 
 		expect(response.status).toBe(429)
@@ -58,7 +56,6 @@ describe('Rate Limiter Middleware', () => {
 	})
 
 	it('should return custom rate limit message', async () => {
-		// Exhaust the rate limit
 		for (let i = 0; i < 10; i++) {
 			await request(app).post('/api/email')
 		}
@@ -90,9 +87,8 @@ describe('Rate Limiter Middleware', () => {
 			response.headers['ratelimit-reset'] as string
 		)
 
-		// Reset time is in seconds, should be a reasonable value (within 15 minutes from now in seconds)
 		expect(resetTime).toBeGreaterThan(0)
-		expect(resetTime).toBeLessThanOrEqual(15 * 60) // Should be at most 900 seconds
+		expect(resetTime).toBeLessThanOrEqual(15 * 60)
 	})
 
 	it('should only apply to /api/email route', async () => {
@@ -107,21 +103,17 @@ describe('Rate Limiter Middleware', () => {
 	})
 
 	it('should track requests per IP address', async () => {
-		// First request from IP
 		const response1 = await request(app).post('/api/email')
 		const remaining1 = Number.parseInt(
 			response1.headers['ratelimit-remaining'] as string
 		)
 
-		// Second request from same IP
 		const response2 = await request(app).post('/api/email')
 		const remaining2 = Number.parseInt(
 			response2.headers['ratelimit-remaining'] as string
 		)
 
-		// Second request should have same or fewer remaining requests
 		expect(remaining2).toBeLessThanOrEqual(remaining1)
-		// Both should be valid numbers
 		expect(remaining1).toBeGreaterThanOrEqual(0)
 		expect(remaining2).toBeGreaterThanOrEqual(0)
 	})

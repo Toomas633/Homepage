@@ -1,13 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import useCookieMixin from '../../src/helpers/cookieMixin'
 
-// Create mock functions that will be reused
 const mockGet = vi.fn()
 const mockSet = vi.fn()
 const mockRemove = vi.fn()
 const mockUpdateConsent = vi.fn()
 
-// Mock useCookies
 vi.mock('../../src/helpers/useCookies', () => ({
 	default: vi.fn(() => ({
 		get: mockGet,
@@ -18,10 +16,8 @@ vi.mock('../../src/helpers/useCookies', () => ({
 
 describe('cookieMixin', () => {
 	beforeEach(() => {
-		// Reset mocks
 		vi.clearAllMocks()
 
-		// Setup window.updateConsent mock
 		Object.defineProperty(globalThis, 'updateConsent', {
 			writable: true,
 			configurable: true,
@@ -295,7 +291,6 @@ describe('cookieMixin', () => {
 			const consoleErrorSpy = vi
 				.spyOn(console, 'error')
 				.mockImplementation(() => {})
-			// Return an object that will throw during isConsent check
 			const badObject = {}
 			Object.defineProperty(badObject, 'necessary', {
 				get() {

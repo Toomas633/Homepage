@@ -1,12 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import request from 'supertest'
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import emailRouter from '../../src/routes/email'
 import * as emailService from '../../src/services/emailService'
 
 // Mock the rate limiter to avoid rate limiting in tests
 vi.mock('../middleware/rateLimiter.js', () => ({
-	emailRateLimiter: (_req: any, _res: any, next: any) => next(),
+	emailRateLimiter: (_req: Request, _res: Response, next: NextFunction) =>
+		next(),
 }))
 
 describe('Email Route', () => {

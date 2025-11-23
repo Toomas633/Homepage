@@ -1,11 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref } from 'vue'
 
-// Create mock objects at module level
 const mockThemeNameRef = ref('lightTheme')
 const mockChange = vi.fn()
 
-// Mock useTheme from Vuetify
 vi.mock('vuetify', () => ({
 	useTheme: vi.fn(() => ({
 		global: {
@@ -24,10 +22,8 @@ describe('themeMixin', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
 
-		// Reset mock theme to light theme
 		mockThemeNameRef.value = 'lightTheme'
 
-		// Setup localStorage mocks
 		localStorageGetItemSpy = vi.fn()
 		localStorageSetItemSpy = vi.fn()
 
@@ -69,8 +65,6 @@ describe('themeMixin', () => {
 
 	describe('apply', () => {
 		it('should change theme to darkTheme', () => {
-			// Access the internal apply function through toggleTheme or checkThemeStorage
-			// Since apply is not exported, we test it through checkThemeStorage
 			localStorageGetItemSpy.mockReturnValue('darkTheme')
 
 			const { checkThemeStorage } = useThemeMixin()
@@ -233,10 +227,8 @@ describe('themeMixin', () => {
 		it('should update isDark when theme name changes', async () => {
 			const { isDark } = useThemeMixin()
 
-			// Simulate theme change
 			mockThemeNameRef.value = 'darkTheme'
 
-			// Wait for watch to trigger
 			await new Promise((resolve) => setTimeout(resolve, 0))
 
 			expect(isDark.value).toBe(true)

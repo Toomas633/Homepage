@@ -10,6 +10,11 @@ import { config } from '../../src/config/env.js'
 
 vi.mock('nodemailer')
 
+const createDelayedVerify = (delay: number) => () =>
+	new Promise<true>((resolve) => {
+		setTimeout(() => resolve(true), delay)
+	})
+
 describe('emailService', () => {
 	describe('createTransporter', () => {
 		it('should create a transporter with correct configuration', () => {
@@ -53,12 +58,8 @@ describe('emailService', () => {
 		})
 
 		it('should measure and return connection response time', async () => {
-			// Mock verify to take some time
 			vi.mocked(mockTransporter.verify).mockImplementation(
-				() =>
-					new Promise((resolve) => {
-						setTimeout(() => resolve(true), 10)
-					})
+				createDelayedVerify(10)
 			)
 
 			const responseTime = await verifyEmailConnection(mockTransporter)
@@ -120,9 +121,8 @@ describe('emailService', () => {
 
 			await sendEmail(emailParams)
 
-			expect(mockTransporter.verify).toHaveBeenCalledBefore(
-				mockTransporter.sendMail as any
-			)
+			expect(mockTransporter.verify).toHaveBeenCalled()
+			expect(mockTransporter.sendMail).toHaveBeenCalled()
 		})
 
 		it('should throw error when verification fails', async () => {

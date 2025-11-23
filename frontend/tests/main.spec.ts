@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-// Mock all the dependencies before importing main
 vi.mock('vue', async () => {
 	const actual = await vi.importActual('vue')
 	return {
@@ -41,7 +40,6 @@ vi.mock('leaflet/dist/leaflet.css', () => ({}))
 describe('main.ts', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
-		// Clear the module cache to ensure fresh imports
 		vi.resetModules()
 	})
 
@@ -185,12 +183,11 @@ describe('main.ts', () => {
 
 		const useCalls = vi.mocked(mockApp.use).mock.calls
 
-		// Verify the order of plugin registration
 		expect(useCalls[0][0]).toBe(Router.default)
 		expect(useCalls[1][0]).toBe(Vuetify.default)
 		expect(useCalls[2][0]).toBe(VueCookies.default)
 		expect(useCalls[3][0]).toBe(VueDeviceDetect.default)
-		expect(useCalls[4][0]).toBeDefined() // head plugin
+		expect(useCalls[4][0]).toBeDefined()
 	})
 
 	it('should chain all operations correctly', async () => {
@@ -208,9 +205,7 @@ describe('main.ts', () => {
 
 		await import('../src/main')
 
-		// Verify use was called 5 times (Router, Vuetify, VueCookies, VueDeviceDetect, head)
 		expect(mockUse).toHaveBeenCalledTimes(5)
-		// Verify mount was called once
 		expect(mockMount).toHaveBeenCalledTimes(1)
 	})
 })

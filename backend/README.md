@@ -138,8 +138,8 @@ npm run test:coverage
 
 ### Test Structure
 
-- **Test files**: Place `*.spec.ts` or `*.test.ts` files alongside source files
-- **Setup**: `src/test/setup.ts` - Global test configuration
+- **Test files**: Place `*.spec.ts` or `*.test.ts` files in `tests/` directory
+- **Setup**: `tests/setup.ts` - Global test configuration
 - **Config**: `vitest.config.ts` - Vitest configuration for Node.js environment
 - **Environment**: `node` for server-side testing
 
@@ -188,8 +188,12 @@ Coverage reports are generated in `coverage/` directory:
 
 ### Example Test Files
 
-- `src/utils/helpers.spec.ts` - Utility function tests
-- `src/routes/health.spec.ts` - API route testing with supertest
+- `tests/utils/helpers.spec.ts` - Utility function tests
+- `tests/routes/health.spec.ts` - API route testing with supertest
+- `tests/routes/email.spec.ts` - Email endpoint tests
+- `tests/middleware/cors.spec.ts` - CORS middleware tests
+- `tests/middleware/rateLimiter.spec.ts` - Rate limiter tests
+- `tests/services/emailService.spec.ts` - Email service tests
 
 For more detailed testing information, see [DEVELOPMENT.md](../DEVELOPMENT.md#-testing).
 
@@ -275,11 +279,19 @@ backend/
 │   │   └── index.ts        # TypeScript type definitions
 │   └── utils/
 │       └── helpers.ts      # Utility functions
+├── tests/                   # Test files
+│   ├── setup.ts            # Global test configuration
+│   ├── app.spec.ts         # Application tests
+│   ├── middleware/         # Middleware tests
+│   ├── routes/             # Route tests
+│   ├── services/           # Service tests
+│   └── utils/              # Utility tests
 ├── dist/                    # Compiled JavaScript (gitignored)
 ├── .env.example            # Environment template
 ├── .env                    # Environment variables (gitignored)
 ├── docker-compose.yml      # Docker compose configuration
 ├── Dockerfile              # Multi-stage container build
+├── vitest.config.ts        # Vitest test configuration
 ├── tsconfig.json           # TypeScript compiler configuration
 ├── eslint.config.js        # ESLint configuration
 ├── package.json            # Dependencies and scripts

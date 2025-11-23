@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import request from 'supertest'
 import express from 'express'
+import type { Transporter } from 'nodemailer'
 import healthRouter from '../../src/routes/health'
 import * as emailService from '../../src/services/emailService'
 
@@ -14,8 +15,9 @@ describe('Health Route', () => {
 	})
 
 	it('should return healthy status when email connection is successful', async () => {
-		// Mock the email service functions
-		vi.spyOn(emailService, 'createTransporter').mockReturnValue({} as any)
+		vi.spyOn(emailService, 'createTransporter').mockReturnValue(
+			{} as Transporter
+		)
 		vi.spyOn(emailService, 'verifyEmailConnection').mockResolvedValue(50)
 
 		const response = await request(app).get('/api/health')
@@ -28,8 +30,9 @@ describe('Health Route', () => {
 	})
 
 	it('should return unhealthy status when email connection fails', async () => {
-		// Mock the email service to throw an error
-		vi.spyOn(emailService, 'createTransporter').mockReturnValue({} as any)
+		vi.spyOn(emailService, 'createTransporter').mockReturnValue(
+			{} as Transporter
+		)
 		vi.spyOn(emailService, 'verifyEmailConnection').mockRejectedValue(
 			new Error('Connection failed')
 		)
@@ -44,7 +47,9 @@ describe('Health Route', () => {
 	})
 
 	it('should include timestamp in ISO format', async () => {
-		vi.spyOn(emailService, 'createTransporter').mockReturnValue({} as any)
+		vi.spyOn(emailService, 'createTransporter').mockReturnValue(
+			{} as Transporter
+		)
 		vi.spyOn(emailService, 'verifyEmailConnection').mockResolvedValue(50)
 
 		const response = await request(app).get('/api/health')

@@ -1,12 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { EventBus } from '../../src/util/eventBus'
-import { EventType } from '@/enums/eventType'
-import { PopupType } from '@/enums/popupType'
-import type { PopupMessage } from '@/types/popup'
+import { EventType } from '../../src/enums/eventType'
+import { PopupType } from '../../src/enums/popupType'
+import type { PopupMessage } from '../../src/types/popup'
 
 describe('EventBus', () => {
+	const alertEvent = EventType.SHOW_ALERT_MESSAGE
+
 	beforeEach(() => {
-		// Clear all event handlers before each test
 		EventBus.all.clear()
 	})
 
@@ -16,14 +17,14 @@ describe('EventBus', () => {
 
 	it('should emit and receive events', () => {
 		const handler = vi.fn()
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler)
+		EventBus.on(alertEvent, handler)
 
 		const message: PopupMessage = {
 			message: 'Test message',
 			type: PopupType.Info,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message)
+		EventBus.emit(alertEvent, message)
 
 		expect(handler).toHaveBeenCalledWith(message)
 		expect(handler).toHaveBeenCalledTimes(1)
@@ -33,15 +34,15 @@ describe('EventBus', () => {
 		const handler1 = vi.fn()
 		const handler2 = vi.fn()
 
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler1)
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler2)
+		EventBus.on(alertEvent, handler1)
+		EventBus.on(alertEvent, handler2)
 
 		const message: PopupMessage = {
 			message: 'Test',
 			type: PopupType.Success,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message)
+		EventBus.emit(alertEvent, message)
 
 		expect(handler1).toHaveBeenCalledWith(message)
 		expect(handler2).toHaveBeenCalledWith(message)
@@ -49,25 +50,25 @@ describe('EventBus', () => {
 
 	it('should remove event listeners', () => {
 		const handler = vi.fn()
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler)
+		EventBus.on(alertEvent, handler)
 
 		const message: PopupMessage = {
 			message: 'Test',
 			type: PopupType.Info,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message)
+		EventBus.emit(alertEvent, message)
 		expect(handler).toHaveBeenCalledTimes(1)
 
-		EventBus.off(EventType.SHOW_ALERT_MESSAGE, handler)
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message)
+		EventBus.off(alertEvent, handler)
+		EventBus.emit(alertEvent, message)
 
-		expect(handler).toHaveBeenCalledTimes(1) // Still only 1 call
+		expect(handler).toHaveBeenCalledTimes(1)
 	})
 
 	it('should handle error messages', () => {
 		const handler = vi.fn()
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler)
+		EventBus.on(alertEvent, handler)
 
 		const errorMessage: PopupMessage = {
 			message: 'An error occurred',
@@ -75,7 +76,7 @@ describe('EventBus', () => {
 			stack: 'Error stack trace',
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, errorMessage)
+		EventBus.emit(alertEvent, errorMessage)
 
 		expect(handler).toHaveBeenCalledWith(errorMessage)
 		expect(handler.mock.calls[0][0]).toHaveProperty('stack')
@@ -83,28 +84,28 @@ describe('EventBus', () => {
 
 	it('should handle success messages', () => {
 		const handler = vi.fn()
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler)
+		EventBus.on(alertEvent, handler)
 
 		const successMessage: PopupMessage = {
 			message: 'Operation successful',
 			type: PopupType.Success,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, successMessage)
+		EventBus.emit(alertEvent, successMessage)
 
 		expect(handler).toHaveBeenCalledWith(successMessage)
 	})
 
 	it('should handle warning messages', () => {
 		const handler = vi.fn()
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler)
+		EventBus.on(alertEvent, handler)
 
 		const warningMessage: PopupMessage = {
 			message: 'This is a warning',
 			type: PopupType.Warn,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, warningMessage)
+		EventBus.emit(alertEvent, warningMessage)
 
 		expect(handler).toHaveBeenCalledWith(warningMessage)
 	})
@@ -113,17 +114,17 @@ describe('EventBus', () => {
 		const handler1 = vi.fn()
 		const handler2 = vi.fn()
 
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler1)
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler2)
+		EventBus.on(alertEvent, handler1)
+		EventBus.on(alertEvent, handler2)
 
-		EventBus.off(EventType.SHOW_ALERT_MESSAGE, handler1)
+		EventBus.off(alertEvent, handler1)
 
 		const message: PopupMessage = {
 			message: 'Test',
 			type: PopupType.Info,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message)
+		EventBus.emit(alertEvent, message)
 
 		expect(handler1).not.toHaveBeenCalled()
 		expect(handler2).toHaveBeenCalledWith(message)
@@ -131,7 +132,7 @@ describe('EventBus', () => {
 
 	it('should handle multiple sequential events', () => {
 		const handler = vi.fn()
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler)
+		EventBus.on(alertEvent, handler)
 
 		const message1: PopupMessage = {
 			message: 'First message',
@@ -143,8 +144,8 @@ describe('EventBus', () => {
 			type: PopupType.Success,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message1)
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message2)
+		EventBus.emit(alertEvent, message1)
+		EventBus.emit(alertEvent, message2)
 
 		expect(handler).toHaveBeenCalledTimes(2)
 		expect(handler).toHaveBeenNthCalledWith(1, message1)
@@ -160,7 +161,7 @@ describe('EventBus', () => {
 			type: PopupType.Info,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message)
+		EventBus.emit(alertEvent, message)
 
 		expect(wildcardHandler).toHaveBeenCalled()
 	})
@@ -169,8 +170,8 @@ describe('EventBus', () => {
 		const handler1 = vi.fn()
 		const handler2 = vi.fn()
 
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler1)
-		EventBus.on(EventType.SHOW_ALERT_MESSAGE, handler2)
+		EventBus.on(alertEvent, handler1)
+		EventBus.on(alertEvent, handler2)
 
 		EventBus.all.clear()
 
@@ -179,7 +180,7 @@ describe('EventBus', () => {
 			type: PopupType.Info,
 		}
 
-		EventBus.emit(EventType.SHOW_ALERT_MESSAGE, message)
+		EventBus.emit(alertEvent, message)
 
 		expect(handler1).not.toHaveBeenCalled()
 		expect(handler2).not.toHaveBeenCalled()

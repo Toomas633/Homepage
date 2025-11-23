@@ -90,4 +90,10 @@ export default [
 			],
 		},
 	},
+	{
+		files: ['tests/**/*.{ts,spec.ts}'],
+		rules: {
+			'vue/one-component-per-file': 'off', // Allow inline test components
+		},
+	},
 ]

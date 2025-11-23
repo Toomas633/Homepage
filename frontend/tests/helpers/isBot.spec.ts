@@ -33,7 +33,6 @@ describe('isBot', () => {
 		})
 
 		it('should handle empty or undefined user agents', () => {
-			// In non-browser contexts, it should return true (defensive)
 			expect(isBotUserAgent('')).toBe(false)
 		})
 

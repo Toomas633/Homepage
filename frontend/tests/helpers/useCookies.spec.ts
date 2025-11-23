@@ -1,9 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
-import { defineComponent, getCurrentInstance } from 'vue'
+import { defineComponent, getCurrentInstance, App } from 'vue'
 import { mount } from '@vue/test-utils'
 import useCookies from '../../src/helpers/useCookies'
-
-/* eslint-disable vue/one-component-per-file */
 
 describe('useCookies', () => {
 	const mockCookies = {
@@ -13,9 +11,8 @@ describe('useCookies', () => {
 		isKey: vi.fn(),
 	}
 
-	// Plugin to install $cookies globally
 	const cookiesPlugin = {
-		install: (app: any) => {
+		install: (app: App) => {
 			app.config.globalProperties.$cookies = mockCookies
 		},
 	}
@@ -127,10 +124,8 @@ describe('useCookies', () => {
 		})
 
 		it('should work with composed setup functions', () => {
-			// Test that useCookies works when called from within another composable
 			const TestComponent = defineComponent({
 				setup() {
-					// Inline composable usage
 					const cookies = useCookies()
 					return { cookies }
 				},
@@ -152,7 +147,6 @@ describe('useCookies', () => {
 			const TestComponent = defineComponent({
 				setup() {
 					const cookies = useCookies()
-					// Type check - these should exist and be callable
 					const hasGetMethod = typeof cookies.get === 'function'
 					const hasSetMethod = typeof cookies.set === 'function'
 					const hasRemoveMethod = typeof cookies.remove === 'function'
