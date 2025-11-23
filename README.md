@@ -1,139 +1,804 @@
-# Hey 👋, I'm Toomas
+# Toomas633's Dungeon
 
-<div align="right">
-<img src="https://komarev.com/ghpvc/?username=Toomas633&&style=flat&abbreviated=true&color=f44336" align="right" />
-</div> 
-<a href="https://toomas633.com" target="_blank" rel="noreferrer">
-<img src="frontend/icons/home.svg" alt="Home page" width="32" height="32" />
-</a>
-<a href="https://discord.com/users/8140" target="_blank" rel="noreferrer">
-<img src="frontend/icons/discord.svg" alt=Discord width="32" height="32" />
-</a>
-<a href="https://twitter.com/Toomas633" target="_blank">
-<img src="frontend/icons/twitter.svg" alt=Twitter width="32" height="32" />
-</a>
-<a href="https://paypal.me/ToomasK" target="_blank">
-<image src="frontend/icons/paypal.svg" alt=PayPal width="32" height="32" />
-</a>
-<a href="https://toomas633.com/donate/" target="_blank" rel="noreferrer">
-<img src="frontend/icons/donate.svg" alt=Donate width="32" height="32" />
-</a>
+<div align="center">
 
-## Rapidfire
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/quality_gate?project=Toomas633_Homepage)](https://sonarcloud.io/summary/new_code?id=Toomas633_Homepage)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.24-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-24+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-- 🌍 I'm based in Estonia
-- 🧠 I'm learning Cyber-physical systems at Taltech
-- 💼 Full time dev (Vue, React & Java)
-- ✉️ You can contact me at [toomas@toomas633.com](mailto:toomas@toomas633.com)
+**A modern full-stack personal projects homepage built with Vue 3, TypeScript, and Node.js**
 
-## Languages and Tools
+[Live](https://toomas633.com) • [Frontend Docs](frontend/README.md) • [Backend Docs](backend/README.md)
 
-### Programming
-
-<div align="left">
-<a href="https://www.cprogramming.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/c.svg" alt="C" height="45" /></a>
-<a href="https://www.java.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/java.svg" alt="Java" height="45"/></a>
-<a href="https://www.python.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/python.svg" alt="Python" height="45" /></a>
-<a href="https://www.php.net/" target="_blank"><img style="margin: 0.625rem" src="https://profilinator.rishav.dev/skills-assets/php-original.svg" alt="PHP" height="45"/></a>
-<a href="https://www.javascript.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/javascript.svg" alt="JavaScript" height="45" /></a>
-<a href="https://www.typescriptlang.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/typescript.svg" alt="TypeScript" height="45" /></a>
 </div>
 
-### Backend
+---
 
-<div align="left">
-<a href="https://www.nginx.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/nginx-dark.svg" alt="Nginx" height="45" /></a>
-<a href="https://spring.io/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/spring.svg" alt="Spring" height="45"/></a>
-<a href="https://nodejs.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/nodejs-dark.svg" alt="Node.js" height="45" /></a>  
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Architecture](#-architecture)
+- [Quick Start](#-quick-start)
+- [Project Structure](#-project-structure)
+- [Development](#-development)
+- [Testing](#-testing)
+- [Docker Deployment](#-docker-deployment)
+- [Configuration](#-configuration)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🌟 Overview
+
+Toomas633's Dungeon is a full-stack web application showcasing personal projects, technical skills, and interactive features. The application combines a modern Vue 3 frontend with a robust Node.js backend, designed for performance, maintainability, and scalability.
+
+### Key Features
+
+- **🎨 Modern UI**: Responsive design with Vuetify 3 Material Design components
+- **📧 Contact System**: Integrated email service with rate limiting and validation
+- **🗺️ Interactive Maps**: Leaflet integration for location visualization
+- **📊 Project Showcase**: Dynamic galleries with GitHub integration
+- **🔒 Security**: CORS protection, rate limiting, and security headers
+- **🐳 Containerized**: Full Docker support with multi-stage builds
+- **✅ Tested**: Comprehensive test coverage with Vitest
+- **📈 Quality**: SonarCloud integration for code quality analysis
+
+### Tech Stack
+
+#### Frontend (v4.3.0)
+- **Framework**: Vue 3.5.24 with Composition API
+- **Language**: TypeScript 5.9.3
+- **UI Library**: Vuetify 3.10.11
+- **Build Tool**: Vite 7.2.4
+- **Router**: Vue Router 4.6.3
+- **HTTP Client**: Axios 1.13.2
+- **Maps**: Leaflet 1.9.4
+
+#### Backend (v2.0.0)
+- **Runtime**: Node.js 18+ (24+ recommended)
+- **Framework**: Express.js 5.1.0
+- **Language**: TypeScript 5.9.3 with ESM modules
+- **Email**: Nodemailer 7.0.10
+- **Security**: CORS 2.8.5, Rate Limiting 8.2.1
+
+---
+
+---
+
+## 🏗️ Architecture
+
+This is a multi-workspace project with separate frontend and backend modules, designed for independent development and deployment.
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              Production Docker Container                 │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │              Nginx (Port 80)                       │ │
+│  │  ┌──────────────────┐    ┌──────────────────────┐ │ │
+│  │  │  Static Files    │    │   API Proxy          │ │ │
+│  │  │  (Vue 3 dist/)   │    │   /api/* → :3000     │ │ │
+│  │  └──────────────────┘    └──────────┬───────────┘ │ │
+│  └───────────────────────────────────────┼────────────┘ │
+│                                          │               │
+│  ┌──────────────────────────────────────▼────────────┐  │
+│  │         Backend API (Port 3000)                   │  │
+│  │  • Express.js 5 with TypeScript                   │  │
+│  │  • Email Service (Nodemailer)                     │  │
+│  │  • Health Monitoring                              │  │
+│  │  • CORS & Rate Limiting                           │  │
+│  └───────────────────────────────────────────────────┘  │
+│                                                          │
+│              PM2 Process Manager                         │
+│         (nginx + backend with auto-restart)              │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Project Structure
+
+```
+homepage/
+├── frontend/                    # Vue 3 application
+│   ├── src/
+│   │   ├── components/         # Reusable Vue components
+│   │   ├── views/              # Page components
+│   │   ├── router/             # Vue Router configuration
+│   │   ├── services/           # API service layer
+│   │   ├── helpers/            # Utility functions & composables
+│   │   ├── types/              # TypeScript type definitions
+│   │   └── assets/             # Static assets (images, styles)
+│   ├── tests/                  # Vitest tests
+│   ├── vite.config.ts          # Vite build configuration
+│   └── package.json            # Frontend dependencies
+│
+├── backend/                     # Express.js API
+│   ├── src/
+│   │   ├── routes/             # API route handlers
+│   │   ├── services/           # Business logic
+│   │   ├── middleware/         # Express middleware
+│   │   ├── types/              # TypeScript interfaces
+│   │   ├── config/             # Environment configuration
+│   │   └── app.ts              # Application entry point
+│   ├── tests/                  # Vitest + Supertest tests
+│   ├── tsconfig.json           # TypeScript configuration
+│   └── package.json            # Backend dependencies
+│
+├── Dockerfile                   # Multi-stage production build
+├── docker-compose.yml          # Container orchestration
+├── nginx.conf                  # Nginx web server config
+├── ecosystem.config.cjs        # PM2 process management
+├── sonar-project.properties    # SonarCloud configuration
+└── Homepage.code-workspace     # VS Code workspace
+
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+| Technology | Version  | Required |
+|------------|----------|----------|
+| Node.js    | 18+      | ✅       |
+| npm        | 8+       | ✅       |
+| Docker     | 20+      | 🔧 Optional |
+
+### Local Development
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Toomas633/homepage.git
+cd homepage
+```
+
+#### 2. Setup Frontend
+
+```bash
+cd frontend
+cp .env.example .env
+# Edit .env with your configuration
+npm install
+npm run dev
+# Frontend runs on http://localhost:5173
+```
+
+#### 3. Setup Backend
+
+```bash
+cd backend
+cp .env.example .env
+# Edit .env with SMTP credentials
+npm install
+npm run dev
+# Backend runs on http://localhost:3000
+```
+
+#### 4. Open in Browser
+
+Visit `http://localhost:5173` to see the application.
+
+### Docker Deployment
+
+For containerized deployment with both frontend and backend:
+
+```bash
+# Using docker-compose (recommended)
+docker-compose up -d
+
+# Or manual build
+docker build -t toomas633-dungeon .
+docker run -d -p 80:80 --env-file backend/.env toomas633-dungeon
+```
+
+See [Docker Deployment](#-docker-deployment) for detailed instructions.
+
+---
+
+## 📂 Project Structure
+
+---
+
+## 💻 Development
+
+### Workspace Setup
+
+This project uses a multi-folder VS Code workspace. Open `Homepage.code-workspace` in VS Code for optimal development experience with module-specific settings.
+
+### Frontend Development
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Development server with hot reload (port 5173)
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run serve
+
+# Linting & formatting
+npm run lint
+npm run stylelint
+npm run prettier
+npm run type-check
+```
+
+**Key Files:**
+- `vite.config.ts` - Build configuration with plugins
+- `src/main.ts` - Application entry point
+- `src/router/` - Vue Router configuration
+- `src/plugins/vuetify.ts` - Vuetify setup
+
+See [Frontend Documentation](frontend/README.md) for detailed patterns and conventions.
+
+### Backend Development
+
+```bash
+cd backend
+
+# Install dependencies
+npm install
+
+# Development with hot reload (tsx watch)
+npm run dev
+
+# Build TypeScript to JavaScript
+npm run build
+
+# Start production server
+npm start
+
+# Linting & formatting
+npm run lint
+npm run prettier
+npm run type-check
+```
+
+**Key Files:**
+- `src/app.ts` - Express application setup
+- `src/routes/` - API endpoint handlers
+- `src/middleware/` - CORS, rate limiting, etc.
+- `src/services/` - Business logic services
+
+See [Backend Documentation](backend/README.md) for detailed patterns and conventions.
+
+### Development Workflow
+
+1. **Start backend**: `cd backend && npm run dev`
+2. **Start frontend**: `cd frontend && npm run dev`
+3. **Make changes** with hot reload
+4. **Run tests**: `npm run test` in respective directory
+5. **Check quality**: `npm run lint` and `npm run type-check`
+6. **Build**: `npm run build` before committing
+
+---
+
+## 🧪 Testing
+
+Both frontend and backend use [Vitest](https://vitest.dev/) for unit and integration testing with comprehensive coverage reporting.
+
+### Running Tests
+
+#### Frontend Tests
+
+```bash
+cd frontend
+
+# Run tests in watch mode (interactive)
+npm run test
+
+# Run with coverage report
+npm run test:coverage
+```
+
+#### Backend Tests
+
+```bash
+cd backend
+
+# Run tests in watch mode (interactive)
+npm run test
+
+# Run with coverage report
+npm run test:coverage
+```
+
+### Test Structure
+
+#### Frontend Testing
+
+- **Framework**: Vitest + Vue Test Utils + happy-dom
+- **Location**: `frontend/tests/` directory
+- **Setup**: `tests/setup.ts` with Vuetify stubs
+- **Config**: `vitest.config.ts` with Vue plugin support
+
+**Example Test Files:**
+- `tests/helpers/isBot.spec.ts` - Utility function tests
+- `tests/App.spec.ts` - Component testing example
+- `tests/services/` - Service layer tests
+
+#### Backend Testing
+
+- **Framework**: Vitest + Supertest for API testing
+- **Location**: `backend/tests/` directory
+- **Setup**: `tests/setup.ts` for global configuration
+- **Config**: `vitest.config.ts` for Node.js environment
+
+**Example Test Files:**
+- `tests/routes/health.spec.ts` - API endpoint tests with supertest
+- `tests/services/emailService.spec.ts` - Service tests with mocking
+- `tests/middleware/` - Middleware unit tests
+
+### Writing Tests
+
+#### Frontend Component Test
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import MyComponent from '@/components/MyComponent.vue'
+
+describe('MyComponent', () => {
+  it('renders with props', () => {
+    const wrapper = mount(MyComponent, {
+      props: { title: 'Test Title' }
+    })
+    expect(wrapper.text()).toContain('Test Title')
+  })
+})
+```
+
+#### Backend API Route Test
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import request from 'supertest'
+import express from 'express'
+import healthRouter from '@/routes/health'
+
+describe('Health Route', () => {
+  it('returns health status', async () => {
+    const app = express()
+    app.use('/health', healthRouter)
+    
+    const response = await request(app).get('/health')
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('healthy')
+  })
+})
+```
+
+### Coverage Reports
+
+Coverage reports are generated in `coverage/` with multiple formats:
+
+- **Console**: Summary output after test run
+- **HTML**: Interactive report at `coverage/index.html`
+- **LCOV**: `coverage/lcov.info` for SonarCloud integration
+- **JSON**: Programmatic access via `coverage/coverage-final.json`
+
+**Coverage Exclusions:**
+- Test files (`**/*.spec.ts`, `**/*.test.ts`)
+- Type definitions (`**/*.d.ts`)
+- Configuration and setup files
+
+### CI/CD Integration
+
+Tests run automatically in GitHub Actions:
+- **SonarCloud Workflow**: Runs tests with coverage on push/PR
+- **Quality Gates**: Coverage thresholds enforced by SonarCloud
+- **Multi-module**: Separate coverage reports for frontend and backend
+
+---
+
+## 🐳 Docker Deployment
+
+The application supports containerized deployment with a multi-stage Docker build that combines both frontend and backend services.
+
+### Architecture
+
+The Docker container runs:
+- **Nginx** (Port 80) - Serves frontend static files and proxies API requests
+- **Backend API** (Port 3000) - Express.js server
+- **PM2** - Process manager for both services with auto-restart
+
+### Quick Start
+
+#### Using Docker Compose (Recommended)
+
+```bash
+# Build and start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+#### Manual Docker Build
+
+```bash
+# Build the image
+docker build -t toomas633-dungeon .
+
+# Run the container
+docker run -d \
+  --name toomas633-dungeon \
+  -p 80:80 \
+  -p 3000:3000 \
+  --env-file backend/.env \
+  --restart unless-stopped \
+  toomas633-dungeon
+
+# View logs
+docker logs -f toomas633-dungeon
+```
+
+### Configuration
+
+#### Environment Variables
+
+Create a `.env` file in the root directory (or use `backend/.env`):
+
+```bash
+# Email service configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+EMAIL_TO=recipient@example.com
+
+# CORS configuration
+ALLOWED_ORIGINS=https://yourdomain.com,http://localhost:5173
+```
+
+#### Port Configuration
+
+Default ports:
+- **80**: Frontend (Nginx) and API proxy
+- **3000**: Backend API direct access
+
+Custom ports:
+```bash
+docker run -p 8080:80 -p 3001:3000 ...
+```
+
+### Multi-Stage Build
+
+The Dockerfile uses multi-stage builds for optimization:
+
+1. **Frontend Build**: Compiles Vue 3 app with Vite
+2. **Backend Build**: Compiles TypeScript to JavaScript
+3. **Production**: Combines both with Nginx and PM2
+
+**Features:**
+- Uses `node:24-slim` for minimal image size
+- Non-root user (`appuser`) for security
+- Health checks built-in
+- Optimized layer caching
+
+### Health Monitoring
+
+#### Health Check Endpoint
+
+```bash
+# Via Nginx proxy
+curl http://localhost/api/health
+
+# Direct backend access
+curl http://localhost:3000/health
+```
+
+**Healthy Response:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2025-11-23T12:00:00.000Z",
+  "email": {
+    "status": "connected",
+    "responseTime": "150ms"
+  }
+}
+```
+
+#### Docker Health Checks
+
+Built-in Docker health monitoring:
+
+```bash
+# Check container health status
+docker inspect --format='{{.State.Health.Status}}' toomas633-dungeon
+
+# View health check logs
+docker inspect --format='{{range .State.Health.Log}}{{.Output}}{{end}}' toomas633-dungeon
+```
+
+Health check configuration:
+- **Interval**: 30 seconds
+- **Timeout**: 10 seconds
+- **Retries**: 3
+- **Start Period**: 40 seconds
+
+### Container Management
+
+#### Basic Operations
+
+```bash
+# Start/stop/restart
+docker start toomas633-dungeon
+docker stop toomas633-dungeon
+docker restart toomas633-dungeon
+
+# Remove container
+docker rm toomas633-dungeon
+
+# View logs (follow mode)
+docker logs -f toomas633-dungeon
+
+# Shell access
+docker exec -it toomas633-dungeon /bin/bash
+```
+
+#### PM2 Process Management
+
+```bash
+# List running processes
+docker exec toomas633-dungeon pm2 list
+
+# View process logs
+docker exec toomas633-dungeon pm2 logs
+
+# Process details
+docker exec toomas633-dungeon pm2 show backend
+docker exec toomas633-dungeon pm2 show nginx
+
+# Restart individual process
+docker exec toomas633-dungeon pm2 restart backend
+docker exec toomas633-dungeon pm2 restart nginx
+```
+
+#### Logs and Debugging
+
+```bash
+# Container logs
+docker logs toomas633-dungeon
+
+# Nginx logs (inside container)
+docker exec toomas633-dungeon cat /var/log/nginx/access.log
+docker exec toomas633-dungeon cat /var/log/nginx/error.log
+
+# Running processes
+docker exec toomas633-dungeon ps aux
+```
+
+### Troubleshooting
+
+#### Container Issues
+
+```bash
+# Check container logs
+docker logs toomas633-dungeon
+
+# Inspect container details
+docker inspect toomas633-dungeon
+
+# Check port conflicts (PowerShell)
+netstat -ano | findstr :80
+netstat -ano | findstr :3000
+```
+
+#### Health Check Failures
+
+```bash
+# Test health endpoint
+curl http://localhost/api/health
+curl http://localhost:3000/health
+
+# Verify processes
+docker exec toomas633-dungeon pm2 list
+
+# Check nginx configuration
+docker exec toomas633-dungeon nginx -t
+```
+
+#### Backend Not Responding
+
+```bash
+# View backend logs
+docker exec toomas633-dungeon pm2 logs backend
+
+# Check environment variables
+docker exec toomas633-dungeon env | findstr EMAIL
+```
+
+#### Email Service Issues
+
+Verify SMTP credentials are correct in your `.env` file. Common issues:
+- Incorrect SMTP host or port
+- Invalid authentication credentials
+- Firewall blocking SMTP traffic (port 587)
+- 2FA requiring app-specific password
+
+### Updates and Maintenance
+
+#### Rebuild After Changes
+
+```bash
+# Using docker-compose
+docker-compose down
+docker-compose up -d --build
+
+# Manual rebuild
+docker stop toomas633-dungeon
+docker rm toomas633-dungeon
+docker build -t toomas633-dungeon .
+docker run -d --name toomas633-dungeon -p 80:80 --env-file backend/.env toomas633-dungeon
+```
+
+#### Clean Up
+
+```bash
+# Remove unused images
+docker image prune
+
+# Remove all stopped containers
+docker container prune
+
+# Full cleanup (careful!)
+docker system prune -a
+```
+
+### Production Deployment
+
+#### Recommended Setup
+
+- ✅ Use reverse proxy (Traefik, Caddy, Nginx Proxy Manager) for HTTPS
+- ✅ Configure proper logging and log rotation
+- ✅ Use Docker secrets or vault for sensitive credentials
+- ✅ Set up automated backups
+- ✅ Configure container restart policies
+- ✅ Monitor health checks and set up alerts
+- ✅ Use specific version tags instead of `latest`
+
+#### Example with Traefik
+
+```yaml
+version: '3.8'
+services:
+  app:
+    image: toomas633-dungeon:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`toomas633.com`)"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls.certresolver=letsencrypt"
+    env_file: backend/.env
+    restart: unless-stopped
+    networks:
+      - traefik
+```
+
+---
+
+## ⚙️ Configuration
+
+### Frontend Environment Variables
+
+Located in `frontend/.env`:
+
+| Variable            | Description                  | Required | Example                      |
+|---------------------|------------------------------|----------|------------------------------|
+| `VITE_API_URL`      | Backend API endpoint         | ✅       | `http://localhost:3000/api`  |
+| `VITE_GITHUB_TOKEN` | GitHub API token (optional)  | ❌       | `ghp_xxxxxxxxxxxxxxxxxxxx`   |
+
+### Backend Environment Variables
+
+Located in `backend/.env`:
+
+| Variable          | Description                      | Required | Example                                      |
+|-------------------|----------------------------------|----------|----------------------------------------------|
+| `EMAIL_HOST`      | SMTP server hostname             | ✅       | `smtp.gmail.com`                             |
+| `EMAIL_USER`      | SMTP username                    | ✅       | `info@example.com`                           |
+| `EMAIL_PASS`      | SMTP password/app password       | ✅       | `your-app-password`                          |
+| `EMAIL_TO`        | Recipient email                  | ✅       | `admin@example.com`                          |
+| `ALLOWED_ORIGINS` | CORS allowed origins (comma-sep) | ✅       | `http://localhost:5173,https://example.com`  |
+
+### API Endpoints
+
+| Endpoint          | Method | Description                  | Rate Limit          |
+|-------------------|--------|------------------------------|---------------------|
+| `/health`         | GET    | Server health status         | None                |
+| `/api/health`     | GET    | Health check (via Nginx)     | None                |
+| `/api/send-email` | POST   | Send contact form email      | 10 req / 15 min     |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Install** dependencies in both modules
+4. **Make** changes following project conventions
+5. **Test** thoroughly: `npm run test` and `npm run test:coverage`
+6. **Lint** your code: `npm run lint` and `npm run prettier`
+7. **Type check**: `npm run type-check`
+8. **Build** to verify: `npm run build`
+9. **Commit** with clear messages
+10. **Push** and create a Pull Request
+
+### Code Quality Standards
+
+- ✅ TypeScript strict mode enabled
+- ✅ ESLint for code linting
+- ✅ Prettier for code formatting
+- ✅ Vitest for testing (maintain >80% coverage)
+- ✅ SonarCloud quality gates must pass
+- ✅ Follow existing patterns and conventions
+
+### Module-Specific Guidelines
+
+- **Frontend**: See [frontend/.github-copilot-instructions.md](frontend/.github-copilot-instructions.md)
+- **Backend**: See [backend/.github-copilot-instructions.md](backend/.github-copilot-instructions.md)
+
+---
+
+## 📚 Additional Resources
+
+- **[Frontend Documentation](frontend/README.md)** - Vue 3 setup, components, and patterns
+- **[Backend Documentation](backend/README.md)** - Express.js API, services, and middleware
+- **[Nginx Configuration](nginx.conf)** - Web server and proxy settings
+- **[PM2 Configuration](ecosystem.config.cjs)** - Process management setup
+- **[Docker Compose](docker-compose.yml)** - Container orchestration
+- **[SonarCloud Project](https://sonarcloud.io/project/overview?id=Toomas633_Homepage)** - Code quality dashboard
+
+### External Links
+
+- **Live Site**: [toomas633.com](https://toomas633.com)
+- **GitHub Repository**: [Toomas633/homepage](https://github.com/Toomas633/homepage)
+- **Vue.js Documentation**: [vuejs.org](https://vuejs.org/)
+- **Vuetify Documentation**: [vuetifyjs.com](https://vuetifyjs.com/)
+- **Express.js Documentation**: [expressjs.com](https://expressjs.com/)
+- **Vitest Documentation**: [vitest.dev](https://vitest.dev/)
+
+---
+
+## 📄 License
+
+This project is licensed under the **GPL-3.0-only** License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Built with modern web technologies:
+- Vue.js 3 & Vuetify 3 for the frontend
+- Node.js & Express.js for the backend
+- TypeScript for type safety
+- Vitest for testing
+- Docker for containerization
+- Nginx for web serving
+- PM2 for process management
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#toomas633s-dungeon)**
+
+Made with ❤️ by [Toomas633](https://github.com/Toomas633)
+
 </div>
-
-### Frontend
-
-<div align="left">
-<a href="https://vuejs.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/vue.svg" alt="Vue" height="45" /></a>
-<a href="https://vuetifyjs.com/" target="_blank"> <img style="margin: 0.625rem" src="frontend/icons/vuetify.svg" alt="Vuetify" height="45"/></a>
-<a href="https://angular.io/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/angular.svg" alt="Angular" height="45" /></a>
-<a href="https://sass-lang.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/sass.svg" alt="Sass" height="45" /></a>
-<a href="https://wordpress.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/wordpress.svg" alt="Wordpress" height="45"/></a>
-</div>
-
-### Devops
-
-<div align="left">
-<a href="https://www.gnu.org/software/bash/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/bash-dark.svg" alt="Bash" height="45" /></a>
-<a href="https://www.docker.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/docker.svg" alt="Docker" height="45" /></a>
-<a href="https://k3s.io/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/k3s.svg" alt="k3s" height="45" /></a>
-</div>
-
-### Data Visualization
-
-<div align="left">
-<a href="https://grafana.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/grafana.svg" alt="Grafana" height="45" /></a>
-</div>
-
-### Databases
-
-<div align="left">
-<a href="https://www.mysql.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/mysql.svg" alt="MySQL" height="45" /></a>
-<a href="https://sqlite.org/index.html" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/sqlite.svg" alt="SQLite3" height="45" /></a>
-<a href="https://www.postgresql.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/postgresql.svg" alt="PostgreSQL" height="45" /></a>
-<a href="https://www.oracle.com/database/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/oracle.svg" alt="Oracle" height="45" /></a>
-</div>
-
-### Cloud
-
-<div align="left">
-<a href="https://aws.amazon.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/aws.svg" alt="AWS" height="45" /></a>
-<a href="https://www.oracle.com/cloud/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/oracle-cloud.svg" alt="Oracle" height="45" /></a>
-</div>
-
-### 3D
-
-<div align="left">
-<a href="https://www.blender.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/blender.svg" alt="Blender" height="45" /></a>
-<a href="https://www.sketchup.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/sketchup.svg" alt="SketchUp" height="45"/></a>
-<a href="https://solidedge.siemens.com/en/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/solid-edge.svg" alt="Solid Edge" height="45"/></a>
-<a href="https://ultimaker.com/software/ultimaker-cura" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/cura.svg" alt="Cura" height="45"/></a>
-</div>
-
-### Hardware
-
-<div align="left">
-<a href="https://www.raspberrypi.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/raspberry-pi.svg" alt="Raspberry Pi" height="45" /></a>
-<a href="https://www.arduino.cc/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/arduino.svg" alt="Arduino" height="45" /></a>
-</div>
-
-### Op systems
-
-<div align="left">
-<a href="https://www.microsoft.com/en-us/windows" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/windows.svg" alt="Windows" height="45" /></a>
-<a href="https://ubuntu.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/ubuntu.svg" alt="Ubuntu" height="45" /></a>
-</div>
-
-### Version control
-
-<div align="left">
-<a href="https://git-scm.com/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/git.svg" alt="Git" height="45" /></a>
-<a href="https://maven.apache.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/maven.svg" alt="Maven" height="45" /></a>
-<a href="https://gradle.org/" target="_blank"><img style="margin: 0.625rem" src="frontend/icons/gradle.svg" alt="Gradle" height="45" /></a>
-</div>
-
-## Github Stats
-
-<p float="left">
-  <img src="https://github-readme-stats-two-topaz-39.vercel.app/api?username=Toomas633&theme=dark&hide_border=true&include_all_commits=true&count_private=false" style="height:10.938rem" />
-  <img src="https://github-readme-streak-stats.herokuapp.com/?user=Toomas633&theme=dark&hide_border=true" style="height:10.938rem" />
-  <img src="https://github-readme-stats-two-topaz-39.vercel.app/api/top-langs/?username=Toomas633&theme=dark&hide_border=true&layout=compact&langs_count=10" style="height:10.938rem" />
-</p>
-
-## Top Contributed Repo
-
-<p float="left">
-  <img src="https://github-contributor-stats.vercel.app/api?username=Toomas633&limit=5&theme=dark&hide_border=true&combine_all_yearly_contributions=true" style="height:10.938rem" />
-</p>
-
-## GitHub Trophies
-
-<p float="left">
-  <img src="https://github-profile-trophy.vercel.app/?username=Toomas633&theme=darkhub&no-frame=true&no-bg=false&margin-w=10&margin-h=10&column=-1" />
-</p>

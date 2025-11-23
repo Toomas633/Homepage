@@ -10,13 +10,18 @@ on:
 jobs:
   test-build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     steps:
       - name: Get current date
         id: meta
         run: echo "date_label=$(date -u +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -36,22 +41,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build
+      - name: Build Multi-Platform Production Images
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/toomas633/homepage:dev
+          labels: |
+            org.opencontainers.image.created=${{ steps.meta.outputs.date_label }}
+            org.opencontainers.image.version=${{ steps.pkg.outputs.package_version }}
+          cache-from: type=registry,ref=ghcr.io/toomas633/homepage:buildcache
+          cache-to: type=registry,ref=ghcr.io/toomas633/homepage:buildcache,mode=max
+
+      - name: Run SonarQube Analysis (AMD64 only)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: sonar-scan
+          push: false
+          secrets: |
+            sonar_token=${{ secrets.SONAR_TOKEN }}
           build-args: |
-            SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}
             GITHUB_REF_NAME=${{ github.ref_name }}
             GITHUB_PR_NUMBER=${{ github.event.pull_request.number }}
             GITHUB_BASE_REF=${{ github.event.pull_request.base.ref }}
             GITHUB_HEAD_REF=${{ github.event.pull_request.head.ref }}
-          tags: |
-            ghcr.io/toomas633/toomas633:dev
-          labels: |
-            org.opencontainers.image.created=${{ steps.meta.outputs.date_label }}
-            org.opencontainers.image.version=${{ steps.pkg.outputs.package_version }}
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=ghcr.io/toomas633/toomas633:buildcache
-          cache-to: type=registry,ref=ghcr.io/toomas633/toomas633:buildcache,mode=max
+          platforms: linux/amd64
+          cache-from: type=registry,ref=ghcr.io/toomas633/homepage:buildcache

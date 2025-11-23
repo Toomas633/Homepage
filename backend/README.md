@@ -13,7 +13,8 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 
 ## 📋 Requirements
 
-- **Node.js**: 24+ (LTS recommended)
+- **Node.js**: 18+ (24+ LTS recommended)
+- **npm**: 8+
 - **Docker**: Optional, for containerized deployment
 - **SMTP Server**: For email functionality
 
@@ -67,19 +68,19 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 1. **Using docker-compose** (recommended):
 
    ```bash
-   npm run docker:up
+   docker-compose up -d
    ```
 
 2. **Manual Docker build**:
 
    ```bash
-   npm run docker:build
-   npm run docker:run
+   docker build -t toomas633-backend .
+   docker run -d -p 3000:3000 --env-file .env toomas633-backend
    ```
 
 3. **Stop containers**:
    ```bash
-   npm run docker:down
+   docker-compose down
    ```
 
 ## 📝 Environment Configuration
@@ -112,22 +113,14 @@ ALLOWED_ORIGINS=http://localhost:5173,https://yourdomain.com
 | Command                 | Description                              |
 | :---------------------- | :--------------------------------------- |
 | `npm run build`         | Compile TypeScript to JavaScript         |
-| `npm run build:watch`   | Compile TypeScript in watch mode         |
-| `npm run clean`         | Remove compiled dist directory           |
 | `npm start`             | Start production server (requires build) |
 | `npm run dev`           | Start with hot reload (tsx watch mode)   |
-| `npm run dev:build`     | Build and start with Node.js watch       |
 | `npm run test`          | Run tests in watch mode                  |
-| `npm run test:ui`       | Run tests with visual UI                 |
 | `npm run test:coverage` | Run tests with coverage report           |
 | `npm run lint`          | Check code style and errors              |
-| `npm run lint:fix`      | Auto-fix linting issues                  |
-| `npm run format`        | Format TypeScript files with Prettier    |
+| `npm run scan:lint`     | Generate ESLint report for SonarQube     |
+| `npm run prettier`      | Format TypeScript files with Prettier    |
 | `npm run type-check`    | TypeScript type checking (no emit)       |
-| `npm run docker:build`  | Build Docker image                       |
-| `npm run docker:run`    | Run Docker container with .env           |
-| `npm run docker:up`     | Start with docker-compose                |
-| `npm run docker:down`   | Stop docker-compose services             |
 
 ## 🧪 Testing
 
@@ -138,9 +131,6 @@ The backend uses [Vitest](https://vitest.dev/) with [Supertest](https://github.c
 ```bash
 # Run tests in watch mode (interactive)
 npm run test
-
-# Run tests with UI (visual test runner)
-npm run test:ui
 
 # Run tests with coverage report
 npm run test:coverage
@@ -363,6 +353,6 @@ GPL-3.0-only - See [LICENSE](../LICENSE) file for details.
 
 ---
 
-**Version**: 4.2.1  
-**Node.js**: 24+  
+**Version**: 2.0.0  
+**Node.js**: 18+ (24+ recommended)  
 **License**: GPL-3.0-only

@@ -1,6 +1,6 @@
 # Toomas633's Dungeon - Frontend
 
-> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.2.1)
+> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.3.0)
 
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.5.24-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -78,7 +78,6 @@ npm run dev
 | `npm run build`          | Build for production                    |
 | `npm run serve`          | Preview production build                |
 | `npm run test`           | Run tests in watch mode                 |
-| `npm run test:ui`        | Run tests with visual UI                |
 | `npm run test:coverage`  | Run tests with coverage report          |
 | `npm run lint`           | Run ESLint for code quality             |
 | `npm run stylelint`      | Run Stylelint for CSS/SCSS              |
@@ -95,9 +94,6 @@ The frontend uses [Vitest](https://vitest.dev/) with Vue Test Utils for componen
 ```bash
 # Run tests in watch mode (interactive)
 npm run test
-
-# Run tests with UI (visual test runner)
-npm run test:ui
 
 # Run tests with coverage report
 npm run test:coverage
@@ -188,7 +184,7 @@ npm run serve
 docker build -t toomas633-frontend .
 
 # Build with specific tag
-docker build -t toomas633-frontend:v4.2.1 .
+docker build -t toomas633-frontend:v4.3.0 .
 ```
 
 ### Running the Container

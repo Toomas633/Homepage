@@ -21,6 +21,8 @@
 		"length": 500,
 		"temperature": 0.1
 	},
-	"powershell.cwd": "Toomas633"
+	"powershell.cwd": "Homepage",
+	"window.openFoldersInNewWindow": "on",
+	"window.restoreWindows": "all"
   }
 }

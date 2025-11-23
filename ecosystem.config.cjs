@@ -15,7 +15,7 @@ module.exports = {
 		},
 		{
 			name: 'backend',
-			script: './backend/dist/app.js',
+			script: './backend/dist/src/app.js',
 			cwd: '/app',
 			exec_mode: 'fork',
 			instances: 1,

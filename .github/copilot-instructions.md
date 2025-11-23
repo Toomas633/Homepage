@@ -2,13 +2,15 @@
 
 ## Project Overview
 
-- **Name:** "Toomas633's Dungeon" - Personal projects homepage (v4.2.1)
+- **Name:** "Toomas633's Dungeon" - Personal projects homepage
+- **Versions:** Frontend v4.3.0, Backend v2.0.0
 - This is a full-stack project with separate frontend and backend modules
 - **Frontend:** Vue 3 + TypeScript + Vuetify 3 in `frontend/` directory
 - **Backend:** Node.js Express server in `backend/` directory
 - Multi-workspace VS Code setup with modular development
 - Docker support and Nginx configuration for deployment
-- SonarQube integration for code quality analysis
+- SonarCloud integration for code quality analysis
+- Comprehensive testing with Vitest for both modules
 
 ## Module-Specific Instructions
 
@@ -16,18 +18,20 @@
 
 ### Frontend Module (`frontend/`)
 - **Detailed Instructions:** See `frontend/.github-copilot-instructions.md`
-- **Stack:** Vue 3 + TypeScript + Vuetify 3 + Vite
+- **Stack:** Vue 3.5.24 + TypeScript 5.9.3 + Vuetify 3.10.11 + Vite 7.2.4
 - **Architecture:** Component-based with strict TypeScript typing
-- **Routing:** Modular Vue Router with service layer organization
+- **Routing:** Modular Vue Router 4.6.3 with service layer organization
 - **Build:** Modern Vite with extensive optimization plugins
+- **Testing:** Vitest 4.0.13 with Vue Test Utils 2.4.6 and happy-dom 20.0.10 in `tests/` directory
 - **When working in `frontend/`:** Always follow the patterns and conventions specified in the frontend instructions
 
 ### Backend Module (`backend/`)
 - **Detailed Instructions:** See `backend/.github-copilot-instructions.md`
-- **Stack:** Node.js 24+ with TypeScript and Express.js using ESM modules
+- **Stack:** Node.js 18+ (24+ recommended) with TypeScript 5.9.3 and Express.js 5.1.0 using ESM modules
 - **Architecture:** Modular structure with TypeScript types, middleware, routes, and services
-- **Features:** CORS protection, rate limiting, email service functionality
+- **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.10 email service
 - **Security:** Environment validation, non-root Docker user, health monitoring
+- **Testing:** Vitest 4.0.13 with supertest 7.1.4 for API testing in `tests/` directory
 - **When working in `backend/`:** Always follow the patterns and conventions specified in the backend instructions
 
 ## Workspace Structure
@@ -40,7 +44,7 @@ This is a multi-folder VS Code workspace with three main directories:
 ## Key Directories & Files
 
 ### Root Level
-- `Toomas633.code-workspace` — Multi-folder workspace configuration
+- `Homepage.code-workspace` — Multi-folder workspace configuration
 - `nginx.conf` — Nginx reverse proxy/static server config
 - `ecosystem.config.cjs` — PM2 configuration for production deployment
 - `sonar-project.properties` — SonarQube configuration for code quality analysis
@@ -74,6 +78,9 @@ This is a multi-folder VS Code workspace with three main directories:
 - **Backend coverage:** `npm run test:coverage` (generates coverage reports)
 - **Backend prod:** `node backend/dist/app.js` (or use `ecosystem.config.js` for PM2)
 - **Docker:** Use `Dockerfile` for containerized build/deploy with TypeScript compilation
+  - **Security:** Uses BuildKit secrets for sensitive data (no ARG/ENV for tokens)
+  - **Multi-platform:** Supports linux/amd64 and linux/arm64 via `TARGETPLATFORM` variable
+  - **Build command:** `docker build --secret id=sonar_token,env=SONAR_TOKEN .`
 - **Lint:** `npm run lint` (uses TypeScript ESLint) — Module-specific configurations
 - **Style lint:** `npm run stylelint` (CSS/SCSS/Vue styles) — Frontend only
 - **Format:** `npm run format` (code formatting) — Both modules configured
@@ -84,15 +91,15 @@ This is a multi-folder VS Code workspace with three main directories:
 - **Framework:** Vitest for both frontend and backend
 - **Frontend:** Vue component testing with `@vue/test-utils`, happy-dom environment
 - **Backend:** API/route testing with `supertest`, Node.js environment
-- **Test location:** Test files (`*.spec.ts`, `*.test.ts`) are placed alongside source files
+- **Test location:** Test files (`*.spec.ts`, `*.test.ts`) in dedicated `tests/` directories
 - **Coverage:** V8 coverage provider with LCOV reports for SonarCloud integration
 - **Configuration:** 
   - `frontend/vitest.config.ts` — Frontend test config with Vue support
   - `backend/vitest.config.ts` — Backend test config with Node.js environment
-  - `frontend/src/test/setup.ts` — Global test setup with Vuetify stubs
-  - `backend/src/test/setup.ts` — Global test setup for backend
+  - `frontend/tests/setup.ts` — Global test setup with Vuetify stubs
+  - `backend/tests/setup.ts` — Global test setup for backend
 - **CI Integration:** Tests run automatically in GitHub Actions SonarCloud workflow
-- **See:** `TESTING.md` for comprehensive testing guide and examples
+- **Test UI:** Vitest UI available for visual test running (`npm run test:ui` in frontend)
 
 ## Patterns & Conventions
 
@@ -116,6 +123,36 @@ This is a multi-folder VS Code workspace with three main directories:
 - **Email, GitHub, Minecraft:** See `src/services/` for API integrations.
 - **PayPal:** Payment button in `src/components/PayPalBtn.vue`.
 - **Nginx/Docker:** For deployment, see `nginx.conf` and `Dockerfile`.
+- **SonarCloud:** Quality scanning integrated in Docker build using BuildKit secrets
+
+## Docker & Deployment
+
+### Docker Security Best Practices
+- **Secrets Management:** SONAR_TOKEN passed via BuildKit secrets (not ARG/ENV)
+  - Dockerfile uses `RUN --mount=type=secret,id=sonar_token`
+  - GitHub workflows use `secrets: sonar_token=${{ secrets.SONAR_TOKEN }}`
+  - Never expose sensitive data in build args or environment variables
+- **Multi-platform Support:** Uses `ARG TARGETPLATFORM` for dynamic platform selection
+  - Supports both linux/amd64 and linux/arm64
+  - Platform automatically set by BuildKit during multi-platform builds
+- **Non-root User:** Production stage runs as `appuser` for security
+- **Health Checks:** Built-in health monitoring via `/api/health` endpoint
+
+### Docker Build Examples
+```bash
+# Local build with secrets
+docker build --secret id=sonar_token,env=SONAR_TOKEN .
+
+# Multi-platform build
+docker buildx build --platform linux/amd64,linux/arm64 \
+  --secret id=sonar_token,env=SONAR_TOKEN .
+```
+
+### GitHub Actions Integration
+- **test-build.yml:** Automated builds on push/PR with multi-platform support
+- **docker.yml:** Production builds with versioned tags
+- Both workflows use `docker/build-push-action@v6` with secrets support
+- Automatic cache management via registry cache
 
 ## Special Notes
 
@@ -132,7 +169,7 @@ This is a multi-folder VS Code workspace with three main directories:
 - To add a new API service: add to `src/services/` (see `emailService.ts`, `githubService.ts`, `minecraftService.ts`), use TypeScript types from `src/types/`
 - To update environment/config: edit `src/constants/env.ts`
 - For cookie consent: main component is `src/components/CookieConsent.vue` with supporting components in `src/components/cookies/`
-- To add tests: create `*.spec.ts` file alongside the component/helper, use `@vue/test-utils` for component tests
+- To add tests: create `*.spec.ts` file in `tests/` directory, use `@vue/test-utils` for component tests
 
 ### Backend Development (detailed patterns in `backend/.github-copilot-instructions.md`)
 - To add a new API route: create in `src/routes/` with TypeScript types and Router pattern, import to `src/app.ts`
@@ -140,8 +177,8 @@ This is a multi-folder VS Code workspace with three main directories:
 - To add business logic: create service in `src/services/` with TypeScript interfaces and proper error handling
 - To add utilities: create helpers in `src/utils/` with TypeScript types and named exports
 - To add types: define interfaces in `src/types/index.ts` for shared type definitions
-- To add tests: create `*.spec.ts` file alongside the route/service/util, use `supertest` for API tests
+- To add tests: create `*.spec.ts` file in `tests/` directory, use `supertest` for API tests
 
 ---
 
-For more context, see `README.md`, `TESTING.md`, `vite.config.ts`, and `src/` structure.
+For more context, see `README.md`, `vite.config.ts`, and `src/` structure.
