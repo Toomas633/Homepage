@@ -1,3 +1,7 @@
+# Build arguments for multi-platform support
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
 FROM node:slim AS frontend-build
 
 WORKDIR /app/frontend
@@ -84,6 +88,7 @@ CMD ["pm2-runtime", "start", "ecosystem.config.cjs"]
 # SonarScanner stage - separate target for code quality analysis
 # Build with: docker buildx build --target sonar-scan --platform linux/amd64 ...
 # This stage only supports linux/amd64 due to SonarScanner limitations
+# NOTE: This is a separate build target and does not affect the production image
 FROM --platform=linux/amd64 sonarsource/sonar-scanner-cli:11 AS sonar-scan
 
 WORKDIR /app

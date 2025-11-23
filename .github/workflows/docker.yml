@@ -53,6 +53,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          target: production-stage
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
@@ -64,7 +65,7 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/toomas633/homepage:buildcache
           cache-to: type=registry,ref=ghcr.io/toomas633/homepage:buildcache,mode=max
 
-      - name: Run SonarQube Analysis (AMD64 only)
+      - name: Run SonarQube Analysis
         uses: docker/build-push-action@v6
         with:
           context: .

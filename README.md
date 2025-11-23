@@ -2,8 +2,9 @@
 
 <div align="center">
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/quality_gate?project=Toomas633_Homepage)](https://sonarcloud.io/summary/new_code?id=Toomas633_Homepage)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Toomas633_Homepage&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Toomas633_Homepage)
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.5.24-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.10.11-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-24+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
