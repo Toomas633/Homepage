@@ -20,18 +20,18 @@
 - **Detailed Instructions:** See `frontend/.github-copilot-instructions.md`
 - **Stack:** Vue 3.5.24 + TypeScript 5.9.3 + Vuetify 3.10.11 + Vite 7.2.4
 - **Architecture:** Component-based with strict TypeScript typing
-- **Routing:** Modular Vue Router 4 with service layer organization
+- **Routing:** Modular Vue Router 4.6.3 with service layer organization
 - **Build:** Modern Vite with extensive optimization plugins
-- **Testing:** Vitest with Vue Test Utils and happy-dom environment in `tests/` directory
+- **Testing:** Vitest 4.0.13 with Vue Test Utils 2.4.6 and happy-dom 20.0.10 in `tests/` directory
 - **When working in `frontend/`:** Always follow the patterns and conventions specified in the frontend instructions
 
 ### Backend Module (`backend/`)
 - **Detailed Instructions:** See `backend/.github-copilot-instructions.md`
-- **Stack:** Node.js 18+ (24+ recommended) with TypeScript and Express.js 5.1.0 using ESM modules
+- **Stack:** Node.js 18+ (24+ recommended) with TypeScript 5.9.3 and Express.js 5.1.0 using ESM modules
 - **Architecture:** Modular structure with TypeScript types, middleware, routes, and services
-- **Features:** CORS protection, rate limiting, email service functionality
+- **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.10 email service
 - **Security:** Environment validation, non-root Docker user, health monitoring
-- **Testing:** Vitest with supertest for API testing in `tests/` directory
+- **Testing:** Vitest 4.0.13 with supertest 7.1.4 for API testing in `tests/` directory
 - **When working in `backend/`:** Always follow the patterns and conventions specified in the backend instructions
 
 ## Workspace Structure
@@ -44,7 +44,7 @@ This is a multi-folder VS Code workspace with three main directories:
 ## Key Directories & Files
 
 ### Root Level
-- `Toomas633.code-workspace` — Multi-folder workspace configuration
+- `Homepage.code-workspace` — Multi-folder workspace configuration
 - `nginx.conf` — Nginx reverse proxy/static server config
 - `ecosystem.config.cjs` — PM2 configuration for production deployment
 - `sonar-project.properties` — SonarQube configuration for code quality analysis
