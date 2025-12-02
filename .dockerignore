@@ -49,9 +49,12 @@ README.md
 **/README.md
 LICENCE
 SECURITY.md
+docs/
+changelog/
 
 # Docker files (avoid recursion)
-Dockerfile
+# Note: Dockerfiles are needed for Hadolint scanning in sonar-scan stage
+# Dockerfile - commented out to allow copying for linting
 docker-compose.yml
 **/docker-compose.yml
 .dockerignore

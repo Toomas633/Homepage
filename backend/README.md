@@ -351,7 +351,35 @@ The `docker-compose.yml` provides:
 - **Docker**: View logs with `docker-compose logs backend`
 - **Health Status**: Check `/health` endpoint regularly
 
-## 📄 License
+## 📚 Documentation
+
+### Project Documentation
+
+- **[Main README](../README.md)** - Project overview and architecture
+- **[Frontend README](../frontend/README.md)** - Frontend application documentation
+- **[API Documentation](../docs/API.md)** - Complete API reference with code examples
+- **[Deployment Guide](../docs/DEPLOYMENT.md)** - Production deployment (Docker, VPS, SSL/TLS)
+- **[Troubleshooting](../docs/TROUBLESHOOTING.md)** - Comprehensive troubleshooting guide
+- **[Contributing Guide](../CONTRIBUTING.md)** - Contribution guidelines and workflow
+- **[Changelog](../CHANGELOG.md)** - Version history and release notes
+
+### Backend-Specific
+
+- **[Copilot Instructions](.github-copilot-instructions.md)** - AI assistant development patterns
+- **[TypeScript Config](tsconfig.json)** - TypeScript compiler settings
+- **[Vitest Config](vitest.config.ts)** - Testing framework configuration
+- **[ESLint Config](eslint.config.js)** - Code linting rules
+
+### API Reference
+
+For detailed API endpoint documentation with request/response examples, see [docs/API.md](../docs/API.md).
+
+**Endpoints**:
+
+- `GET /health` - Health check with email service verification
+- `POST /send-email` - Send contact form emails (rate limited)
+
+## 📝 License
 
 GPL-3.0-only - See [LICENSE](../LICENSE) file for details.
 
@@ -360,11 +388,11 @@ GPL-3.0-only - See [LICENSE](../LICENSE) file for details.
 1. Fork the repository
 2. Create a feature branch
 3. Make changes with proper testing
-4. Run linting: `npm run lint:fix`
+4. Run linting: `npm run lint` and `npm run prettier`
 5. Submit a pull request
 
 ---
 
-**Version**: 2.0.0  
+**Version**: 2.0.2  
 **Node.js**: 18+ (24+ recommended)  
 **License**: GPL-3.0-only

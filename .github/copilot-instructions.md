@@ -3,7 +3,7 @@
 ## Project Overview
 
 - **Name:** "Toomas633's Dungeon" - Personal projects homepage
-- **Versions:** Frontend v4.3.0, Backend v2.0.0
+- **Versions:** Frontend v4.3.2, Backend v2.0.2
 - This is a full-stack project with separate frontend and backend modules
 - **Frontend:** Vue 3 + TypeScript + Vuetify 3 in `frontend/` directory
 - **Backend:** Node.js Express server in `backend/` directory
@@ -18,20 +18,20 @@
 
 ### Frontend Module (`frontend/`)
 - **Detailed Instructions:** See `frontend/.github-copilot-instructions.md`
-- **Stack:** Vue 3.5.24 + TypeScript 5.9.3 + Vuetify 3.10.11 + Vite 7.2.4
+- **Stack:** Vue 3.5.25 + TypeScript 5.9.3 + Vuetify 3.11.0 + Vite 7.2.6
 - **Architecture:** Component-based with strict TypeScript typing
 - **Routing:** Modular Vue Router 4.6.3 with service layer organization
 - **Build:** Modern Vite with extensive optimization plugins
-- **Testing:** Vitest 4.0.13 with Vue Test Utils 2.4.6 and happy-dom 20.0.10 in `tests/` directory
+- **Testing:** Vitest 4.0.14 with Vue Test Utils 2.4.6 and happy-dom 20.0.11 in `tests/` directory
 - **When working in `frontend/`:** Always follow the patterns and conventions specified in the frontend instructions
 
 ### Backend Module (`backend/`)
 - **Detailed Instructions:** See `backend/.github-copilot-instructions.md`
-- **Stack:** Node.js 18+ (24+ recommended) with TypeScript 5.9.3 and Express.js 5.1.0 using ESM modules
+- **Stack:** Node.js 18+ (24+ recommended) with TypeScript 5.9.3 and Express.js 5.2.1 using ESM modules
 - **Architecture:** Modular structure with TypeScript types, middleware, routes, and services
-- **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.10 email service
+- **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.11 email service, body-parser 2.2.1
 - **Security:** Environment validation, non-root Docker user, health monitoring
-- **Testing:** Vitest 4.0.13 with supertest 7.1.4 for API testing in `tests/` directory
+- **Testing:** Vitest 4.0.14 with supertest 7.1.4 for API testing in `tests/` directory
 - **When working in `backend/`:** Always follow the patterns and conventions specified in the backend instructions
 
 ## Workspace Structure
@@ -49,6 +49,9 @@ This is a multi-folder VS Code workspace with three main directories:
 - `ecosystem.config.cjs` — PM2 configuration for production deployment
 - `sonar-project.properties` — SonarQube configuration for code quality analysis
 - `Dockerfile` — Root-level container configuration
+- `CONTRIBUTING.md` — Contribution guidelines and development workflow
+- `CHANGELOG.md` — Version history and release notes
+- `docs/` — Additional documentation (API, deployment, troubleshooting)
 
 ### Frontend (`frontend/`)
 - `frontend/src/` — Vue 3 app source code (components, views, services, etc.)
@@ -99,7 +102,6 @@ This is a multi-folder VS Code workspace with three main directories:
   - `frontend/tests/setup.ts` — Global test setup with Vuetify stubs
   - `backend/tests/setup.ts` — Global test setup for backend
 - **CI Integration:** Tests run automatically in GitHub Actions SonarCloud workflow
-- **Test UI:** Vitest UI available for visual test running (`npm run test:ui` in frontend)
 
 ## Patterns & Conventions
 
@@ -181,4 +183,28 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 
 ---
 
-For more context, see `README.md`, `vite.config.ts`, and `src/` structure.
+## Documentation References
+
+For comprehensive information, consult these documentation files:
+
+### Getting Started
+- **[README.md](../README.md)** - Project overview, quick start, architecture
+- **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Contribution guidelines, coding standards, PR process
+- **[CHANGELOG.md](../CHANGELOG.md)** - Version history and release notes
+
+### Module Documentation
+- **[frontend/README.md](../frontend/README.md)** - Frontend architecture, dependencies, patterns
+- **[frontend/.github-copilot-instructions.md](../frontend/.github-copilot-instructions.md)** - Frontend development patterns
+- **[backend/README.md](../backend/README.md)** - Backend architecture, API endpoints, configuration
+- **[backend/.github-copilot-instructions.md](../backend/.github-copilot-instructions.md)** - Backend development patterns
+
+### Technical Documentation
+- **[docs/API.md](../docs/API.md)** - Complete API reference with examples
+- **[docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md)** - Production deployment guide (Docker, VPS, SSL)
+- **[docs/TROUBLESHOOTING.md](../docs/TROUBLESHOOTING.md)** - Common issues and solutions
+- **[docs/DOCKER_LINTING.md](../docs/DOCKER_LINTING.md)** - Docker linting configuration
+
+### Configuration Files
+- `vite.config.ts` - Frontend build configuration
+- `tsconfig.json` - TypeScript compiler settings (both modules)
+- `vitest.config.ts` - Test configuration (both modules)

@@ -1,0 +1,47 @@
+# Hadolint Configuration for Frontend Dockerfile
+# Documentation: https://github.com/hadolint/hadolint
+# Enforces best practices with no exceptions
+
+# Trusted registries for base images
+trustedRegistries:
+  - docker.io
+  - node
+  - nginx
+
+# Fail on specific severity levels
+failure-threshold: warning
+
+# Output format for reports (checkstyle for SonarQube)
+format: checkstyle
+
+# Strict labels
+strict-labels: false
+
+# Disable inline ignore comments
+disable-ignore-pragma: false
+
+# Override specific rules
+override:
+  error:
+    - DL3001 # Avoid sudo
+    - DL3002 # Last USER should not be root
+    - DL3003 # Use WORKDIR instead of cd
+    - DL3004 # Do not use sudo
+    - DL3006 # Always tag image versions
+    - DL3007 # Using latest is not recommended
+    - DL3020 # Use COPY instead of ADD for files
+    - DL3025 # Use JSON notation for CMD and ENTRYPOINT
+    - DL4001 # Multiple consecutive RUN can be combined
+    - DL4003 # Multiple consecutive RUN can be combined (apt-get update & install)
+    - DL4006 # Set pipefail option
+
+  warning:
+    - DL3013 # Pin versions in pip
+    - DL3016 # Pin versions in npm
+    - DL3018 # Pin versions in apk add
+    - DL3028 # Pin versions in gem install
+    - DL3059 # Multiple consecutive RUN
+
+  info:
+    - DL3032 # yum clean all missing
+    - DL3033 # Specify version with yum install

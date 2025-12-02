@@ -20,7 +20,9 @@
 		"lint": "eslint src/**/* tests/**/*",
 		"scan:lint": "eslint src/**/* tests/**/* --format json --output-file .reports/eslint-report.json --no-fix",
 		"prettier": "prettier --write '**/*.{ts,js,jsx,json,css,scss,vue,html}'",
-		"type-check": "tsc --noEmit"
+		"type-check": "tsc --noEmit",
+		"docker:lint": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint < Dockerfile",
+		"scan:docker": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint hadolint --format json - < Dockerfile > .reports/hadolint-backend.json || true"
 	},
 	"dependencies": {
 		"body-parser": "^2.2.1",

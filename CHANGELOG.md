@@ -1,0 +1,166 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+For detailed release notes, see the `changelog/` directory.
+
+---
+
+## [5.1.0] - 2025-12-02
+
+### Added
+- Backend version display in UI with health endpoint version information
+- Node.js brand icon asset for technology stack visualization
+- **Hadolint Integration**: Comprehensive Docker linting for all three Dockerfiles (root, frontend, backend)
+  - Dedicated `.hadolint.yaml` configurations for each module
+  - GitHub Actions workflow for automated Docker linting
+  - SonarQube integration for Docker quality analysis
+- **Extensive Documentation Suite**:
+  - [API.md](docs/API.md) - Complete API reference with examples
+  - [DEPLOYMENT.md](docs/DEPLOYMENT.md) - Production deployment guide
+  - [DOCKER_LINTING.md](docs/DOCKER_LINTING.md) - Docker linting documentation
+  - [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) - Comprehensive troubleshooting guide
+  - [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines and workflow
+  - Versioned changelog files (v5.0.0, v5.0.1, v5.1.0)
+- Dedicated `Dockerfile-sonarscan` for SonarQube analysis
+- Improved navigation structure with submenu reorganization
+
+### Fixed
+- Docker image building process for reliable containerization
+- Failing tests across frontend and backend modules
+- Various styling issues for improved visual consistency
+- SonarQube code quality issues and technical debt
+
+### Changed
+- **Dependencies Updated**:
+  - TypeScript 5.9.3
+  - Vitest 4.0.14
+  - Express.js 5.2.1
+  - Vue 3.5.25
+  - Vuetify 3.11.0
+  - Vite 7.2.6
+- **Build Optimizations**:
+  - Enhanced multi-stage Docker builds with better layer caching
+  - Improved `.dockerignore` for reduced build context
+  - Better support for multi-platform builds (amd64, arm64)
+- **GitHub Workflows**:
+  - Enhanced docker.yml with multi-platform support
+  - Updated test-build.yml with better error handling
+  - Updated codeql.yml for security scanning
+  - Updated epic-manager.yml workflow
+- **Configuration**:
+  - Enhanced SonarQube properties with Hadolint integration
+  - Improved environment variable management
+  - Updated CORS and rate limiting configuration
+
+### Security
+- Docker best practices enforced via Hadolint
+- Updated CodeQL security scanning workflow
+- Comprehensive security guidelines in deployment documentation
+
+**Statistics**: 28 files changed, 3,569 insertions(+), 183 deletions(-)
+
+**Full Release Notes**: [changelog-5.1.0.md](changelog/changelog-5.1.0.md)
+
+---
+
+## [5.0.1] - 2025-11-23
+
+### Changed
+- Repository migrated to dedicated homepage repository
+- Renamed workspace from `Toomas633.code-workspace` to `Homepage.code-workspace`
+- Updated all documentation for new repository structure
+- Fixed PM2 ecosystem configuration
+- Updated SonarCloud project configuration
+
+### Removed
+- `DEVELOPMENT.md` in favor of module-specific README files
+
+**Full Release Notes**: [changelog-5.0.1.md](changelog/changelog-5.0.1.md)
+
+---
+
+## [5.0.0] - 2025-11-22
+
+### Added
+- **Complete Project Restructure**: Migrated from monolithic to multi-module architecture
+- **Backend Module**: New Express.js TypeScript backend with email service
+- **Frontend Module**: Refactored Vue 3 application with improved structure
+- **Testing**: Comprehensive test suites with Vitest for both modules
+- **Docker Support**: Multi-stage Docker builds with docker-compose
+- **Code Quality**: ESLint, Prettier, Stylelint, and SonarCloud integration
+- **Documentation**: Extensive README files and development guides
+
+### Frontend (v4.3.0)
+- Vue 3.5.24 with Composition API
+- Vuetify 3 for Material Design
+- Vite 7.0.5 build system
+- TypeScript 5.7.2
+- Comprehensive testing with Vitest
+
+### Backend (v2.0.0)
+- Express.js 5.1.0 with TypeScript
+- Nodemailer email service
+- CORS and rate limiting
+- Health monitoring endpoints
+- ESM modules with strict TypeScript
+
+### DevOps
+- Multi-stage Docker builds
+- PM2 process management
+- Nginx configuration
+- GitHub Actions workflows
+- SonarCloud quality gates
+
+**Full Release Notes**: [changelog-5.0.0.md](changelog/changelog-5.0.0.md)
+
+---
+
+## Version History
+
+| Version | Date | Type | Description |
+|---------|------|------|-------------|
+| **5.1.0** | 2025-12-02 | Minor | Backend version display, navigation improvements, Hadolint integration, extensive documentation, dependency updates |
+| **5.0.1** | 2025-11-23 | Patch | Repository migration, documentation updates |
+| **5.0.0** | 2025-11-22 | Major | Complete restructure to multi-module architecture |
+
+---
+
+## Versioning Scheme
+
+This project uses **semantic versioning** (SemVer):
+
+- **Major version** (X.0.0): Breaking changes, major architectural changes
+- **Minor version** (X.Y.0): New features, non-breaking changes
+- **Patch version** (X.Y.Z): Bug fixes, small improvements
+
+### Module Versions
+
+The project consists of two main modules with independent versioning:
+
+- **Frontend**: Currently v4.3.2
+- **Backend**: Currently v2.0.2
+
+The overall project version (5.x.x) represents the combined release version.
+
+---
+
+## Links
+
+- **Repository**: [https://github.com/Toomas633/homepage](https://github.com/Toomas633/homepage)
+- **Live Site**: [https://toomas633.com](https://toomas633.com)
+- **Issues**: [https://github.com/Toomas633/homepage/issues](https://github.com/Toomas633/homepage/issues)
+- **SonarCloud**: [https://sonarcloud.io/project/overview?id=Toomas633_Homepage](https://sonarcloud.io/project/overview?id=Toomas633_Homepage)
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+---
+
+**Note**: Detailed release notes for each version are available in the `changelog/` directory.

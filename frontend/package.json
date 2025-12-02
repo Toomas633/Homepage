@@ -16,7 +16,9 @@
 		"prettier": "prettier --write '**/*.{ts,js,jsx,json,css,scss,vue,html}'",
 		"type-check": "vue-tsc --noEmit",
 		"scan:lint": "eslint src/**/*.{ts,vue} tests/**/*.{ts,vue} plugins/**/*.{ts,mjs} --format json --output-file .reports/eslint-report.json --no-fix",
-		"scan:stylelint": "stylelint src/**/*.{css,scss,vue} tests/**/*.{css,scss,vue} --f json -o .reports/stylelint-report.json"
+		"scan:stylelint": "stylelint src/**/*.{css,scss,vue} tests/**/*.{css,scss,vue} --f json -o .reports/stylelint-report.json",
+		"docker:lint": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint < Dockerfile",
+		"scan:docker": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint hadolint --format json - < Dockerfile > .reports/hadolint-frontend.json || true"
 	},
 	"dependencies": {
 		"@basitcodeenv/vue3-device-detect": "^1.0.3",

@@ -3,11 +3,12 @@
 <div align="center">
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Toomas633_Homepage&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Toomas633_Homepage)
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.24-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.10.11-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.0-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-24+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
+[![Test Build](https://github.com/Toomas633/Homepage/actions/workflows/test-build.yml/badge.svg)](https://github.com/Toomas633/Homepage/actions/workflows/test-build.yml)
 
 **A modern full-stack personal projects homepage built with Vue 3, TypeScript, and Node.js**
 
@@ -28,6 +29,7 @@
 - [Docker Deployment](#-docker-deployment)
 - [Configuration](#-configuration)
 - [Contributing](#-contributing)
+- [Documentation](#-additional-resources)
 - [License](#-license)
 
 ---
@@ -49,20 +51,20 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 
 ### Tech Stack
 
-#### Frontend (v4.3.0)
-- **Framework**: Vue 3.5.24 with Composition API
+#### Frontend (v4.3.2)
+- **Framework**: Vue 3.5.25 with Composition API
 - **Language**: TypeScript 5.9.3
-- **UI Library**: Vuetify 3.10.11
-- **Build Tool**: Vite 7.2.4
+- **UI Library**: Vuetify 3.11.0
+- **Build Tool**: Vite 7.2.6
 - **Router**: Vue Router 4.6.3
 - **HTTP Client**: Axios 1.13.2
 - **Maps**: Leaflet 1.9.4
 
-#### Backend (v2.0.0)
+#### Backend (v2.0.2)
 - **Runtime**: Node.js 18+ (24+ recommended)
-- **Framework**: Express.js 5.1.0
+- **Framework**: Express.js 5.2.1
 - **Language**: TypeScript 5.9.3 with ESM modules
-- **Email**: Nodemailer 7.0.10
+- **Email**: Nodemailer 7.0.11
 - **Security**: CORS 2.8.5, Rate Limiting 8.2.1
 
 ---
@@ -197,7 +199,7 @@ docker build -t toomas633-dungeon .
 docker run -d -p 80:80 --env-file backend/.env toomas633-dungeon
 ```
 
-See [Docker Deployment](#-docker-deployment) for detailed instructions.
+See [Docker Deployment](#-docker-deployment) section below for detailed instructions, or [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for production deployment guide.
 
 ---
 
@@ -241,7 +243,7 @@ npm run type-check
 - `src/router/` - Vue Router configuration
 - `src/plugins/vuetify.ts` - Vuetify setup
 
-See [Frontend Documentation](frontend/README.md) for detailed patterns and conventions.
+See [Frontend Documentation](frontend/README.md) for detailed patterns and conventions, or [frontend/.github-copilot-instructions.md](frontend/.github-copilot-instructions.md) for AI-assisted development patterns.
 
 ### Backend Development
 
@@ -272,7 +274,7 @@ npm run type-check
 - `src/middleware/` - CORS, rate limiting, etc.
 - `src/services/` - Business logic services
 
-See [Backend Documentation](backend/README.md) for detailed patterns and conventions.
+See [Backend Documentation](backend/README.md) for detailed patterns and conventions, or [backend/.github-copilot-instructions.md](backend/.github-copilot-instructions.md) for AI-assisted development patterns.
 
 ### Development Workflow
 
@@ -719,10 +721,12 @@ Located in `backend/.env`:
 ### API Endpoints
 
 | Endpoint          | Method | Description                  | Rate Limit          |
-|-------------------|--------|------------------------------|---------------------|
+|-------------------|--------|------------------------------|--------------------- |
 | `/health`         | GET    | Server health status         | None                |
 | `/api/health`     | GET    | Health check (via Nginx)     | None                |
 | `/api/send-email` | POST   | Send contact form email      | 10 req / 15 min     |
+
+For detailed API documentation with request/response examples, see [docs/API.md](docs/API.md).
 
 ---
 
@@ -740,6 +744,8 @@ Contributions are welcome! Please follow these guidelines:
 8. **Build** to verify: `npm run build`
 9. **Commit** with clear messages
 10. **Push** and create a Pull Request
+
+For detailed contribution guidelines, coding standards, and development workflow, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Code Quality Standards
 
@@ -759,8 +765,19 @@ Contributions are welcome! Please follow these guidelines:
 
 ## 📚 Additional Resources
 
+### Documentation
+
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and development workflow
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history and release notes
 - **[Frontend Documentation](frontend/README.md)** - Vue 3 setup, components, and patterns
 - **[Backend Documentation](backend/README.md)** - Express.js API, services, and middleware
+- **[API Documentation](docs/API.md)** - Complete API reference with code examples
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment (Docker, VPS, SSL/TLS)
+- **[Troubleshooting Guide](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+- **[Docker Linting](docs/DOCKER_LINTING.md)** - Docker best practices and linting
+
+### Configuration Files
+
 - **[Nginx Configuration](nginx.conf)** - Web server and proxy settings
 - **[PM2 Configuration](ecosystem.config.cjs)** - Process management setup
 - **[Docker Compose](docker-compose.yml)** - Container orchestration
