@@ -158,6 +158,9 @@
 			color="primary"
 			density="compact"
 			nav>
+			<h3 class="text-center">{{ navSelection[0].toLocaleUpperCase() }}</h3>
+			<v-divider class="border-opacity-100" thickness="2" color="primary" />
+			<v-separator />
 			<v-list-item
 				v-for="item in drawerItems"
 				:key="item.title"
