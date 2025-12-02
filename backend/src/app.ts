@@ -44,45 +44,42 @@ app.use(
 )
 
 export const startServer = async (): Promise<void> => {
-	try {
-		logWithTimestamp('info', 'Verifying email server connection...')
-		const transporter = createTransporter()
-		const duration = await verifyEmailConnection(transporter)
-		logWithTimestamp('info', 'Email server connection verified', duration)
-
-		const server: Server = app.listen(config.server.port, () => {
+	logWithTimestamp('info', 'Verifying email server connection...')
+	const transporter = createTransporter()
+	verifyEmailConnection(transporter)
+		.then((duration) => {
+			logWithTimestamp('info', 'Email server connection verified', duration)
+		})
+		.catch((err) => {
 			logWithTimestamp(
-				'info',
-				`Backend listening on port ${config.server.port}`
+				'warn',
+				'Email server connection failed - email features may be unavailable'
 			)
+			const errorInfo =
+				err instanceof Error
+					? objectToString({
+							name: err.name,
+							message: err.message,
+							stack: err.stack,
+						})
+					: 'Unknown error'
+			console.error(errorInfo)
 		})
 
-		const gracefulShutdown = (signal: string): void => {
-			logWithTimestamp('info', `${signal} received, shutting down gracefully`)
-			server.close(() => {
-				logWithTimestamp('info', 'Server closed')
-				process.exit(0)
-			})
-		}
+	const server: Server = app.listen(config.server.port, () => {
+		logWithTimestamp('info', `Backend listening on port ${config.server.port}`)
+	})
 
-		process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
-		process.on('SIGINT', () => gracefulShutdown('SIGINT'))
-	} catch (err) {
-		logWithTimestamp(
-			'error',
-			'Failed to verify email server connection at startup'
-		)
-		const errorInfo =
-			err instanceof Error
-				? objectToString({
-						name: err.name,
-						message: err.message,
-						stack: err.stack,
-					})
-				: 'Unknown error'
-		console.error(errorInfo)
-		process.exit(1)
+	const gracefulShutdown = (signal: string): void => {
+		logWithTimestamp('info', `${signal} received, shutting down gracefully`)
+		server.close(() => {
+			logWithTimestamp('info', 'Server closed')
+			process.exit(0)
+		})
 	}
+
+	process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
+	process.on('SIGINT', () => gracefulShutdown('SIGINT'))
 }
 
 // Only start server if this module is run directly (not imported in tests)

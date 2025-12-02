@@ -16,7 +16,7 @@ describe('Email Route', () => {
 	beforeEach(() => {
 		app = express()
 		app.use(express.json())
-		app.use('/api/email', emailRouter)
+		app.use(emailRouter)
 		vi.clearAllMocks()
 	})
 
@@ -29,7 +29,7 @@ describe('Email Route', () => {
 
 			vi.spyOn(emailService, 'sendEmail').mockResolvedValue(mockInfo)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test Project',
@@ -49,7 +49,7 @@ describe('Email Route', () => {
 			const error = new Error('SMTP connection failed')
 			vi.spyOn(emailService, 'sendEmail').mockRejectedValue(error)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test Project',
@@ -67,7 +67,7 @@ describe('Email Route', () => {
 			error.name = 'TimeoutError'
 			vi.spyOn(emailService, 'sendEmail').mockRejectedValue(error)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test Project',
@@ -89,7 +89,7 @@ describe('Email Route', () => {
 			}
 
 			const response = await request(app)
-				.post('/api/email/send-email')
+				.post('/api/send-email')
 				.send(emailData)
 
 			expect(response.status).toBe(200)
@@ -100,7 +100,7 @@ describe('Email Route', () => {
 			const mockInfo = { messageId: 'test-id' }
 			vi.spyOn(emailService, 'sendEmail').mockResolvedValue(mockInfo)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Message with <html> tags & special "characters"',
 				project: 'Test',
@@ -120,7 +120,7 @@ describe('Email Route', () => {
 
 			const longMessage = 'A'.repeat(5000)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: longMessage,
 				project: 'Test',
@@ -132,7 +132,7 @@ describe('Email Route', () => {
 		it('should handle non-Error exceptions', async () => {
 			vi.spyOn(emailService, 'sendEmail').mockRejectedValue('String error')
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test',
@@ -147,7 +147,7 @@ describe('Email Route', () => {
 			const error = new Error('Detailed error')
 			vi.spyOn(emailService, 'sendEmail').mockRejectedValue(error)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test',
@@ -165,7 +165,7 @@ describe('Email Route', () => {
 			}
 			vi.spyOn(emailService, 'sendEmail').mockResolvedValue(mockInfo)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test',
@@ -183,7 +183,7 @@ describe('Email Route', () => {
 			error.name = 'AuthenticationError'
 			vi.spyOn(emailService, 'sendEmail').mockRejectedValue(error)
 
-			const response = await request(app).post('/api/email/send-email').send({
+			const response = await request(app).post('/api/send-email').send({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test',

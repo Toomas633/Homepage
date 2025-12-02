@@ -70,6 +70,17 @@
 								max-width="32" />
 						</template>
 					</v-tooltip>
+					<v-tooltip :text="`Backend ${backendVersion}`" location="right">
+						<template #activator="{ props }">
+							<v-img
+								v-bind="props"
+								:src="NodeJS"
+								class="mx-1 nodejs"
+								alt="Node.js icon"
+								max-height="32"
+								max-width="32" />
+						</template>
+					</v-tooltip>
 				</div>
 			</div>
 			<v-list density="compact" nav>
@@ -167,6 +178,7 @@ import { MenuItem } from '@/types/menuItem'
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import Vue from '@/assets/icons/brands/vue.svg'
 import Vuetify from '@/assets/icons/brands/vuetify.svg'
+import NodeJS from '@/assets/icons/brands/nodejs.svg'
 import useThemeMixin from '@/helpers/themeMixin'
 import { isMobile } from '@basitcodeenv/vue3-device-detect'
 import { projectRoutes } from '@/router/projects'
@@ -174,6 +186,7 @@ import { demoRoutes } from '@/router/demos'
 import { RouteRecord } from '@/types/route'
 import { archiveRoutes } from '@/router/archive'
 import { serversRoutes } from '@/router/servers'
+import { getBackendVersion } from '@/services/backendService'
 
 const isRail = ref(true)
 const fullyExpanded = ref(false)
@@ -181,6 +194,7 @@ const secondDrawer = ref(false)
 const navSelection = ref<string[]>([])
 const secondSelection = ref<string[]>([])
 const drawerItems = ref<MenuItem[]>([])
+const backendVersion = ref<string>('Loading...')
 
 let expandTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -270,9 +284,10 @@ watch(navSelection, (val, oldVal) => {
 	secondDrawer.value = drawerItems.value.length > 0
 })
 
-onMounted(() => {
+onMounted(async () => {
 	document.addEventListener('click', handleGlobalClick, { passive: true })
 	document.addEventListener('touchstart', handleGlobalClick, { passive: true })
+	backendVersion.value = await getBackendVersion()
 })
 
 function handleMouseEnter() {
@@ -344,5 +359,9 @@ onBeforeUnmount(() => {
 
 .vue:hover {
 	filter: drop-shadow(0 0 0.5rem #41b883);
+}
+
+.nodejs:hover {
+	filter: drop-shadow(0 0 0.5rem #539e43);
 }
 </style>
