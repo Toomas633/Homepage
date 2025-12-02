@@ -1,7 +1,7 @@
 {
 	"name": "toomas633s-dungeon-backend",
 	"description": "Backend server for Toomas633's projects homepage",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"private": true,
 	"license": "GPL-3.0-only",
 	"type": "module",
@@ -23,31 +23,31 @@
 		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
-		"body-parser": "^2.2.0",
+		"body-parser": "^2.2.1",
 		"cors": "^2.8.5",
 		"dotenv": "^17.2.3",
-		"express": "^5.1.0",
+		"express": "^5.2.1",
 		"express-rate-limit": "^8.2.1",
-		"nodemailer": "^7.0.10"
+		"nodemailer": "^7.0.11"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.39.1",
 		"@types/body-parser": "^1.19.6",
 		"@types/cors": "^2.8.19",
-		"@types/express": "^5.0.5",
+		"@types/express": "^5.0.6",
 		"@types/node": "^24.10.1",
 		"@types/nodemailer": "^7.0.4",
 		"@types/supertest": "^6.0.3",
-		"@typescript-eslint/eslint-plugin": "^8.47.0",
-		"@typescript-eslint/parser": "^8.47.0",
-		"@vitest/coverage-v8": "^4.0.13",
+		"@typescript-eslint/eslint-plugin": "^8.48.1",
+		"@typescript-eslint/parser": "^8.48.1",
+		"@vitest/coverage-v8": "^4.0.14",
 		"eslint": "^9.39.1",
 		"eslint-plugin-prettier": "^5.5.4",
 		"globals": "^16.5.0",
-		"prettier": "^3.6.2",
+		"prettier": "^3.7.3",
 		"supertest": "^7.1.4",
-		"tsx": "^4.20.6",
+		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
-		"vitest": "^4.0.13"
+		"vitest": "^4.0.14"
 	}
 }
