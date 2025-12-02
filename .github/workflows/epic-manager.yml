@@ -2,12 +2,6 @@ name: Epic Manager
 
 on:
   issues:
-    types:
-      - closed
-      - reopened
-      - edited
-      - labeled
-      - unlabeled
   workflow_dispatch:
     inputs:
       issue_number:
