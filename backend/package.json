@@ -12,7 +12,7 @@
 		"npm": ">=8.0.0"
 	},
 	"scripts": {
-		"build": "tsc",
+		"build": "node esbuild.config.js",
 		"start": "node dist/app.js",
 		"dev": "tsx watch src/app.ts",
 		"test": "vitest",
@@ -20,9 +20,7 @@
 		"lint": "eslint src/**/* tests/**/*",
 		"scan:lint": "eslint src/**/* tests/**/* --format json --output-file .reports/eslint-report.json --no-fix",
 		"prettier": "prettier --write '**/*.{ts,js,jsx,json,css,scss,vue,html}'",
-		"type-check": "tsc --noEmit",
-		"docker:lint": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint < Dockerfile",
-		"scan:docker": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint hadolint --format json - < Dockerfile > .reports/hadolint-backend.json || true"
+		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
 		"body-parser": "^2.2.1",
@@ -42,14 +40,15 @@
 		"@types/supertest": "^6.0.3",
 		"@typescript-eslint/eslint-plugin": "^8.48.1",
 		"@typescript-eslint/parser": "^8.48.1",
-		"@vitest/coverage-v8": "^4.0.14",
+		"@vitest/coverage-v8": "^4.0.15",
+		"esbuild": "^0.27.1",
 		"eslint": "^9.39.1",
 		"eslint-plugin-prettier": "^5.5.4",
 		"globals": "^16.5.0",
-		"prettier": "^3.7.3",
+		"prettier": "^3.7.4",
 		"supertest": "^7.1.4",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
-		"vitest": "^4.0.14"
+		"vitest": "^4.0.15"
 	}
 }

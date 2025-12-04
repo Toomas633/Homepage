@@ -54,7 +54,7 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
    **For production**:
 
    ```bash
-   npm run build  # Compile TypeScript
+   npm run build  # Compile TypeScript with esbuild
    npm start      # Run compiled JavaScript
    ```
 
@@ -110,17 +110,17 @@ ALLOWED_ORIGINS=http://localhost:5173,https://yourdomain.com
 
 ## 🔧 Available Scripts
 
-| Command                 | Description                              |
-| :---------------------- | :--------------------------------------- |
-| `npm run build`         | Compile TypeScript to JavaScript         |
-| `npm start`             | Start production server (requires build) |
-| `npm run dev`           | Start with hot reload (tsx watch mode)   |
-| `npm run test`          | Run tests in watch mode                  |
-| `npm run test:coverage` | Run tests with coverage report           |
-| `npm run lint`          | Check code style and errors              |
-| `npm run scan:lint`     | Generate ESLint report for SonarQube     |
-| `npm run prettier`      | Format TypeScript files with Prettier    |
-| `npm run type-check`    | TypeScript type checking (no emit)       |
+| Command                 | Description                                   |
+| :---------------------- | :-------------------------------------------- |
+| `npm run build`         | Compile TypeScript to JavaScript with esbuild |
+| `npm start`             | Start production server (requires build)      |
+| `npm run dev`           | Start with hot reload (tsx watch mode)        |
+| `npm run test`          | Run tests in watch mode                       |
+| `npm run test:coverage` | Run tests with coverage report                |
+| `npm run lint`          | Check code style and errors                   |
+| `npm run scan:lint`     | Generate ESLint report for SonarQube          |
+| `npm run prettier`      | Format TypeScript files with Prettier         |
+| `npm run type-check`    | TypeScript type checking (no emit)            |
 
 ## 🧪 Testing
 

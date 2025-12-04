@@ -9,7 +9,7 @@ For detailed release notes, see the `changelog/` directory.
 
 ---
 
-## [5.1.0] - 2025-12-02
+## [5.1.0] - 2025-12-04
 
 ### Added
 - Backend version display in UI with health endpoint version information
@@ -27,6 +27,7 @@ For detailed release notes, see the `changelog/` directory.
   - Versioned changelog files (v5.0.0, v5.0.1, v5.1.0)
 - Dedicated `Dockerfile-sonarscan` for SonarQube analysis
 - Improved navigation structure with submenu reorganization
+- **esbuild Integration**: Fast JavaScript bundler for backend production builds
 
 ### Fixed
 - Docker image building process for reliable containerization
@@ -37,15 +38,25 @@ For detailed release notes, see the `changelog/` directory.
 ### Changed
 - **Dependencies Updated**:
   - TypeScript 5.9.3
-  - Vitest 4.0.14
+  - Vitest 4.0.15
   - Express.js 5.2.1
   - Vue 3.5.25
-  - Vuetify 3.11.0
+  - Vuetify 3.11.2
   - Vite 7.2.6
+  - Prettier 3.7.4
+  - esbuild 0.27.1 (backend build tool)
+  - Axios 1.13.2
+  - Nodemailer 7.0.11
 - **Build Optimizations**:
+  - Backend now uses esbuild for fast production builds (replacing tsc)
   - Enhanced multi-stage Docker builds with better layer caching
   - Improved `.dockerignore` for reduced build context
   - Better support for multi-platform builds (amd64, arm64)
+- **Documentation Updates**:
+  - All READMEs updated with current dependency versions
+  - Copilot instructions updated for frontend, backend, and root
+  - API documentation updated with latest endpoint information
+  - Deployment guide enhanced with esbuild references
 - **GitHub Workflows**:
   - Enhanced docker.yml with multi-platform support
   - Updated test-build.yml with better error handling
@@ -123,7 +134,7 @@ For detailed release notes, see the `changelog/` directory.
 
 | Version | Date | Type | Description |
 |---------|------|------|-------------|
-| **5.1.0** | 2025-12-02 | Minor | Backend version display, navigation improvements, Hadolint integration, extensive documentation, dependency updates |
+| **5.1.0** | 2025-12-04 | Minor | Backend version display, navigation improvements, Hadolint integration, esbuild build tool, extensive documentation, dependency updates |
 | **5.0.1** | 2025-11-23 | Patch | Repository migration, documentation updates |
 | **5.0.0** | 2025-11-22 | Major | Complete restructure to multi-module architecture |
 

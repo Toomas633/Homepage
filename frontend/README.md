@@ -5,7 +5,7 @@
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7.2.6-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.0-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.2-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 
 ## 🏗️ Architecture
 

@@ -646,4 +646,4 @@ docker system prune  # Clean up (careful!)
 
 ---
 
-**Last Updated**: December 2, 2025
+**Last Updated**: December 4, 2025

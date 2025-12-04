@@ -84,8 +84,8 @@
 		"**/.vscode": true
 	},
 	"files.exclude": {
-		"**/node_modules": true,
-		"**/dist": true
+		"**/node_modules": false,
+		"**/dist": false
 	},
 	"emmet.includeLanguages": {
 		"vue": "html",

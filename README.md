@@ -54,18 +54,21 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 #### Frontend (v4.3.2)
 - **Framework**: Vue 3.5.25 with Composition API
 - **Language**: TypeScript 5.9.3
-- **UI Library**: Vuetify 3.11.0
+- **UI Library**: Vuetify 3.11.2
 - **Build Tool**: Vite 7.2.6
 - **Router**: Vue Router 4.6.3
 - **HTTP Client**: Axios 1.13.2
 - **Maps**: Leaflet 1.9.4
+- **Testing**: Vitest 4.0.15
 
 #### Backend (v2.0.2)
 - **Runtime**: Node.js 18+ (24+ recommended)
 - **Framework**: Express.js 5.2.1
 - **Language**: TypeScript 5.9.3 with ESM modules
+- **Build Tool**: esbuild 0.27.1
 - **Email**: Nodemailer 7.0.11
 - **Security**: CORS 2.8.5, Rate Limiting 8.2.1
+- **Testing**: Vitest 4.0.15
 
 ---
 

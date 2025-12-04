@@ -18,11 +18,11 @@
 
 ### Frontend Module (`frontend/`)
 - **Detailed Instructions:** See `frontend/.github-copilot-instructions.md`
-- **Stack:** Vue 3.5.25 + TypeScript 5.9.3 + Vuetify 3.11.0 + Vite 7.2.6
+- **Stack:** Vue 3.5.25 + TypeScript 5.9.3 + Vuetify 3.11.2 + Vite 7.2.6
 - **Architecture:** Component-based with strict TypeScript typing
 - **Routing:** Modular Vue Router 4.6.3 with service layer organization
 - **Build:** Modern Vite with extensive optimization plugins
-- **Testing:** Vitest 4.0.14 with Vue Test Utils 2.4.6 and happy-dom 20.0.11 in `tests/` directory
+- **Testing:** Vitest 4.0.15 with Vue Test Utils 2.4.6 and happy-dom 20.0.11 in `tests/` directory
 - **When working in `frontend/`:** Always follow the patterns and conventions specified in the frontend instructions
 
 ### Backend Module (`backend/`)
@@ -31,7 +31,8 @@
 - **Architecture:** Modular structure with TypeScript types, middleware, routes, and services
 - **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.11 email service, body-parser 2.2.1
 - **Security:** Environment validation, non-root Docker user, health monitoring
-- **Testing:** Vitest 4.0.14 with supertest 7.1.4 for API testing in `tests/` directory
+- **Testing:** Vitest 4.0.15 with supertest 7.1.4 for API testing in `tests/` directory
+- **Build:** esbuild 0.27.1 for fast production builds
 - **When working in `backend/`:** Always follow the patterns and conventions specified in the backend instructions
 
 ## Workspace Structure
@@ -76,7 +77,7 @@ This is a multi-folder VS Code workspace with three main directories:
 - **Frontend test:** `npm run test` (Vitest in watch mode)
 - **Frontend coverage:** `npm run test:coverage` (generates coverage reports)
 - **Backend dev:** `npm run dev` (tsx watch, hot reload) — See backend instructions for TypeScript patterns
-- **Backend build:** `npm run build` (TypeScript compilation to `dist/`) — Compiles TS to JS
+- **Backend build:** `npm run build` (TypeScript compilation with esbuild to `dist/`) — Fast bundler
 - **Backend test:** `npm run test` (Vitest in watch mode)
 - **Backend coverage:** `npm run test:coverage` (generates coverage reports)
 - **Backend prod:** `node backend/dist/app.js` (or use `ecosystem.config.js` for PM2)

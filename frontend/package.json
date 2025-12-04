@@ -16,9 +16,7 @@
 		"prettier": "prettier --write '**/*.{ts,js,jsx,json,css,scss,vue,html}'",
 		"type-check": "vue-tsc --noEmit",
 		"scan:lint": "eslint src/**/*.{ts,vue} tests/**/*.{ts,vue} plugins/**/*.{ts,mjs} --format json --output-file .reports/eslint-report.json --no-fix",
-		"scan:stylelint": "stylelint src/**/*.{css,scss,vue} tests/**/*.{css,scss,vue} --f json -o .reports/stylelint-report.json",
-		"docker:lint": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint < Dockerfile",
-		"scan:docker": "docker run --rm -v ${PWD}/.hadolint.yaml:/root/.config/hadolint.yaml -i hadolint/hadolint hadolint --format json - < Dockerfile > .reports/hadolint-frontend.json || true"
+		"scan:stylelint": "stylelint src/**/*.{css,scss,vue} tests/**/*.{css,scss,vue} --f json -o .reports/stylelint-report.json"
 	},
 	"dependencies": {
 		"@basitcodeenv/vue3-device-detect": "^1.0.3",
@@ -27,7 +25,7 @@
 		"vue": "^3.5.25",
 		"vue-cookies": "^1.8.6",
 		"vue-router": "^4.6.3",
-		"vuetify": "^3.11.0"
+		"vuetify": "^3.11.2"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.3",
@@ -40,7 +38,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.48.1",
 		"@typescript-eslint/parser": "^8.48.1",
 		"@vitejs/plugin-vue": "^6.0.2",
-		"@vitest/coverage-v8": "^4.0.14",
+		"@vitest/coverage-v8": "^4.0.15",
 		"@vue/test-utils": "^2.4.6",
 		"@vueuse/head": "^2.0.0",
 		"eslint": "^9.39.1",
@@ -52,14 +50,14 @@
 		"globals": "^16.5.0",
 		"happy-dom": "^20.0.11",
 		"jsdom": "^27.2.0",
-		"prettier": "^3.7.3",
+		"prettier": "^3.7.4",
 		"sass": "^1.94.2",
 		"sitemap": "^9.0.0",
 		"stylelint": "^16.26.1",
 		"stylelint-config-recommended-scss": "^16.0.2",
 		"stylelint-config-recommended-vue": "^1.6.1",
 		"stylelint-config-standard": "^39.0.1",
-		"stylelint-scss": "^6.12.1",
+		"stylelint-scss": "^6.13.0",
 		"supertest": "^7.1.4",
 		"terser": "^5.44.1",
 		"typescript": "^5.9.3",
@@ -69,7 +67,7 @@
 		"vite-plugin-compression": "^0.5.1",
 		"vite-plugin-vue-devtools": "^8.0.5",
 		"vite-plugin-vuetify": "^2.1.2",
-		"vitest": "^4.0.14",
+		"vitest": "^4.0.15",
 		"vue-eslint-parser": "^10.2.0",
 		"vue-tsc": "^3.1.5"
 	}

@@ -36,10 +36,6 @@ WORKDIR /app
 COPY .hadolint.yaml /app/
 COPY Dockerfile /app/
 COPY Dockerfile-sonarscan /app/
-COPY frontend/Dockerfile /app/frontend/
-COPY frontend/.hadolint.yaml /app/frontend/
-COPY backend/Dockerfile /app/backend/
-COPY backend/.hadolint.yaml /app/backend/
 
 RUN mkdir -p .reports frontend/.reports backend/.reports
 
@@ -50,9 +46,7 @@ RUN hadolint --config .hadolint.yaml --format json Dockerfile > .reports/hadolin
     wait
 
 RUN sed -i 's|"file":"Dockerfile"|"file":"./Dockerfile"|g' .reports/hadolint-root.json && \
-    sed -i 's|"file":"Dockerfile-sonarscan"|"file":"./Dockerfile-sonarscan"|g' .reports/hadolint-sonarscan.json && \
-    sed -i 's|"file":"frontend/Dockerfile"|"file":"./Dockerfile"|g' frontend/.reports/hadolint-frontend.json && \
-    sed -i 's|"file":"backend/Dockerfile"|"file":"./Dockerfile"|g' backend/.reports/hadolint-backend.json
+    sed -i 's|"file":"Dockerfile-sonarscan"|"file":"./Dockerfile-sonarscan"|g' .reports/hadolint-sonarscan.json
 
 FROM sonarsource/sonar-scanner-cli:11 AS sonar-scan
 
@@ -61,13 +55,9 @@ WORKDIR /app
 COPY --from=frontend-scan /app/frontend /app/frontend
 COPY --from=backend-scan /app/backend /app/backend
 COPY --from=hadolint-scan /app/.reports /app/.reports
-COPY --from=hadolint-scan /app/frontend/.reports /app/frontend/.reports
-COPY --from=hadolint-scan /app/backend/.reports /app/backend/.reports
 
 COPY Dockerfile ./Dockerfile
 COPY Dockerfile-sonarscan ./Dockerfile-sonarscan
-COPY frontend/Dockerfile ./frontend/Dockerfile
-COPY backend/Dockerfile ./backend/Dockerfile
 
 COPY .git ./.git
 COPY sonar-project.properties ./

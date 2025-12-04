@@ -5,15 +5,9 @@ import {
 	verifyEmailConnection,
 } from '../services/emailService.js'
 import { healthRateLimiter } from '../middleware/rateLimiter.js'
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const packageJson = JSON.parse(
-	readFileSync(join(__dirname, '../../package.json'), 'utf-8')
-)
+// Version is injected at build time or use environment variable
+const APP_VERSION = process.env.APP_VERSION || '2.0.2'
 
 interface HealthResponse {
 	status: 'healthy' | 'unhealthy'
@@ -41,7 +35,7 @@ router.get(
 			res.status(200).json({
 				status: 'healthy',
 				timestamp,
-				version: packageJson.version,
+				version: APP_VERSION,
 				email: {
 					status: 'connected',
 					responseTime: `${emailCheckDuration}ms`,
@@ -53,7 +47,7 @@ router.get(
 			res.status(503).json({
 				status: 'unhealthy',
 				timestamp,
-				version: packageJson.version,
+				version: APP_VERSION,
 				email: {
 					status: 'disconnected',
 					error: errorMessage,

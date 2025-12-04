@@ -520,5 +520,5 @@ For API issues or questions:
 
 ---
 
-**Last Updated**: December 2, 2025  
+**Last Updated**: December 4, 2025  
 **API Version**: 2.0.2

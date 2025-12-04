@@ -10,6 +10,7 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"declaration": false,
+		"rootDir": "./src",
 		"outDir": "./dist",
 		"removeComments": true,
 		"resolveJsonModule": true,
@@ -21,12 +22,12 @@
 		"types": ["node"]
 	},
 	"include": [
-		"src/**/*",
-		"tests/**/*"
+		"src/**/*"
 	],
 	"exclude": [
 		"node_modules",
-		"dist"
+		"dist",
+		"tests"
 	],
 	"ts-node": {
 		"esm": true,

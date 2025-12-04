@@ -1,10 +1,10 @@
 # Release Notes - v5.1.0
 
-**Release Date:** December 2, 2025
+**Release Date:** December 4, 2025
 
 ## Overview
 
-This minor release includes new features for backend version display, bug fixes, test improvements, extensive documentation additions, Docker linting with Hadolint, build optimizations, and dependency upgrades across both frontend and backend modules. Key highlights include backend version display in the UI, navigation improvements, comprehensive Docker linting setup, and production-ready documentation suite.
+This minor release includes new features for backend version display, bug fixes, test improvements, extensive documentation additions, Docker linting with Hadolint, build optimizations with esbuild, and dependency upgrades across both frontend and backend modules. Key highlights include backend version display in the UI, navigation improvements, comprehensive Docker linting setup, esbuild integration for faster backend builds, and production-ready documentation suite.
 
 ## ✨ New Features
 
@@ -52,6 +52,7 @@ This minor release includes new features for backend version display, bug fixes,
 - **Layer Caching**: Improved build layer organization for better cache utilization
 - **Context Reduction**: Enhanced `.dockerignore` to reduce build context size
 - **Parallel Builds**: Better support for multi-platform builds (amd64, arm64)
+- **esbuild Integration**: Backend now uses esbuild 0.27.1 for fast production builds instead of tsc, significantly improving build times
 
 ### Code Quality Tooling
 
@@ -67,18 +68,24 @@ This minor release includes new features for backend version display, bug fixes,
 ### Backend Dependencies
 
 - TypeScript 5.9.3
-- Vitest 4.0.14
 - Express.js 5.2.1
 - Nodemailer 7.0.11
+- esbuild 0.27.1 (new fast bundler for production builds)
+- Vitest 4.0.15
+- Prettier 3.7.4
+- CORS 2.8.5
+- Rate Limiting 8.2.1
 - Various security and maintenance updates
 
 ### Frontend Dependencies
 
 - Vue 3.5.25
-- Vuetify 3.11.0
+- Vuetify 3.11.2
 - Vite 7.2.6
-- Vitest 4.0.14
+- Vitest 4.0.15
+- Prettier 3.7.4
 - Vue Router 4.6.3
+- Axios 1.13.2
 - Various tooling and plugin updates
 
 ## 🛠️ GitHub Workflows
