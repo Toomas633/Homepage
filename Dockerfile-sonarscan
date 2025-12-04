@@ -85,14 +85,14 @@ RUN --mount=type=secret,id=sonar_token,mode=0444,required=false \
       SONAR_TOKEN=$(cat /run/secrets/sonar_token) && \
       if [ -n "$GITHUB_PR_NUMBER" ]; then \
         sonar-scanner \
-          -Dsonar.token=${SONAR_TOKEN} \
-          -Dsonar.pullrequest.key=${GITHUB_PR_NUMBER} \
-          -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} \
-          -Dsonar.pullrequest.base=${GITHUB_BASE_REF}; \
+          -Dsonar.token="${SONAR_TOKEN}" \
+          -Dsonar.pullrequest.key="${GITHUB_PR_NUMBER}" \
+          -Dsonar.pullrequest.branch="${GITHUB_HEAD_REF}" \
+          -Dsonar.pullrequest.base="${GITHUB_BASE_REF}"; \
       else \
         sonar-scanner \
-          -Dsonar.token=${SONAR_TOKEN} \
-          -Dsonar.branch.name=${GITHUB_REF_NAME}; \
+          -Dsonar.token="${SONAR_TOKEN}" \
+          -Dsonar.branch.name="${GITHUB_REF_NAME}"; \
       fi; \
     else \
       echo "Sonar token not provided, skipping scan"; \
