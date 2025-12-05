@@ -3,7 +3,7 @@
 ## Project Overview
 
 - **Name:** "Toomas633's Dungeon" - Personal projects homepage
-- **Versions:** Frontend v4.3.2, Backend v2.0.2
+- **Versions:** Frontend v4.3.3, Backend v2.0.3
 - This is a full-stack project with separate frontend and backend modules
 - **Frontend:** Vue 3 + TypeScript + Vuetify 3 in `frontend/` directory
 - **Backend:** Node.js Express server in `backend/` directory
@@ -52,6 +52,8 @@ This is a multi-folder VS Code workspace with three main directories:
 - `Dockerfile` — Root-level container configuration
 - `CONTRIBUTING.md` — Contribution guidelines and development workflow
 - `CHANGELOG.md` — Version history and release notes
+- `changelog/` — Detailed release notes for each version
+- `changelog/changelog-template.md` — Template for creating new release changelogs
 - `docs/` — Additional documentation (API, deployment, troubleshooting)
 
 ### Frontend (`frontend/`)
@@ -181,6 +183,60 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 - To add utilities: create helpers in `src/utils/` with TypeScript types and named exports
 - To add types: define interfaces in `src/types/index.ts` for shared type definitions
 - To add tests: create `*.spec.ts` file in `tests/` directory, use `supertest` for API tests
+
+---
+
+## Release & Changelog Management
+
+### Creating a New Release Changelog
+
+When creating a new release changelog, follow these steps:
+
+1. **Use the Template**: Start with `changelog/changelog-template.md` as the base
+2. **Naming Convention**: Create file as `changelog/changelog-X.Y.Z.md`
+3. **Gather Changes**: Review commits since last release using `git log --stat PREVIOUS_TAG..HEAD`
+4. **Fill Sections**: 
+   - Include all relevant sections from the template
+   - Remove sections that don't apply (e.g., "New Features" for patch releases)
+   - Keep "Known Issues" section even if none (state "None identified")
+5. **Update Main Changelog**: Add entry to `CHANGELOG.md` with summary and link to detailed changelog
+6. **Version Consistency**: Ensure version numbers match across:
+   - `frontend/package.json`
+   - `backend/package.json`
+   - Changelog files
+   - Documentation references
+
+### Changelog Section Order
+
+The standard section order (based on v5.1.0/v5.1.1 format):
+1. Overview
+2. New Features (major/minor) OR Bug Fixes (patch)
+3. Performance & Quality Improvements
+4. Dependency Updates (if applicable)
+5. GitHub Workflows
+6. Documentation
+7. Configuration
+8. Testing Improvements
+9. Statistics
+10. Version Information
+11. Breaking Changes
+12. Migration Notes
+13. Known Issues
+14. Security Improvements
+15. Links
+16. Contributors
+
+### Release Types
+
+- **Major (X.0.0)**: Breaking changes, architectural changes
+- **Minor (X.Y.0)**: New features, non-breaking enhancements
+- **Patch (X.Y.Z)**: Bug fixes, optimizations, documentation
+
+### Example References
+
+- **Major Release**: `changelog/changelog-5.0.0.md`
+- **Minor Release**: `changelog/changelog-5.1.0.md`
+- **Patch Release**: `changelog/changelog-5.1.1.md`
 
 ---
 

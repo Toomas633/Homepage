@@ -205,7 +205,7 @@ For more detailed testing information, see [DEVELOPMENT.md](../DEVELOPMENT.md#-t
 GET /health
 ```
 
-Returns server health status, timestamp, and email service verification.
+Returns server health status, timestamp, version, and email service verification.
 
 **Response:**
 
@@ -213,6 +213,7 @@ Returns server health status, timestamp, and email service verification.
 {
 	"status": "healthy",
 	"timestamp": "2025-11-21T12:00:00.000Z",
+	"version": "2.0.3",
 	"email": {
 		"status": "connected",
 		"responseTime": "150ms"
@@ -393,6 +394,6 @@ GPL-3.0-only - See [LICENSE](../LICENSE) file for details.
 
 ---
 
-**Version**: 2.0.2  
+**Version**: 2.0.3  
 **Node.js**: 18+ (24+ recommended)  
 **License**: GPL-3.0-only

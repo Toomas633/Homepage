@@ -73,6 +73,8 @@ jobs:
           target: production-stage
           push: true
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            VITE_APP_ENV=production
           tags: |
             ghcr.io/toomas633/homepage:latest
             ghcr.io/toomas633/homepage:${{ needs.prepare.outputs.package_version }}

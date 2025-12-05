@@ -1,4 +1,4 @@
-FROM node:24-slim AS frontend-scan
+FROM node:24-alpine AS frontend-scan
 
 WORKDIR /app/frontend
 
@@ -14,7 +14,7 @@ RUN mkdir -p .reports && \
     npm run test:coverage & \
     wait
 
-FROM node:24-slim AS backend-scan
+FROM node:24-alpine AS backend-scan
 
 WORKDIR /app/backend
 

@@ -15,21 +15,16 @@ const {
 
 const requiredEnvVars: Record<string, string | undefined> = {
 	EMAIL_HOST,
-	EMAIL_USER,
 	EMAIL_PORT,
-	EMAIL_TLS,
-	EMAIL_PASS,
 	EMAIL_TO,
+	EMAIL_TLS,
 	ALLOWED_ORIGINS,
 }
 
-// Skip validation in test environment (mocked in test setup)
-if (process.env.NODE_ENV !== 'test') {
-	for (const [key, value] of Object.entries(requiredEnvVars)) {
-		if (value === undefined) {
-			console.error(`Missing required environment variable: ${key}`)
-			process.exit(1)
-		}
+for (const [key, value] of Object.entries(requiredEnvVars)) {
+	if (value === undefined || value === '') {
+		console.error(`Missing required environment variable: ${key}`)
+		process.exit(1)
 	}
 }
 

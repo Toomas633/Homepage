@@ -12,6 +12,8 @@ export default defineConfig({
 			EMAIL_USER: 'test@example.com',
 			EMAIL_PASS: 'test-password',
 			EMAIL_TO: 'recipient@example.com',
+			EMAIL_PORT: '587',
+			EMAIL_TLS: 'true',
 			ALLOWED_ORIGINS: 'http://localhost:5173,http://localhost:3000',
 		},
 		coverage: {

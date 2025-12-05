@@ -64,6 +64,8 @@ jobs:
           target: production-stage
           push: true
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            VITE_APP_ENV=dev
           tags: |
             ghcr.io/toomas633/homepage:dev
           labels: |

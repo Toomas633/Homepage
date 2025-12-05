@@ -9,6 +9,39 @@ For detailed release notes, see the `changelog/` directory.
 
 ---
 
+## [5.1.1] - 2025-12-05
+
+### Fixed
+- SonarQube code quality issues in backend environment configuration
+- Styling issues in MinecraftView component
+- Docker image build process optimization
+- Enhanced test coverage with environment configuration tests
+
+### Changed
+- **Icon Organization**: Moved technology icons from `frontend/icons/` to `frontend/src/assets/icons/logos/`
+  - Better integration with Vite's asset pipeline
+  - Improved build-time asset handling
+- **SEO Enhancements**: Comprehensive improvements to meta tags and route metadata
+  - Enhanced Open Graph and Twitter Card support
+  - Improved structured data markup
+  - Better route-level SEO configuration
+- **Docker Optimizations**: Improved multi-stage build process
+  - Better layer caching for faster builds
+  - Reduced image size
+  - Enhanced environment variable handling
+- **Documentation Updates**: Updated all documentation with current version references
+  - API documentation with version 2.0.3
+  - Deployment guide with esbuild references
+  - README files across all modules
+  - Copilot instruction files
+- **Changelog Template**: Added standardized template for creating future release changelogs
+
+**Statistics**: ~50 files changed, 570 insertions(+), 200 deletions(-)
+
+**Full Release Notes**: [changelog-5.1.1.md](changelog/changelog-5.1.1.md)
+
+---
+
 ## [5.1.0] - 2025-12-04
 
 ### Added
@@ -134,6 +167,7 @@ For detailed release notes, see the `changelog/` directory.
 
 | Version | Date | Type | Description |
 |---------|------|------|-------------|
+| **5.1.1** | 2025-12-05 | Patch | SonarQube fixes, SEO enhancements, Docker optimizations, icon reorganization, documentation updates |
 | **5.1.0** | 2025-12-04 | Minor | Backend version display, navigation improvements, Hadolint integration, esbuild build tool, extensive documentation, dependency updates |
 | **5.0.1** | 2025-11-23 | Patch | Repository migration, documentation updates |
 | **5.0.0** | 2025-11-22 | Major | Complete restructure to multi-module architecture |
@@ -152,8 +186,8 @@ This project uses **semantic versioning** (SemVer):
 
 The project consists of two main modules with independent versioning:
 
-- **Frontend**: Currently v4.3.2
-- **Backend**: Currently v2.0.2
+- **Frontend**: Currently v4.3.3
+- **Backend**: Currently v2.0.3
 
 The overall project version (5.x.x) represents the combined release version.
 
