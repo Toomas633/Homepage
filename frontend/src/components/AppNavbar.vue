@@ -11,7 +11,7 @@
 			<v-list-item
 				prepend-avatar="/logo.svg"
 				title="Toomas633's Dungeon"
-				:subtitle="APP_VERSION"
+				:subtitle="`${APP_VERSION} ${APP_ENV !== 'production' ? APP_ENV.toLocaleUpperCase() : ''}`"
 				value="home"
 				:active="false"
 				to="/" />
@@ -160,7 +160,6 @@
 			nav>
 			<h3 class="text-center">{{ navSelection[0].toLocaleUpperCase() }}</h3>
 			<v-divider class="border-opacity-100" thickness="2" color="primary" />
-			<v-separator />
 			<v-list-item
 				v-for="item in drawerItems"
 				:key="item.title"
@@ -175,7 +174,12 @@
 	</v-navigation-drawer>
 </template>
 <script setup lang="ts">
-import { APP_VERSION, VUE_VERSION, VUETIFY_VERSION } from '@/constants/env'
+import {
+	APP_ENV,
+	APP_VERSION,
+	VUE_VERSION,
+	VUETIFY_VERSION,
+} from '@/constants/env'
 import router from '@/router'
 import { MenuItem } from '@/types/menuItem'
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'

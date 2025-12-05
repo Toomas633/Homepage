@@ -1,5 +1,7 @@
 FROM node:24-alpine AS frontend-build
 
+ARG VITE_APP_ENV="production"
+
 WORKDIR /app/frontend
 
 COPY frontend/package*.json ./
@@ -7,7 +9,7 @@ RUN npm ci --ignore-scripts
 
 COPY frontend/ ./
 
-RUN npm run build
+RUN VITE_APP_ENV=${VITE_APP_ENV} npm run build
 
 FROM node:24-alpine AS backend-build
 
