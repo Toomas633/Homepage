@@ -42,7 +42,7 @@ const backgroundImageStyle = computed(() => {
 		backgroundImage: `url(${background})`,
 		backgroundSize: 'cover',
 		backgroundPosition: 'center',
+		marginBottom: '-48px',
 	}
 })
 </script>
-s
