@@ -95,7 +95,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
 		resolve: {
 			alias: {
 				'@': fileURLToPath(new URL('./src', import.meta.url)),
-				'@icons': fileURLToPath(new URL('./icons', import.meta.url)),
 				'@public': fileURLToPath(new URL('./public', import.meta.url)),
 			},
 		},
