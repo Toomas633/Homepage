@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import {
+	getLicence,
+	getLanguages,
+	getLatestRelease,
+} from '../../src/services/githubService'
 
-// Use vi.hoisted to ensure this runs before mocks
 const { mockGet, mockCreate } = vi.hoisted(() => {
 	const mockGet = vi.fn()
 	return {
@@ -17,24 +21,14 @@ vi.mock('axios', () => ({
 	},
 }))
 
-// Mock alertMixin
 vi.mock('@/helpers/alertMixin', () => ({
 	default: () => ({
 		showErrorMessage: vi.fn(),
 	}),
 }))
 
-// Import after mocks are set up
-import {
-	getLicence,
-	getLanguages,
-	getLatestRelease,
-} from '../../src/services/githubService'
-
 describe('githubService', () => {
 	beforeEach(() => {
-		// Clear only mockGet, not mockCreate
-		// mockCreate needs to retain its call history from module initialization
 		mockGet.mockClear()
 	})
 
@@ -181,18 +175,22 @@ describe('githubService', () => {
 	describe('GitHub API configuration', () => {
 		it('should create axios instance with base URL', () => {
 			expect(mockCreate).toHaveBeenCalled()
-			const createCall = mockCreate.mock.calls[0]
-			expect(createCall[0]).toHaveProperty('baseURL')
+			expect(mockCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					baseURL: expect.any(String),
+				})
+			)
 		})
 
 		it('should include required GitHub API headers', () => {
-			const createCall = mockCreate.mock.calls[0]
-			if (createCall) {
-				const config = createCall[0]
-				expect(config).toHaveProperty('headers')
-				expect(config?.headers).toHaveProperty('Accept')
-				expect(config?.headers).toHaveProperty('X-GitHub-Api-Version')
-			}
+			expect(mockCreate).toHaveBeenCalledWith(
+				expect.objectContaining({
+					headers: expect.objectContaining({
+						Accept: expect.any(String),
+						'X-GitHub-Api-Version': expect.any(String),
+					}),
+				})
+			)
 		})
 	})
 })

@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import useAlertMixin from '../../src/helpers/alertMixin'
-import { EventBus } from '@/util/eventBus'
-import { EventType } from '@/enums/eventType'
-import { PopupType } from '@/enums/popupType'
+import { EventBus } from '../../src/util/eventBus'
+import { EventType } from '../../src/enums/eventType'
+import { PopupType } from '../../src/enums/popupType'
 
-vi.mock('@/util/eventBus', () => ({
+vi.mock('../../src/util/eventBus', () => ({
 	EventBus: {
 		emit: vi.fn(),
 	},
@@ -44,9 +44,12 @@ describe('alertMixin', () => {
 				.mockImplementation(() => {})
 			showErrorMessage(error)
 
-			const emitCall = vi.mocked(EventBus.emit).mock.calls[0]
-			expect(emitCall[1]).toHaveProperty('stack')
-			expect(emitCall[1].stack).toBeDefined()
+			expect(EventBus.emit).toHaveBeenCalledWith(
+				EventType.SHOW_ALERT_MESSAGE,
+				expect.objectContaining({
+					stack: expect.any(String),
+				})
+			)
 
 			consoleErrorSpy.mockRestore()
 		})

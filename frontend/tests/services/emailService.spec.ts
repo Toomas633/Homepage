@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import axios from 'axios'
 import { sendEmail } from '../../src/services/emailService'
-import { API_URL } from '@/constants/env'
+import { API_URL } from '../../src/constants/env'
 
 vi.mock('axios')
 

@@ -1,19 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import useCopyMixin from '../../src/helpers/copyMixin'
 
-// Mock clipboard API
 const mockClipboard = {
 	writeText: vi.fn(),
 }
 
-// Use defineProperty for read-only clipboard property
 Object.defineProperty(navigator, 'clipboard', {
 	value: mockClipboard,
 	writable: true,
 	configurable: true,
 })
 
-// Mock the mixins
 vi.mock('./alertMixin', () => ({
 	default: () => ({
 		showErrorMessage: vi.fn(),
@@ -116,12 +113,10 @@ describe('copyMixin', () => {
 		it('should reset error state on successful copy after previous error', async () => {
 			const { copy, error } = useCopyMixin()
 
-			// First copy fails
 			mockClipboard.writeText.mockRejectedValue(new Error('Failed'))
 			await copy('test')
 			expect(error.value).toBe(true)
 
-			// Second copy succeeds
 			mockClipboard.writeText.mockResolvedValue(undefined)
 			await copy('test again')
 			expect(error.value).toBe(false)

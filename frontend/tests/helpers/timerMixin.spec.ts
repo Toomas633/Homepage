@@ -30,7 +30,6 @@ describe('timerMixin', () => {
 
 			expect(callback).toHaveBeenCalledWith(true)
 
-			// Fast-forward time
 			vi.advanceTimersByTime(1000)
 
 			expect(callback).toHaveBeenCalledWith(false)
@@ -45,11 +44,9 @@ describe('timerMixin', () => {
 
 			expect(callback).toHaveBeenCalledWith(true)
 
-			// After 2 seconds, callback should not have been called again
 			vi.advanceTimersByTime(2000)
 			expect(callback).toHaveBeenCalledTimes(1)
 
-			// After 3 seconds total, callback should be called with false
 			vi.advanceTimersByTime(1000)
 			expect(callback).toHaveBeenCalledWith(false)
 			expect(callback).toHaveBeenCalledTimes(2)
@@ -110,7 +107,7 @@ describe('timerMixin', () => {
 			const { timer } = useTimerMixin()
 			const callback = vi.fn()
 
-			timer(callback, 60000) // 1 minute
+			timer(callback, 60000)
 
 			expect(callback).toHaveBeenCalledWith(true)
 

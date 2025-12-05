@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'fs'
-import { tmpdir } from 'os'
-import { join, resolve, dirname } from 'path'
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join, resolve, dirname } from 'node:path'
 import { createSitemapPlugin } from '../../plugins/sitemap-plugin'
 
 type MockFn = ReturnType<typeof vi.fn>
@@ -14,9 +14,12 @@ vi.mock('glob', () => ({
 
 vi.mock('sitemap', () => {
 	class MockSitemapStream {
-		constructor(_opts: unknown) {}
-		write() {}
-		end() {}
+		write() {
+			// Mock implementation
+		}
+		end() {
+			// Mock implementation
+		}
 	}
 
 	const streamToPromise = vi.fn(async () =>

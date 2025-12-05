@@ -68,10 +68,10 @@
 		"javascript": "javascriptreact"
 	},
 	"search.exclude": {
-		"**/node_modules": true,
 		"**/package-lock.json": true
 	},
 	"files.exclude": {
-		"**/node_modules": true
+		"**/node_modules": false,
+		"**/dist": false
 	}
 }

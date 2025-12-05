@@ -70,20 +70,16 @@ describe('loadingMixin', () => {
 
 			const wrapper = mount(component)
 
-			// Initial state
 			expect(wrapper.vm.loadingIcon).toBe('icon1')
 
-			// After first interval
 			await vi.advanceTimersByTimeAsync(100)
 			await wrapper.vm.$nextTick()
 			expect(wrapper.vm.loadingIcon).toBe('icon2')
 
-			// After second interval
 			await vi.advanceTimersByTimeAsync(100)
 			await wrapper.vm.$nextTick()
 			expect(wrapper.vm.loadingIcon).toBe('icon3')
 
-			// Should cycle back to first icon
 			await vi.advanceTimersByTimeAsync(100)
 			await wrapper.vm.$nextTick()
 			expect(wrapper.vm.loadingIcon).toBe('icon1')
@@ -191,7 +187,6 @@ describe('loadingMixin', () => {
 				expect(wrapper.vm.loadingIcon).toBe(`icon${i}`)
 			}
 
-			// Should cycle back
 			await vi.advanceTimersByTimeAsync(100)
 			await wrapper.vm.$nextTick()
 			expect(wrapper.vm.loadingIcon).toBe('icon0')

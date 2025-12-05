@@ -8,7 +8,8 @@ html {
 	overflow-y: auto !important;
 }
 
-h1 {
+h1,
+h3 {
 	color: rgb(var(--v-theme-primary));
 }
 
@@ -122,4 +123,8 @@ mark {
 
 .z-top {
 	z-index: 2000;
+}
+
+.v-avatar {
+	background: none;
 }

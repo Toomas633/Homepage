@@ -23,6 +23,10 @@
 	},
 	"powershell.cwd": "Homepage",
 	"window.openFoldersInNewWindow": "on",
-	"window.restoreWindows": "all"
+	"window.restoreWindows": "all",
+	"files.exclude": {
+		"**/node_modules": false,
+		"**/dist": false
+	}
   }
 }

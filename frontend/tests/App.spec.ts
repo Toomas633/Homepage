@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import App from '../src/App.vue'
 
-// Mock the themeMixin
 vi.mock('../src/helpers/themeMixin', () => ({
 	default: vi.fn(() => ({
 		checkThemeStorage: vi.fn(),
@@ -12,7 +11,6 @@ vi.mock('../src/helpers/themeMixin', () => ({
 
 describe('App.vue', () => {
 	beforeEach(() => {
-		// Clear all mocks before each test
 		vi.clearAllMocks()
 	})
 
@@ -51,7 +49,6 @@ describe('App.vue', () => {
 			},
 		})
 
-		// Check that stub components were rendered
 		expect(wrapper.html()).toContain('v-app')
 	})
 
@@ -188,7 +185,6 @@ describe('App.vue', () => {
 			},
 		})
 
-		// Since components are stubbed, just verify the wrapper is valid
 		expect(wrapper.exists()).toBe(true)
 		expect(wrapper.vm).toBeDefined()
 	})

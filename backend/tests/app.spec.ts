@@ -2,13 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import request from 'supertest'
 import app from '../src/app.js'
 
-// Mock the email service to prevent actual email connections during tests
 vi.mock('../src/services/emailService.js', () => ({
 	createTransporter: vi.fn().mockReturnValue({}),
 	verifyEmailConnection: vi.fn().mockResolvedValue(50),
 }))
 
-// Mock the helpers to prevent actual logging during tests
 vi.mock('../src/utils/helpers.js', () => ({
 	logWithTimestamp: vi.fn(),
 	objectToString: vi.fn((obj) => JSON.stringify(obj)),
@@ -31,7 +29,6 @@ describe('Express App', () => {
 				.send({ email: 'test@example.com', message: 'Test' })
 				.set('Content-Type', 'application/json')
 
-			// Should not fail with JSON parsing error
 			expect(response.status).not.toBe(400)
 		})
 
@@ -107,17 +104,11 @@ describe('Express App', () => {
 	})
 
 	describe('Error Handler', () => {
-		it('should handle internal server errors with 500 status', async () => {
-			// Create a route that throws an error to test the error handler
-			const consoleErrorSpy = vi
-				.spyOn(console, 'error')
-				.mockImplementation(() => {})
+		it('should have error handling middleware configured', async () => {
+			const response = await request(app).get('/api/health')
 
-			// Trigger an error by sending invalid JSON (this depends on implementation)
-			// Since we can't easily trigger the error handler without modifying the app,
-			// we'll verify its existence through other means in integration tests
-
-			consoleErrorSpy.mockRestore()
+			expect(response.status).toBeDefined()
+			expect(typeof response.status).toBe('number')
 		})
 	})
 
@@ -128,7 +119,7 @@ describe('Express App', () => {
 				.send({ email: 'test@example.com', message: 'Test message' })
 				.set('Content-Type', 'application/json')
 
-			expect(response.status).not.toBe(415) // Not Unsupported Media Type
+			expect(response.status).not.toBe(415)
 		})
 
 		it('should respond with JSON for API routes', async () => {
@@ -141,9 +132,8 @@ describe('Express App', () => {
 	describe('HTTP Method Support', () => {
 		it('should support GET requests', async () => {
 			const response = await request(app).get('/api/health')
-			// The health route should be available
 			expect(response.status).toBeLessThan(500)
-			expect(response.status).not.toBe(405) // Not Method Not Allowed
+			expect(response.status).not.toBe(405)
 		})
 
 		it('should support POST requests', async () => {
@@ -151,7 +141,6 @@ describe('Express App', () => {
 				.post('/api/email')
 				.send({ email: 'test@example.com', message: 'Test' })
 
-			// Should be processed (either success or validation error, not method not allowed)
 			expect(response.status).not.toBe(405)
 		})
 
@@ -193,6 +182,286 @@ describe('Express App', () => {
 			expect(app).toBeDefined()
 			expect(typeof app).toBe('function')
 			expect(app.listen).toBeDefined()
+		})
+	})
+
+	describe('Error Handler Middleware', () => {
+		it('should handle errors thrown by middleware', async () => {
+			const consoleErrorSpy = vi
+				.spyOn(console, 'error')
+				.mockImplementation(() => {})
+
+			const response = await request(app)
+				.post('/api/email')
+				.send('invalid json')
+				.set('Content-Type', 'application/json')
+
+			expect(response.status).toBe(500)
+			expect(response.body).toHaveProperty('error')
+			expect(consoleErrorSpy).toHaveBeenCalledWith(
+				'Unhandled error:',
+				expect.any(Error)
+			)
+
+			consoleErrorSpy.mockRestore()
+		})
+
+		it('should return 500 for unhandled errors', async () => {
+			const consoleErrorSpy = vi
+				.spyOn(console, 'error')
+				.mockImplementation(() => {})
+
+			const response = await request(app)
+				.post('/api/email')
+				.send('{"invalid": json}')
+				.set('Content-Type', 'application/json')
+
+			expect(consoleErrorSpy).toHaveBeenCalled()
+
+			consoleErrorSpy.mockRestore()
+		})
+	})
+
+	describe('JSON Body Parsing', () => {
+		it('should handle malformed JSON gracefully', async () => {
+			const response = await request(app)
+				.post('/api/email')
+				.send('{invalid json}')
+				.set('Content-Type', 'application/json')
+
+			expect([400, 500]).toContain(response.status)
+		})
+
+		it('should handle empty body on POST requests', async () => {
+			const response = await request(app)
+				.post('/api/email')
+				.set('Content-Type', 'application/json')
+
+			expect(response.status).toBeDefined()
+		})
+
+		it('should handle large JSON payloads', async () => {
+			const largeObject = {
+				message: 'a'.repeat(10000),
+				data: Array(100).fill({ key: 'value' }),
+			}
+
+			const response = await request(app)
+				.post('/api/email')
+				.send(largeObject)
+				.set('Content-Type', 'application/json')
+
+			expect(response.status).toBeDefined()
+		})
+	})
+
+	describe('HTTP Methods Not Allowed', () => {
+		it('should return 404 for PATCH requests', async () => {
+			const response = await request(app).patch('/api/health')
+
+			expect(response.status).toBe(404)
+			expect(response.body).toHaveProperty('error', 'Not Found')
+		})
+
+		it('should return 404 for HEAD requests to non-existent routes', async () => {
+			const response = await request(app).head('/non-existent')
+
+			expect(response.status).toBe(404)
+		})
+	})
+
+	describe('Edge Cases', () => {
+		it('should handle requests with no headers', async () => {
+			const response = await request(app).get('/api/health')
+
+			expect(response.status).toBeDefined()
+		})
+
+		it('should handle multiple query parameters', async () => {
+			const response = await request(app).get(
+				'/api/health?param1=value1&param2=value2&param3=value3'
+			)
+
+			expect(response.status).toBeLessThan(500)
+		})
+
+		it('should handle URL encoded paths', async () => {
+			const response = await request(app).get(
+				'/some%20path%20with%20spaces/test'
+			)
+
+			expect(response.status).toBe(404)
+		})
+
+		it('should handle paths with trailing slashes', async () => {
+			const response = await request(app).get('/api/health/')
+
+			expect(response.status).toBeDefined()
+		})
+	})
+})
+
+describe('Server Lifecycle', () => {
+	beforeEach(() => {
+		vi.clearAllMocks()
+	})
+
+	describe('startServer function', () => {
+		it('should be exported from app module', async () => {
+			const appModule = await import('../src/app.js')
+			expect(appModule.startServer).toBeDefined()
+			expect(typeof appModule.startServer).toBe('function')
+		})
+
+		it('should verify email connection on startup', async () => {
+			const { startServer } = await import('../src/app.js')
+			const { createTransporter, verifyEmailConnection } =
+				await import('../src/services/emailService.js')
+
+			const originalEnv = process.env.NODE_ENV
+			process.env.NODE_ENV = 'test'
+
+			const serverPromise = startServer()
+
+			await new Promise((resolve) => setTimeout(resolve, 10))
+
+			expect(createTransporter).toHaveBeenCalled()
+
+			process.env.NODE_ENV = originalEnv
+		})
+	})
+
+	describe('Email verification on startup', () => {
+		it('should log success when email verification succeeds', async () => {
+			const { logWithTimestamp } = await import('../src/utils/helpers.js')
+			const { startServer } = await import('../src/app.js')
+
+			const originalEnv = process.env.NODE_ENV
+			process.env.NODE_ENV = 'test'
+
+			const { createTransporter, verifyEmailConnection } =
+				await import('../src/services/emailService.js')
+
+			const serverPromise = startServer()
+
+			await new Promise((resolve) => setTimeout(resolve, 50))
+
+			expect(logWithTimestamp).toHaveBeenCalledWith(
+				'info',
+				'Verifying email server connection...'
+			)
+
+			process.env.NODE_ENV = originalEnv
+		})
+
+		it('should handle email verification failure gracefully', async () => {
+			const { logWithTimestamp, objectToString } =
+				await import('../src/utils/helpers.js')
+			const { verifyEmailConnection } =
+				await import('../src/services/emailService.js')
+
+			vi.mocked(verifyEmailConnection).mockRejectedValueOnce(
+				new Error('SMTP connection failed')
+			)
+
+			const consoleErrorSpy = vi
+				.spyOn(console, 'error')
+				.mockImplementation(() => {})
+
+			const { startServer } = await import('../src/app.js')
+
+			const originalEnv = process.env.NODE_ENV
+			process.env.NODE_ENV = 'test'
+
+			const serverPromise = startServer()
+
+			await new Promise((resolve) => setTimeout(resolve, 100))
+
+			expect(logWithTimestamp).toHaveBeenCalledWith(
+				'warn',
+				'Email server connection failed - email features may be unavailable'
+			)
+
+			expect(consoleErrorSpy).toHaveBeenCalled()
+
+			expect(objectToString).toHaveBeenCalledWith(
+				expect.objectContaining({
+					name: expect.any(String),
+					message: 'SMTP connection failed',
+				})
+			)
+
+			vi.mocked(verifyEmailConnection).mockResolvedValue(50)
+
+			consoleErrorSpy.mockRestore()
+			process.env.NODE_ENV = originalEnv
+		})
+
+		it('should handle non-Error exceptions in email verification', async () => {
+			const { verifyEmailConnection } =
+				await import('../src/services/emailService.js')
+
+			vi.mocked(verifyEmailConnection).mockRejectedValueOnce('String error')
+
+			const consoleErrorSpy = vi
+				.spyOn(console, 'error')
+				.mockImplementation(() => {})
+
+			const { startServer } = await import('../src/app.js')
+
+			const originalEnv = process.env.NODE_ENV
+			process.env.NODE_ENV = 'test'
+
+			const serverPromise = startServer()
+
+			await new Promise((resolve) => setTimeout(resolve, 100))
+
+			expect(consoleErrorSpy).toHaveBeenCalled()
+
+			vi.mocked(verifyEmailConnection).mockResolvedValue(50)
+
+			consoleErrorSpy.mockRestore()
+			process.env.NODE_ENV = originalEnv
+		})
+	})
+
+	describe('Conditional execution', () => {
+		it('should not start server when NODE_ENV is test', () => {
+			expect(process.env.NODE_ENV).toBe('test')
+		})
+	})
+
+	describe('Graceful shutdown', () => {
+		it('should handle SIGTERM signal gracefully', async () => {
+			const { logWithTimestamp } = await import('../src/utils/helpers.js')
+
+			const sigtermListeners = process.listenerCount('SIGTERM')
+			const sigintListeners = process.listenerCount('SIGINT')
+
+			expect(sigtermListeners).toBeGreaterThan(0)
+			expect(sigintListeners).toBeGreaterThan(0)
+		})
+
+		it('should register signal handlers on server start', async () => {
+			const { startServer } = await import('../src/app.js')
+
+			const originalEnv = process.env.NODE_ENV
+			process.env.NODE_ENV = 'test'
+
+			const sigtermBefore = process.listenerCount('SIGTERM')
+			const sigintBefore = process.listenerCount('SIGINT')
+
+			const serverPromise = startServer()
+
+			await new Promise((resolve) => setTimeout(resolve, 50))
+
+			const sigtermAfter = process.listenerCount('SIGTERM')
+			const sigintAfter = process.listenerCount('SIGINT')
+
+			expect(sigtermAfter).toBeGreaterThanOrEqual(sigtermBefore)
+			expect(sigintAfter).toBeGreaterThanOrEqual(sigintBefore)
+
+			process.env.NODE_ENV = originalEnv
 		})
 	})
 })

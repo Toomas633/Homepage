@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import request from 'supertest'
 import express from 'express'
 
-// Mock the config before importing middleware
 vi.mock('../../src/config/env.js', () => ({
 	config: {
 		allowedOrigins: {
@@ -109,8 +108,6 @@ describe('CORS Middleware', () => {
 			.delete('/test')
 			.set('Origin', allowedOrigin)
 
-		// CORS middleware doesn't block the request, but browser would
-		// The response should still have CORS headers
 		expect(response.headers).toHaveProperty('access-control-allow-origin')
 	})
 })

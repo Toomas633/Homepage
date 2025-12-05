@@ -1,11 +1,11 @@
 # Toomas633's Dungeon - Frontend
 
-> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.3.0)
+> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.3.2)
 
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.24-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.10.11-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vite](https://img.shields.io/badge/Vite-7.2.6-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.2-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 
 ## 🏗️ Architecture
 
@@ -101,8 +101,8 @@ npm run test:coverage
 
 ### Test Structure
 
-- **Test files**: Place `*.spec.ts` or `*.test.ts` files alongside source files
-- **Setup**: `src/test/setup.ts` - Global test configuration with Vuetify stubs
+- **Test files**: Place `*.spec.ts` or `*.test.ts` files in `tests/` directory
+- **Setup**: `tests/setup.ts` - Global test configuration with Vuetify stubs
 - **Config**: `vitest.config.ts` - Vitest configuration with Vue and CSS support
 - **Environment**: `happy-dom` for fast DOM testing
 
@@ -148,8 +148,12 @@ Coverage reports are generated in `coverage/` directory:
 
 ### Example Test Files
 
-- `src/helpers/isBot.spec.ts` - Bot detection utility tests
-- `src/components/InlineCode.spec.ts` - Component testing example
+- `tests/helpers/isBot.spec.ts` - Bot detection utility tests
+- `tests/helpers/useCookies.spec.ts` - Cookie management composable tests
+- `tests/util/validation.spec.ts` - Validation utility tests
+- `tests/services/emailService.spec.ts` - Email service API tests
+- `tests/App.spec.ts` - Root application component tests
+- `tests/main.spec.ts` - Application entry point tests
 
 For more detailed testing information, see [DEVELOPMENT.md](../DEVELOPMENT.md#-testing).
 
@@ -284,11 +288,19 @@ frontend/
 │   ├── views/           # Page components
 │   ├── App.vue          # Root component
 │   └── main.ts          # Application entry point
+├── tests/               # Test files
+│   ├── setup.ts         # Global test configuration
+│   ├── App.spec.ts      # Application tests
+│   ├── main.spec.ts     # Entry point tests
+│   ├── helpers/         # Helper function tests
+│   ├── services/        # Service tests
+│   └── util/            # Utility tests
 ├── icons/               # Technology icons
 ├── plugins/             # Vite plugins
 ├── Dockerfile           # Production container
 ├── nginx.conf           # Nginx configuration
 ├── vite.config.ts       # Vite configuration
+├── vitest.config.ts     # Vitest test configuration
 └── tsconfig.json        # TypeScript configuration
 ```
 
@@ -378,6 +390,25 @@ The project includes configurations for:
 - **Stylelint Reports**: JSON output for CI integration
 - **SonarQube**: Quality gate integration
 - **Docker**: Multi-stage builds for optimization
+
+## 📚 Documentation
+
+### Project Documentation
+
+- **[Main README](../README.md)** - Project overview and architecture
+- **[Backend README](../backend/README.md)** - Backend API and services documentation
+- **[API Documentation](../docs/API.md)** - Complete API reference with examples
+- **[Deployment Guide](../docs/DEPLOYMENT.md)** - Production deployment instructions
+- **[Troubleshooting](../docs/TROUBLESHOOTING.md)** - Common issues and solutions
+- **[Contributing Guide](../CONTRIBUTING.md)** - How to contribute to this project
+- **[Changelog](../CHANGELOG.md)** - Version history and release notes
+
+### Frontend-Specific
+
+- **[Copilot Instructions](.github-copilot-instructions.md)** - AI assistant development patterns
+- **[Vite Config](vite.config.ts)** - Build and development server configuration
+- **[TypeScript Config](tsconfig.json)** - TypeScript compiler settings
+- **[Vitest Config](vitest.config.ts)** - Testing framework configuration
 
 ## 🤝 Contributing
 

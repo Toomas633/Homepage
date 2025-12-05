@@ -3,12 +3,21 @@ import type { AppConfig } from '../types/index.js'
 
 dotenv.config()
 
-const { EMAIL_HOST, EMAIL_USER, EMAIL_PASS, EMAIL_TO, ALLOWED_ORIGINS, PORT } =
-	process.env
+const {
+	EMAIL_HOST,
+	EMAIL_USER,
+	EMAIL_PASS,
+	EMAIL_TO,
+	ALLOWED_ORIGINS,
+	EMAIL_PORT,
+	EMAIL_TLS,
+} = process.env
 
 const requiredEnvVars: Record<string, string | undefined> = {
 	EMAIL_HOST,
 	EMAIL_USER,
+	EMAIL_PORT,
+	EMAIL_TLS,
 	EMAIL_PASS,
 	EMAIL_TO,
 	ALLOWED_ORIGINS,
@@ -30,11 +39,11 @@ export const config: AppConfig = {
 		user: EMAIL_USER!,
 		password: EMAIL_PASS!,
 		to: EMAIL_TO!,
-		port: 587,
-		requireTLS: true,
+		port: Number(EMAIL_PORT),
+		requireTLS: EMAIL_TLS === 'true',
 	},
 	server: {
-		port: Number.parseInt(PORT as string) || 3000,
+		port: 3000,
 	},
 	allowedOrigins: {
 		origins: ALLOWED_ORIGINS?.split(',') || [],

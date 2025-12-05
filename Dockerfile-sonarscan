@@ -1,0 +1,89 @@
+FROM node:24-slim AS frontend-scan
+
+WORKDIR /app/frontend
+
+COPY frontend/package*.json ./
+RUN npm ci --ignore-scripts
+
+COPY frontend/ ./
+
+RUN mkdir -p .reports && \
+    npm run scan:lint & \
+    npm run scan:stylelint & \
+    npm run type-check & \
+    npm run test:coverage & \
+    wait
+
+FROM node:24-slim AS backend-scan
+
+WORKDIR /app/backend
+
+COPY backend/package*.json ./
+RUN npm ci --ignore-scripts
+
+COPY backend/ ./
+
+RUN mkdir -p .reports && \
+    npm run scan:lint & \
+    npm run type-check & \
+    npm run test:coverage & \
+    wait
+
+FROM hadolint/hadolint:v2.12.0-alpine AS hadolint-scan
+
+WORKDIR /app
+
+COPY .hadolint.yaml /app/
+COPY Dockerfile /app/
+COPY Dockerfile-sonarscan /app/
+
+RUN mkdir -p .reports frontend/.reports backend/.reports
+
+RUN hadolint --config .hadolint.yaml --format json Dockerfile > .reports/hadolint-root.json || true & \
+    hadolint --config .hadolint.yaml --format json Dockerfile-sonarscan > .reports/hadolint-sonarscan.json || true & \
+    hadolint --config frontend/.hadolint.yaml --format json frontend/Dockerfile > frontend/.reports/hadolint-frontend.json || true & \
+    hadolint --config backend/.hadolint.yaml --format json backend/Dockerfile > backend/.reports/hadolint-backend.json || true & \
+    wait
+
+RUN sed -i 's|"file":"Dockerfile"|"file":"./Dockerfile"|g' .reports/hadolint-root.json && \
+    sed -i 's|"file":"Dockerfile-sonarscan"|"file":"./Dockerfile-sonarscan"|g' .reports/hadolint-sonarscan.json
+
+FROM sonarsource/sonar-scanner-cli:11 AS sonar-scan
+
+WORKDIR /app
+
+COPY --from=frontend-scan /app/frontend /app/frontend
+COPY --from=backend-scan /app/backend /app/backend
+COPY --from=hadolint-scan /app/.reports /app/.reports
+
+COPY Dockerfile ./Dockerfile
+COPY Dockerfile-sonarscan ./Dockerfile-sonarscan
+
+COPY .git ./.git
+COPY sonar-project.properties ./
+COPY *.md ./
+COPY *.cjs ./
+COPY *.yml ./
+
+ARG GITHUB_REF_NAME=main
+ARG GITHUB_PR_NUMBER=""
+ARG GITHUB_BASE_REF=""
+ARG GITHUB_HEAD_REF=""
+
+RUN --mount=type=secret,id=sonar_token,mode=0444,required=false \
+    if [ -f /run/secrets/sonar_token ]; then \
+      SONAR_TOKEN=$(cat /run/secrets/sonar_token) && \
+      if [ -n "$GITHUB_PR_NUMBER" ]; then \
+        sonar-scanner \
+          -Dsonar.token="${SONAR_TOKEN}" \
+          -Dsonar.pullrequest.key="${GITHUB_PR_NUMBER}" \
+          -Dsonar.pullrequest.branch="${GITHUB_HEAD_REF}" \
+          -Dsonar.pullrequest.base="${GITHUB_BASE_REF}"; \
+      else \
+        sonar-scanner \
+          -Dsonar.token="${SONAR_TOKEN}" \
+          -Dsonar.branch.name="${GITHUB_REF_NAME}"; \
+      fi; \
+    else \
+      echo "Sonar token not provided, skipping scan"; \
+    fi

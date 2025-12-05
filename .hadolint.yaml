@@ -1,0 +1,69 @@
+# Hadolint Configuration for Docker Linting
+# Documentation: https://github.com/hadolint/hadolint
+# Enforces best practices with minimal exceptions
+
+# Ignore specific rules
+ignored:
+  # DL3008: Pin versions in apt-get install
+  # Skipped for minimal dependencies (nginx, curl) that are cleaned after installation
+  # Pinning versions makes Dockerfile fragile as specific versions may not be available in future base images
+  - DL3008
+  
+  # DL3016: Pin versions in npm install
+  # We use package-lock.json for dependency pinning instead of version suffixes in install commands
+  # This provides better version control and is the recommended npm practice
+  - DL3016
+  
+  # DL3029: Do not use --platform flag with FROM
+  # Required for SonarScanner stage which only supports linux/amd64
+  # This is unavoidable for cross-platform compatibility
+  - DL3029
+
+# Trusted registries for base images
+trustedRegistries:
+  - docker.io
+  - node
+
+# Fail on specific severity levels
+# error: critical issues that must be fixed
+# warning: important issues that should be addressed
+# info: suggestions for improvement
+# style: style-related suggestions
+failure-threshold: warning
+
+# Output format for reports
+# Can be: tty, json, checkstyle, codeclimate, gitlab_codeclimate, gnu, codacy, sonarqube
+# We'll use checkstyle for SonarQube integration
+format: checkstyle
+
+# Strict labels - enforce label schema
+strict-labels: false
+
+# Disable inline ignore comments
+disable-ignore-pragma: false
+
+# Override specific rules
+override:
+  error:
+    - DL3001  # Avoid sudo
+    - DL3002  # Last USER should not be root
+    - DL3003  # Use WORKDIR instead of cd
+    - DL3004  # Do not use sudo
+    - DL3006  # Always tag image versions
+    - DL3007  # Using latest is not recommended
+    - DL3020  # Use COPY instead of ADD for files
+    - DL3025  # Use JSON notation for CMD and ENTRYPOINT
+    - DL4001  # Multiple consecutive RUN can be combined
+    - DL4003  # Multiple consecutive RUN can be combined (apt-get update & install)
+    - DL4006  # Set pipefail option
+  
+  warning:
+    - DL3013  # Pin versions in pip
+    - DL3016  # Pin versions in npm
+    - DL3018  # Pin versions in apk add
+    - DL3028  # Pin versions in gem install
+    - DL3059  # Multiple consecutive RUN
+  
+  info:
+    - DL3032  # yum clean all missing
+    - DL3033  # Specify version with yum install
