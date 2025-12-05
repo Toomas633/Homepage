@@ -15,6 +15,8 @@ import { logWithTimestamp, objectToString } from './utils/helpers.js'
 
 const app: Application = express().disable('x-powered-by')
 
+app.set('trust proxy', 1)
+
 app.use(bodyParser.json())
 app.use(corsMiddleware)
 
