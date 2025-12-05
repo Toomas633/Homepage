@@ -42,8 +42,8 @@ Rate limiting is applied per IP address to prevent abuse.
 
 | Endpoint | Limit | Window |
 |----------|-------|--------|
+| `/api/health` | 60 requests | 1 minute |
 | `/send-email` | 10 requests | 15 minutes |
-| Other endpoints | Unlimited | N/A |
 
 **Rate Limit Headers**:
 ```
@@ -89,6 +89,7 @@ HTTP Status: `429 Too Many Requests`
 {
   "status": "healthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
+  "version": "2.0.3",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -122,6 +123,7 @@ Host: localhost:3000
 {
   "status": "healthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
+  "version": "2.0.3",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -135,17 +137,19 @@ Host: localhost:3000
 |-------|------|-------------|
 | `status` | string | Overall health status (`"healthy"` or `"unhealthy"`) |
 | `timestamp` | string | ISO 8601 timestamp of the health check |
+| `version` | string | Backend API version (e.g., `"2.0.3"`) |
 | `email.status` | string | Email service status (`"connected"` or `"disconnected"`) |
 | `email.responseTime` | string | Time taken to verify email connection (e.g., `"150ms"`) |
 
 **Error Response**:
 
-*Status Code*: `500 Internal Server Error`
+*Status Code*: `503 Service Unavailable`
 
 ```json
 {
   "status": "unhealthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
+  "version": "2.0.3",
   "email": {
     "status": "disconnected",
     "error": "Connection timeout"
@@ -503,11 +507,12 @@ If you receive a CORS error, ensure your request's `Origin` header matches one o
 
 ## Changelog
 
-### v2.0.2 (Current)
+### v2.0.3 (Current)
 - Email service with Nodemailer 7.0.11
 - Rate limiting with express-rate-limit 8.2.1
 - CORS protection with cors 2.8.5
-- Health check endpoint with email verification
+- Health check endpoint with email verification and version information
+- Health endpoint rate limiting (60 requests per minute)
 
 ---
 
@@ -520,5 +525,5 @@ For API issues or questions:
 
 ---
 
-**Last Updated**: December 4, 2025  
-**API Version**: 2.0.2
+**Last Updated**: December 5, 2025  
+**API Version**: 2.0.3

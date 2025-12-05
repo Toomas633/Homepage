@@ -7,7 +7,7 @@ import {
 import { healthRateLimiter } from '../middleware/rateLimiter.js'
 
 // Version is injected at build time or use environment variable
-const APP_VERSION = process.env.APP_VERSION || '2.0.2'
+const APP_VERSION = process.env.APP_VERSION || '2.0.3'
 
 interface HealthResponse {
 	status: 'healthy' | 'unhealthy'
