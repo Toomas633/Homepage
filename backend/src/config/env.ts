@@ -21,13 +21,10 @@ const requiredEnvVars: Record<string, string | undefined> = {
 	ALLOWED_ORIGINS,
 }
 
-// Skip validation in test environment (mocked in test setup)
-if (process.env.NODE_ENV !== 'test') {
-	for (const [key, value] of Object.entries(requiredEnvVars)) {
-		if (value === undefined || value === '') {
-			console.error(`Missing required environment variable: ${key}`)
-			process.exit(1)
-		}
+for (const [key, value] of Object.entries(requiredEnvVars)) {
+	if (value === undefined || value === '') {
+		console.error(`Missing required environment variable: ${key}`)
+		process.exit(1)
 	}
 }
 

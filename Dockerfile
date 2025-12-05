@@ -39,7 +39,8 @@ WORKDIR /app
 RUN apk add --no-cache nodejs curl tini \
     && rm -rf /var/cache/apk/* \
     && rm -f /etc/nginx/conf.d/default.conf \
-    && sed -i 's|/run/nginx.pid|/tmp/nginx.pid|g' /etc/nginx/nginx.conf
+    && sed -i 's|/run/nginx.pid|/tmp/nginx.pid|g' /etc/nginx/nginx.conf \
+    && sed -i '/^user /d' /etc/nginx/nginx.conf
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
@@ -57,7 +58,7 @@ RUN addgroup -g 1000 appuser \
     && touch /tmp/nginx.pid \
     && chown appuser:appuser /tmp/nginx.pid
 
-COPY --chown=appuser:appuser <<'EOF' /app/entrypoint.sh
+COPY <<'EOF' /app/entrypoint.sh
 #!/bin/sh
 set -e
 
@@ -73,7 +74,7 @@ kill $NGINX_PID $BACKEND_PID 2>/dev/null || true
 exit $?
 EOF
 
-RUN chmod +x /app/entrypoint.sh
+RUN chmod 755 /app/entrypoint.sh
 
 USER appuser
 

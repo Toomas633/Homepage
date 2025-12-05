@@ -9,6 +9,11 @@ ignored:
   # Pinning versions makes Dockerfile fragile as specific versions may not be available in future base images
   - DL3008
   
+  # DL3018: Pin versions in apk add
+  # Skipped for minimal dependencies (bash, curl) that are cleaned after installation
+  # Pinning versions makes Dockerfile fragile as specific versions may not be available in future base images
+  - DL3018
+
   # DL3016: Pin versions in npm install
   # We use package-lock.json for dependency pinning instead of version suffixes in install commands
   # This provides better version control and is the recommended npm practice
