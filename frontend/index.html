@@ -4,61 +4,49 @@
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+		<!-- Resource Hints for Performance -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+
 		<link rel="manifest" href="/manifest.json" />
 		<meta name="theme-color" content="#f44336" />
 		<link rel="icon" href="/favicon.ico" />
 		<title>Toomas633's Dungeon</title>
 		<meta
+			name="description"
+			content="Explore the projects and interests of a tech enthusiast and full-time developer. From robotics to 3D printing and find open-source work on GitHub and Thingiverse." />
+		<meta
+			name="keywords"
+			content="Toomas633, portfolio, web development, robotics, 3D printing, programming, projects, GitHub, full-stack developer" />
+		<meta name="author" content="Toomas633" />
+		<meta name="robots" content="index, follow" />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://toomas633.com/" />
+		<meta property="og:title" content="Toomas633's Dungeon" />
+		<meta
+			property="og:description"
+			content="Explore the projects and interests of a tech enthusiast and full-time developer. From robotics to 3D printing and find open-source work on GitHub and Thingiverse." />
+		<meta property="og:image" content="https://toomas633.com/logo.svg" />
+		<meta property="og:site_name" content="Toomas633's Dungeon" />
+		<meta property="og:locale" content="en_US" />
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content="https://toomas633.com/" />
+		<meta name="twitter:title" content="Toomas633's Dungeon" />
+		<meta
+			name="twitter:description"
+			content="Explore the projects and interests of a tech enthusiast and full-time developer. From robotics to 3D printing and find open-source work on GitHub and Thingiverse." />
+		<meta name="twitter:image" content="https://toomas633.com/logo.svg" />
+
+		<meta
 			name="google-site-verification"
 			content="3mzfkHeHI79i5vZPIipQ5bCn0TflXUHfrzTDuzzuVOw" />
-		<script
-			async
-			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511585383372617"
-			crossorigin="anonymous"></script>
 	</head>
-	<!-- Google tag (gtag.js) -->
-	<script
-		async
-		src="https://www.googletagmanager.com/gtag/js?id=G-NXQTF484K2"></script>
-	<script>
-		globalThis.dataLayer = globalThis.dataLayer || []
-		function gtag() {
-			dataLayer.push(arguments)
-		}
-
-		gtag('js', new Date())
-		gtag('config', 'G-NXQTF484K2')
-		gtag('consent', 'default', {
-			ad_storage: 'denied',
-			analytics_storage: 'denied',
-			ad_user_data: 'denied',
-			ad_personalization: 'denied',
-			functionality_storage: 'denied',
-			personalization_storage: 'denied',
-			security_storage: 'granted',
-		})
-	</script>
-	<script>
-		function updateConsent(consent) {
-			gtag('consent', 'update', {
-				functionality_storage: consent.necessary ? 'granted' : 'denied',
-				personalization_storage: consent.necessary ? 'granted' : 'denied',
-				ad_storage: consent.ads ? 'granted' : 'denied',
-				ad_personalization: consent.ads ? 'granted' : 'denied',
-				analytics_storage: consent.analytics ? 'granted' : 'denied',
-				ad_user_data: consent.userData ? 'granted' : 'denied',
-			})
-
-			if (!consent.analytics) {
-				gtag('set', 'url_passthrough', true)
-			}
-			if (!consent.ads) {
-				gtag('set', 'ads_data_redaction', true)
-			}
-		}
-
-		globalThis.updateConsent = updateConsent
-	</script>
 
 	<body>
 		<noscript>
@@ -69,5 +57,67 @@
 		</noscript>
 		<div id="app"></div>
 		<script type="module" src="/src/main.ts"></script>
+
+		<!-- Analytics and Ads loaded after app for better FCP -->
+		<script>
+			// Initialize gtag early but load script later
+			globalThis.dataLayer = globalThis.dataLayer || []
+			function gtag() {
+				dataLayer.push(arguments)
+			}
+			gtag('js', new Date())
+			gtag('config', 'G-NXQTF484K2')
+			gtag('consent', 'default', {
+				ad_storage: 'denied',
+				analytics_storage: 'denied',
+				ad_user_data: 'denied',
+				ad_personalization: 'denied',
+				functionality_storage: 'denied',
+				personalization_storage: 'denied',
+				security_storage: 'granted',
+			})
+
+			function updateConsent(consent) {
+				gtag('consent', 'update', {
+					functionality_storage: consent.necessary ? 'granted' : 'denied',
+					personalization_storage: consent.necessary ? 'granted' : 'denied',
+					ad_storage: consent.ads ? 'granted' : 'denied',
+					ad_personalization: consent.ads ? 'granted' : 'denied',
+					analytics_storage: consent.analytics ? 'granted' : 'denied',
+					ad_user_data: consent.userData ? 'granted' : 'denied',
+				})
+				if (!consent.analytics) {
+					gtag('set', 'url_passthrough', true)
+				}
+				if (!consent.ads) {
+					gtag('set', 'ads_data_redaction', true)
+				}
+			}
+			globalThis.updateConsent = updateConsent
+
+			// Load analytics after page interactive
+			if (document.readyState === 'complete') {
+				loadAnalytics()
+			} else {
+				window.addEventListener('load', loadAnalytics)
+			}
+
+			function loadAnalytics() {
+				// Load gtag script
+				const gtagScript = document.createElement('script')
+				gtagScript.src =
+					'https://www.googletagmanager.com/gtag/js?id=G-NXQTF484K2'
+				gtagScript.async = true
+				document.head.appendChild(gtagScript)
+
+				// Load AdSense script
+				const adsScript = document.createElement('script')
+				adsScript.src =
+					'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511585383372617'
+				adsScript.async = true
+				adsScript.crossOrigin = 'anonymous'
+				document.head.appendChild(adsScript)
+			}
+		</script>
 	</body>
 </html>

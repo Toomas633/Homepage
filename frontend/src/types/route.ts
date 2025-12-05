@@ -10,4 +10,6 @@ interface RouteMeta {
 	title: string
 	description: string
 	icon?: string
+	image?: string
+	keywords?: string
 }

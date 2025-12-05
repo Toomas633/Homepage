@@ -40,14 +40,87 @@ router.beforeEach((to, _from, next) => {
 	}
 
 	const defaultDescription = "Toomas633's projects homepage"
+	const canonicalUrl = `https://toomas633.com${to.path}`
+	const pageTitle = to.meta.title?.toString() ?? defaultTitle
+	const pageDescription = to.meta.description?.toString() ?? defaultDescription
+	const pageImage =
+		to.meta.image?.toString() ?? 'https://toomas633.com/logo.svg'
+	const pageKeywords =
+		to.meta.keywords?.toString() ??
+		'Toomas633, portfolio, web development, robotics, 3D printing, programming, projects'
 
-	document.title = to.meta.title?.toString() ?? defaultTitle
+	document.title = pageTitle
 
 	useHead({
+		link: [
+			{
+				rel: 'canonical',
+				href: canonicalUrl,
+			},
+		],
 		meta: [
+			// Standard meta tags
 			{
 				name: 'description',
-				content: to.meta.description?.toString() ?? defaultDescription,
+				content: pageDescription,
+			},
+			{
+				name: 'keywords',
+				content: pageKeywords,
+			},
+			{
+				name: 'author',
+				content: 'Toomas633',
+			},
+			// Open Graph / Facebook
+			{
+				property: 'og:type',
+				content: 'website',
+			},
+			{
+				property: 'og:url',
+				content: canonicalUrl,
+			},
+			{
+				property: 'og:title',
+				content: pageTitle,
+			},
+			{
+				property: 'og:description',
+				content: pageDescription,
+			},
+			{
+				property: 'og:image',
+				content: pageImage,
+			},
+			{
+				property: 'og:site_name',
+				content: "Toomas633's Dungeon",
+			},
+			{
+				property: 'og:locale',
+				content: 'en_US',
+			},
+			// Twitter Card
+			{
+				name: 'twitter:card',
+				content: 'summary_large_image',
+			},
+			{
+				name: 'twitter:url',
+				content: canonicalUrl,
+			},
+			{
+				name: 'twitter:title',
+				content: pageTitle,
+			},
+			{
+				name: 'twitter:description',
+				content: pageDescription,
+			},
+			{
+				name: 'twitter:image',
+				content: pageImage,
 			},
 		],
 	})

@@ -1,7 +1,9 @@
-import StudentApiView from '@/views/demos/StudentApiView.vue'
-import ContactApiView from '@/views/demos/ContactApiView.vue'
-import ClickCounterView from '@/views/demos/ClickCounterView.vue'
 import { RouteRecord } from '@/types/route'
+
+// Lazy load demo views for better performance
+const StudentApiView = () => import('@/views/demos/StudentApiView.vue')
+const ContactApiView = () => import('@/views/demos/ContactApiView.vue')
+const ClickCounterView = () => import('@/views/demos/ClickCounterView.vue')
 
 export const demoRoutes: Array<RouteRecord> = [
 	{
@@ -12,6 +14,8 @@ export const demoRoutes: Array<RouteRecord> = [
 			description:
 				'This project is a simple Node.js API built with TypeScript and Express. It provides CRUD operations for managing student data.',
 			icon: 'mdi-account-school',
+			keywords:
+				'Student API, Node.js, TypeScript, Express, REST API, CRUD operations, demo, web development',
 		},
 	},
 	{
@@ -22,6 +26,8 @@ export const demoRoutes: Array<RouteRecord> = [
 			description:
 				'A minimal contact management system with a Java REST API, PostgreSQL storage, and a simple JavaScript UI for adding, viewing, and searching contacts.',
 			icon: 'mdi-card-account-mail',
+			keywords:
+				'Contact API, Java, REST API, PostgreSQL, JavaScript, contact management, demo, database',
 		},
 	},
 	{
@@ -31,6 +37,8 @@ export const demoRoutes: Array<RouteRecord> = [
 			title: 'Click Counter',
 			description: 'Simple demo click counter webpage',
 			icon: 'mdi-cursor-pointer',
+			keywords:
+				'click counter, web demo, JavaScript, interactive demo, simple web app',
 		},
 	},
 ]

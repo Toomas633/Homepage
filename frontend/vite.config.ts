@@ -71,11 +71,13 @@ export default defineConfig(({ command, mode }): UserConfig => {
 			chunkSizeWarningLimit: 1500,
 			minify: command === 'build' ? 'terser' : false,
 			target: 'esnext',
+			cssCodeSplit: true,
 			terserOptions: {
 				compress: {
 					drop_console: command === 'build',
 					drop_debugger: true,
-					passes: 2
+					passes: 2,
+					pure_funcs: ['console.log', 'console.info', 'console.debug']
 				},
 				format: { 
 					comments: false 
@@ -84,11 +86,53 @@ export default defineConfig(({ command, mode }): UserConfig => {
 			rollupOptions: {
 				treeshake: true,
 				output: {
-					manualChunks: {
-						vue: ['vue', 'vue-router'],
-						vuetify: ['vuetify'],
-						vendor: ['@vueuse/head', 'vue-cookies']
-					}
+					manualChunks: (id) => {
+						const getNodeModuleChunk = (id: string): string | undefined => {
+							const moduleChecks = [
+								{ includes: 'vue-router', chunk: 'vue-router' },
+								{ includes: 'vue', chunk: 'vue', exclude: 'vue-router' },
+								{ includes: 'vuetify', chunk: 'vuetify' },
+								{ includes: '@vueuse', chunk: 'vueuse' },
+								{ includes: 'leaflet', chunk: 'leaflet' },
+								{ includes: 'axios', chunk: 'axios' },
+							]
+							
+							for (const check of moduleChecks) {
+								if (id.includes(check.includes)) {
+									if (!check.exclude || !id.includes(check.exclude)) {
+										return check.chunk
+									}
+								}
+							}
+							return 'vendor'
+						}
+						
+						const getViewChunk = (id: string): string | undefined => {
+							const viewPath = id.split('/views/')[1]
+							const viewTypes = [
+								{ includes: 'projects/', chunk: 'views-projects' },
+								{ includes: 'demos/', chunk: 'views-demos' },
+								{ includes: 'servers/', chunk: 'views-servers' },
+							]
+							
+							for (const type of viewTypes) {
+								if (viewPath.includes(type.includes)) {
+									return type.chunk
+								}
+							}
+							return 'views-main'
+						}
+						
+						if (id.includes('node_modules')) {
+							return getNodeModuleChunk(id)
+						}
+						if (id.includes('/views/')) {
+							return getViewChunk(id)
+						}
+					},
+					chunkFileNames: 'assets/[name]-[hash].js',
+					entryFileNames: 'assets/[name]-[hash].js',
+					assetFileNames: 'assets/[name]-[hash].[ext]'
 				}
 			},
 		},
