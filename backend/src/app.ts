@@ -2,11 +2,13 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import type { Application, Request, Response, NextFunction } from 'express'
 import type { Server } from 'node:http'
+import swaggerUi from 'swagger-ui-express'
 import { corsMiddleware } from './middleware/cors.js'
 import healthRoutes from './routes/health.js'
 import emailRoutes from './routes/email.js'
 import type { ErrorResponse } from './types/index.js'
 import { config } from './config/env.js'
+import { swaggerSpec } from './config/swagger.js'
 import {
 	createTransporter,
 	verifyEmailConnection,
@@ -19,6 +21,23 @@ app.set('trust proxy', 1)
 
 app.use(bodyParser.json())
 app.use(corsMiddleware)
+
+app.use(
+	'/api/swagger-ui',
+	swaggerUi.serve,
+	swaggerUi.setup(swaggerSpec, {
+		customSiteTitle: "Toomas633's Dungeon API Documentation",
+		customCss: '.swagger-ui .topbar { display: none }',
+		swaggerOptions: {
+			persistAuthorization: true,
+		},
+	})
+)
+
+app.get('/api/swagger-ui.json', (_req: Request, res: Response) => {
+	res.setHeader('Content-Type', 'application/json')
+	res.send(swaggerSpec)
+})
 
 app.use('/', healthRoutes)
 app.use('/', emailRoutes)

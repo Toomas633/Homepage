@@ -8,6 +8,7 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 - **CORS Protection**: Configurable allowed origins
 - **Rate Limiting**: Email endpoint protection (10 requests per 15 minutes)
 - **Health Monitoring**: Health check endpoint for Docker/monitoring
+- **API Documentation**: Interactive Swagger UI at `/api-docs`
 - **Security**: Non-root user in Docker, environment validation
 - **Development**: Hot reload with Node.js `--watch` mode
 
@@ -198,6 +199,33 @@ Coverage reports are generated in `coverage/` directory:
 For more detailed testing information, see [DEVELOPMENT.md](../DEVELOPMENT.md#-testing).
 
 ## 🌐 API Endpoints
+
+### Interactive API Documentation
+
+Access the interactive Swagger UI documentation at:
+
+```
+http://localhost:3000/api/swagger-ui
+```
+
+Or in production:
+
+```
+https://yourdomain.com/api/swagger-ui
+```
+
+The Swagger UI provides:
+- ✅ Interactive API testing
+- ✅ Complete request/response schemas
+- ✅ Example payloads for all endpoints
+- ✅ Authentication and authorization details
+- ✅ Try-it-out functionality
+
+You can also access the OpenAPI JSON specification at:
+
+```
+http://localhost:3000/api/swagger-ui.json
+```
 
 ### Health Check
 

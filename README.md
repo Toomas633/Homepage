@@ -48,6 +48,7 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 - **🐳 Containerized**: Full Docker support with multi-stage builds
 - **✅ Tested**: Comprehensive test coverage with Vitest
 - **📈 Quality**: SonarCloud integration for code quality analysis
+- **📚 API Documentation**: Interactive Swagger UI for API exploration
 
 ### Tech Stack
 
@@ -68,6 +69,7 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 - **Build Tool**: esbuild 0.27.1
 - **Email**: Nodemailer 7.0.11
 - **Security**: CORS 2.8.5, Rate Limiting 8.2.1
+- **API Docs**: Swagger UI with OpenAPI 3.0
 - **Testing**: Vitest 4.0.15
 
 ---

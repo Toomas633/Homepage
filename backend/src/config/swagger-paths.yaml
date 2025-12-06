@@ -1,0 +1,107 @@
+paths:
+  /api/health:
+    get:
+      summary: Check the health status of the API
+      description: Returns the current health status of the application, including email service connectivity and version information
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                healthy:
+                  value:
+                    status: healthy
+                    timestamp: '2025-12-06T12:00:00.000Z'
+                    version: '2.0.3'
+                    email:
+                      status: connected
+                      responseTime: '150ms'
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                unhealthy:
+                  value:
+                    status: unhealthy
+                    timestamp: '2025-12-06T12:00:00.000Z'
+                    version: '2.0.3'
+                    email:
+                      status: disconnected
+                      error: 'Connection timeout'
+
+  /api/send-email:
+    post:
+      summary: Send a contact form email
+      description: Sends an email from the contact form to the configured recipient. Rate limited to 10 requests per 15 minutes per IP.
+      tags:
+        - Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+            examples:
+              contact:
+                summary: Contact form submission
+                value:
+                  from: 'user@example.com'
+                  message: 'Hello, I would like to inquire about...'
+                  project: 'General Inquiry'
+      responses:
+        '200':
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailResponse'
+              examples:
+                success:
+                  value:
+                    success: true
+                    info:
+                      accepted: ['contact@toomas633.com']
+                      rejected: []
+                      response: '250 2.0.0 OK'
+                      messageId: '<abc123@gmail.com>'
+        '400':
+          description: Invalid input or missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingFields:
+                  value:
+                    success: false
+                    message: 'Missing required fields: from, message, project'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitError'
+              examples:
+                rateLimited:
+                  value:
+                    error: 'Too many requests, please try again later.'
+        '500':
+          description: Email service error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                smtpError:
+                  value:
+                    success: false
+                    message: 'Error sending email'
+                    error: 'SMTP connection failed'

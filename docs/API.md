@@ -4,6 +4,7 @@ Backend API documentation for Toomas633's Dungeon.
 
 ## 📋 Table of Contents
 
+- [Interactive Documentation](#interactive-documentation)
 - [Base URL](#base-url)
 - [Authentication](#authentication)
 - [Rate Limiting](#rate-limiting)
@@ -13,6 +14,29 @@ Backend API documentation for Toomas633's Dungeon.
   - [Send Email](#send-email)
 - [Error Codes](#error-codes)
 - [Examples](#examples)
+
+---
+
+## Interactive Documentation
+
+For the best API exploration experience, use the **interactive Swagger UI**:
+
+**Development**:
+```
+http://localhost:3000/api/swagger-ui
+```
+
+**Production**:
+```
+https://yourdomain.com/api/swagger-ui
+```
+
+The Swagger UI provides:
+- ✅ **Try it out**: Test endpoints directly from your browser
+- ✅ **Detailed schemas**: Complete request/response specifications
+- ✅ **Examples**: Pre-filled example payloads
+- ✅ **Real-time validation**: Instant feedback on request format
+- ✅ **OpenAPI spec**: Download the OpenAPI JSON at `/api/swagger-ui.json`
 
 ---
 
