@@ -3,7 +3,7 @@
 		<h1 class="text-center d-flex justify-center align-items-center">
 			Plex Organizer
 		</h1>
-		<StatsAndChips hide-langs repo="plex-organizer" />
+		<StatsAndChips hide-langs :repo="repo" />
 		<p :class="!isMobile ? 'text-center' : ''">
 			Plex Organizer is a Python-based utility designed to help manage and
 			organize media files for Plex Media Server. It automates tasks such as
@@ -20,7 +20,7 @@
 		</p>
 		<v-row class="d-block d-sm-flex" justify="center">
 			<v-col class="align-content-space-around mt-3">
-				<StatsAndChips hide-chips repo="plex-organizer" />
+				<StatsAndChips hide-chips :repo="repo" />
 			</v-col>
 			<v-col class="align-content-space-around" lg="2" md="3" sm="4" xl="1">
 				<ButtonCard
@@ -256,6 +256,8 @@ import { isMobile } from '@basitcodeenv/vue3-device-detect'
 import { fileIcons } from '@/constants/fileIcons'
 
 const { openImageInNewTab } = useImageMixin()
+
+const repo = 'toomas633/plex-organizer'
 
 const exampleConfig = `[qBittorrent]
 host = http://localhost:8081 #host address and port of qBittorrent webui api

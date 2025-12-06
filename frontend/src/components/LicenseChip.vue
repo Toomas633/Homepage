@@ -14,23 +14,12 @@
 </template>
 <script setup lang="ts">
 import useThemeMixin from '@/helpers/themeMixin'
-import { getLicence } from '@/services/githubService'
 import { License } from '@/types/github'
-import { onMounted, ref } from 'vue'
 
-const porps = defineProps<{
-	repo: string
+defineProps<{
+	loading: boolean
+	license?: License
 }>()
 
-const loading = ref(true)
-const license = ref<License | undefined>(undefined)
-
 const { isDark } = useThemeMixin()
-
-onMounted(async () => {
-	license.value = await getLicence(porps.repo).then((resp) => {
-		loading.value = false
-		return resp
-	})
-})
 </script>

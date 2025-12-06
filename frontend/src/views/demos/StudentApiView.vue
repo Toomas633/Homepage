@@ -1,14 +1,14 @@
 <template>
 	<v-container>
 		<h1 class="text-center">Student API</h1>
-		<StatsAndChips hide-langs hide-version repo="student-api" />
+		<StatsAndChips hide-langs hide-version :repo="repo" />
 		<p class="text-center">
 			This project is a simple Node.js API built with TypeScript and Express. It
 			provides CRUD operations for managing student data.
 		</p>
 		<v-row class="d-block d-sm-flex my-1" justify="center">
 			<v-col>
-				<StatsAndChips repo="student-api" hide-chips />
+				<StatsAndChips :repo="repo" hide-chips />
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard
@@ -147,6 +147,8 @@
 <script setup lang="ts">
 import { fileIcons } from '@/constants/fileIcons'
 import { FileType } from '@/enums/fileType'
+
+const repo = 'toomas633/student-api'
 
 const studentData = `{
   firstName: string

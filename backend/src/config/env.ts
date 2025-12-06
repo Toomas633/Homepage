@@ -11,6 +11,7 @@ const {
 	ALLOWED_ORIGINS,
 	EMAIL_PORT,
 	EMAIL_TLS,
+	GITHUB_TOKEN,
 } = process.env
 
 const requiredEnvVars: Record<string, string | undefined> = {
@@ -19,6 +20,7 @@ const requiredEnvVars: Record<string, string | undefined> = {
 	EMAIL_TO,
 	EMAIL_TLS,
 	ALLOWED_ORIGINS,
+	GITHUB_TOKEN,
 }
 
 for (const [key, value] of Object.entries(requiredEnvVars)) {
@@ -42,6 +44,9 @@ export const config: AppConfig = {
 	},
 	allowedOrigins: {
 		origins: ALLOWED_ORIGINS?.split(',') || [],
+	},
+	github: {
+		token: GITHUB_TOKEN,
 	},
 }
 

@@ -1,7 +1,7 @@
 <template>
 	<v-container>
 		<h1 class="text-center">XMrig Proxy</h1>
-		<StatsAndChips repo="xmrig-proxy" hide-langs />
+		<StatsAndChips :repo="repo" hide-langs />
 		<p :class="!isMobile ? 'text-center' : ''">
 			Simple ubuntu docker image with the latest XMRig Proxy cloned from
 			<LinkComponent
@@ -11,7 +11,7 @@
 		</p>
 		<v-row class="d-block d-sm-flex my-1" justify="center">
 			<v-col>
-				<StatsAndChips repo="xmrig-proxy" hide-chips />
+				<StatsAndChips :repo="repo" hide-chips />
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard
@@ -59,6 +59,8 @@ import Image from '@/assets/images/xmrig-proxy/image.png'
 import useImageMixin from '@/helpers/imageMixin'
 
 const { openImageInNewTab } = useImageMixin()
+
+const repo = 'toomas633/xmrig-proxy'
 
 const dockerCode = `docker pull toomas633/xmrig-proxy:latest && \
 docker run -d -p 3333:3333 -p 8080:8080 -p 80:80\

@@ -1,16 +1,26 @@
 <template>
 	<div v-if="!hideChips" class="chips">
-		<LicenseChip :repo="repo" />
+		<LicenseChip :license="data?.license" :loading="loading" />
 		<ArchiveChip
 			v-if="newPage && newLink"
 			:new-page="newPage"
 			:new-link="newLink" />
-		<LatestReleaseChip v-if="!hideVersion" :repo="repo" />
+		<LatestReleaseChip
+			v-if="!hideVersion"
+			:release="data?.latestRelease ?? ''"
+			:loading="loading" />
 	</div>
-	<LangGraph v-if="!hideLangs" :repo="repo" />
+	<LangGraph
+		v-if="!hideLangs"
+		:languages="data?.languages"
+		:loading="loading" />
 </template>
 <script setup lang="ts">
-defineProps<{
+import { getRepoInfo } from '@/services/githubService'
+import { RepoInfo } from '@/types/github'
+import { onMounted, ref } from 'vue'
+
+const props = defineProps<{
 	repo: string
 	newPage?: string
 	newLink?: string
@@ -18,6 +28,16 @@ defineProps<{
 	hideChips?: boolean
 	hideVersion?: boolean
 }>()
+
+const loading = ref(true)
+const data = ref<RepoInfo | undefined>(undefined)
+
+onMounted(async () => {
+	data.value = await getRepoInfo(props.repo).then((resp) => {
+		loading.value = false
+		return resp
+	})
+})
 </script>
 <style scoped lang="scss">
 .chips {

@@ -3,7 +3,7 @@
 		<h1 class="text-center">File Organizer</h1>
 		<StatsAndChips
 			hide-langs
-			repo="file-organizer"
+			:repo="repo"
 			new-page="Plex Organizer"
 			new-link="/projects/plex-organizer" />
 		<p :class="!isMobile ? 'text-center' : ''">
@@ -24,7 +24,7 @@
 		</p>
 		<v-row class="d-block d-sm-flex" justify="center">
 			<v-col class="align-content-space-around mt-3">
-				<StatsAndChips hide-chips repo="file-organizer" />
+				<StatsAndChips hide-chips :repo="repo" />
 			</v-col>
 			<v-col class="align-content-space-around" lg="2" md="3" sm="4" xl="1">
 				<ButtonCard
@@ -141,4 +141,6 @@ import { fileIcons } from '@/constants/fileIcons'
 import { inputItems, outputItems } from '@/constants/fileOrganizer'
 import { FileType } from '@/enums/fileType'
 import { isMobile } from '@basitcodeenv/vue3-device-detect'
+
+const repo = 'toomas633/file-organizer'
 </script>

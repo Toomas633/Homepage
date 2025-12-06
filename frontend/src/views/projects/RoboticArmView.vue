@@ -1,7 +1,7 @@
 <template>
 	<v-container>
 		<h1 class="text-center">Robotic Arm</h1>
-		<StatsAndChips hide-langs repo="arduino-robotic-arm" />
+		<StatsAndChips hide-langs :repo="repo" />
 		<p class="mb-2" :class="!isMobile ? 'text-center' : ''">
 			This is Arduino Uno robotic arm using joystick input. It's my first
 			Arduino project that I have coded completely by myself from the beginning.
@@ -10,7 +10,7 @@
 			sturdiness and better power and performance. Currently on my setup it can
 			lift about 1kg of weights.
 		</p>
-		<StatsAndChips hide-chips repo="arduino-robotic-arm" />
+		<StatsAndChips hide-chips :repo="repo" />
 		<v-tabs v-model="tab" align-tabs="center" class="elevation-4" grow stacked>
 			<v-tab :value="Tabs.V1">
 				<v-icon icon="mdi-robot-industrial" /> V1
@@ -38,6 +38,7 @@ import ArmV2 from './RoboticArm/ArmV2.vue'
 import { isMobile } from '@basitcodeenv/vue3-device-detect'
 
 const tab = ref<Tabs>(Tabs.V1)
+const repo = 'toomas633/arduino-robotic-arm'
 </script>
 <style scoped lang="scss">
 .v-slide-group {

@@ -8,7 +8,7 @@
 		</p>
 		<v-row class="d-block d-sm-flex my-1" justify="center">
 			<v-col>
-				<StatsAndChips repo="contact-api" hide-chips />
+				<StatsAndChips repo="toomas633/contact-api" hide-chips />
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard

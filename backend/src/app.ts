@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express'
 import { corsMiddleware } from './middleware/cors.js'
 import healthRoutes from './routes/health.js'
 import emailRoutes from './routes/email.js'
+import githubRoutes from './routes/github.js'
 import type { ErrorResponse } from './types/index.js'
 import { config } from './config/env.js'
 import { swaggerSpec } from './config/swagger.js'
@@ -41,6 +42,7 @@ app.get('/api/swagger-ui.json', (_req: Request, res: Response) => {
 
 app.use('/', healthRoutes)
 app.use('/', emailRoutes)
+app.use('/', githubRoutes)
 
 app.use((req: Request, res: Response<ErrorResponse>) => {
 	res.status(404).json({

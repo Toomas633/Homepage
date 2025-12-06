@@ -19,6 +19,7 @@ export interface AppConfig {
 	email: EmailConfig
 	server: ServerConfig
 	allowedOrigins: AllowedOriginsConfig
+	github: GithubConfig
 }
 
 export interface ContactFormData {
@@ -38,4 +39,27 @@ export interface ApiResponse<T = unknown> {
 export interface ErrorResponse {
 	error: string
 	message: string
+}
+
+export interface GitHubResponse {
+	license?: License
+	languages: Language[]
+	latestRelease?: string
+}
+
+export interface License {
+	key: string
+	name: string
+	node_id: string
+	spdx_id: string
+	url: string
+}
+
+export interface Language {
+	name: string
+	count: number
+}
+
+export interface GithubConfig {
+	token?: string
 }

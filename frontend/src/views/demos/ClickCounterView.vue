@@ -1,7 +1,7 @@
 <template>
 	<v-container>
 		<h1 class="text-center">Click Counter</h1>
-		<StatsAndChips hide-langs hide-version repo="click-counter" />
+		<StatsAndChips hide-langs hide-version :repo="repo" />
 		<p class="text-center">
 			A simple Vue 3 application that demonstrates a click counter with theme
 			toggling functionality. The project uses Vuetify for UI components and
@@ -9,7 +9,7 @@
 		</p>
 		<v-row class="d-block d-sm-flex my-1" justify="center">
 			<v-col>
-				<StatsAndChips repo="click-counter" hide-chips />
+				<StatsAndChips :repo="repo" hide-chips />
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard
@@ -95,7 +95,7 @@ import Preview from '@/assets/images/click-counter/preview.gif'
 import useImageMixin from '@/helpers/imageMixin'
 
 const { openImageInNewTab } = useImageMixin()
-
+const repo = 'toomas633/click-counter'
 const testCode = `yarn build
 yarn preview #serves build webpage from dist on port 4123
 yarn test`

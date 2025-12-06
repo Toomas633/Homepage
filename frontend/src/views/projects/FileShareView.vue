@@ -1,14 +1,14 @@
 <template>
 	<v-container>
 		<h1 class="text-center">FileShare</h1>
-		<StatsAndChips hide-langs repo="fileshare" />
+		<StatsAndChips hide-langs :repo="repo" />
 		<p class="text-center">
 			Easy file sharing website featuring (direct) link generation and delete
 			timer.
 		</p>
 		<v-row class="d-block d-sm-flex" justify="center">
 			<v-col class="align-content-space-around pt-5">
-				<StatsAndChips hide-chips repo="fileshare" />
+				<StatsAndChips hide-chips :repo="repo" />
 			</v-col>
 			<v-col
 				class="align-content-space-around pa-0"
@@ -274,4 +274,6 @@ const images: Image[] = [
 		alt: 'Settings',
 	},
 ]
+
+const repo = 'toomas633/fileshare'
 </script>
