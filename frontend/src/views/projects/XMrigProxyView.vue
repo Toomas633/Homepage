@@ -32,7 +32,7 @@
 			class="border-opacity-100 mt-6 mb-4"
 			color="primary" />
 		<LinkableTitle h1 title="Running" centered />
-		<p :class="!isMobile ? 'text-center' : ''">
+		<p>
 			Run the Docker container with the following command, passing the necessary
 			environment variables:
 		</p>

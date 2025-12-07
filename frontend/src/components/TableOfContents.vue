@@ -3,10 +3,10 @@
 		v-if="!drawer"
 		data-contents-button
 		class="toc-fab"
-		:class="isMobile ? 'mobile' : ''"
 		color="black"
 		icon="mdi-format-list-bulleted"
 		elevation="8"
+		position="fixed"
 		@click="drawer = true" />
 	<v-navigation-drawer
 		v-model="drawer"
@@ -14,7 +14,8 @@
 		location="right"
 		temporary
 		floating
-		class="bg-black"
+		class="bg-black toc-drawer"
+		:class="drawer ? 'open' : 'closed'"
 		:scrim="false"
 		touchless>
 		<h2 class="text-center mt-1">Table of contents</h2>
@@ -33,7 +34,6 @@
 	</v-navigation-drawer>
 </template>
 <script lang="ts" setup>
-import { isMobile } from '@basitcodeenv/vue3-device-detect'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -163,13 +163,18 @@ onUnmounted(() => {
 </script>
 <style scoped lang="scss">
 .toc-fab {
-	position: fixed;
 	right: calc(0.25rem + var(--scrollbar-offset));
 	top: 5.15rem;
 	transform: translateY(-50%);
+}
 
-	&.mobile {
-		right: 0.25rem;
+.toc-drawer {
+	&.open {
+		right: var(--scrollbar-offset) !important;
+	}
+
+	&.closed {
+		right: 0 !important;
 	}
 }
 </style>

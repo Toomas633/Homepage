@@ -1,9 +1,5 @@
 @use 'sass:meta';
 
-:root {
-	--scrollbar-offset-right: 0rem;
-}
-
 html {
 	overflow-y: auto !important;
 }
@@ -94,7 +90,7 @@ mark {
 }
 
 .v-table {
-	background: background;
+	background-color: rgb(var(--v-theme-code)) !important;
 }
 
 .multicolumn {

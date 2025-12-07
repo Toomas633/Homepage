@@ -1,16 +1,22 @@
 import { defineConfig } from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
+import vuetify from 'vite-plugin-vuetify';
 import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
-	plugins: [vue()],
+	plugins: [
+		vue(),
+		vuetify({ autoImport: true }),
+	],
 	test: {
 		globals: true,
 		environment: 'happy-dom',
 		setupFiles: ['./tests/setup.ts'],
 		include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
 		css: {
-			include: /.+/,
+			modules: {
+				classNameStrategy: 'non-scoped',
+			},
 		},
 		coverage: {
 			provider: 'v8',
@@ -27,10 +33,18 @@ export default defineConfig({
 				'vitest.config.ts',
 			],
 		},
+		server: {
+			deps: {
+				inline: ['vuetify'],
+			},
+		},
 	},
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
 		},
+	},
+	ssr: {
+		noExternal: ['vuetify'],
 	},
 });

@@ -241,7 +241,7 @@
 			thickness="2"
 			color="primary" />
 		<LinkableTitle h1 centered title="Docker" />
-		<p class="text-center">
+		<p>
 			Create a <InlineCode code="docker-compose.yml" />, copy the contents under
 			here and run it with <InlineCode code="docker-compose up -d" /> (or
 			download the .yml from
