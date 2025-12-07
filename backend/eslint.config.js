@@ -54,7 +54,12 @@ export default [
 		},
 	},
 	{
-		// Ignore compiled JavaScript files
-		ignores: ['dist/**/*.js', '**/*.mjs'],
+		// Ignore only compiled files and generated reports
+		ignores: [
+			'dist/**/*.js',
+			'**/*.mjs',
+			'.reports/**',
+			'coverage/**',
+		],
 	},
 ]

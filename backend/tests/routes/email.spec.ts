@@ -16,7 +16,7 @@ describe('Email Route', () => {
 	beforeEach(() => {
 		app = express()
 		app.use(express.json())
-		app.use(emailRouter)
+		app.use('/api', emailRouter)
 		vi.clearAllMocks()
 	})
 

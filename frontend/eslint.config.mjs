@@ -96,4 +96,13 @@ export default [
 			'vue/one-component-per-file': 'off', // Allow inline test components
 		},
 	},
+	{
+		// Ignore only generated files and build artifacts
+		ignores: [
+			'dist/**',
+			'coverage/**',
+			'.reports/**',
+			'**/*.d.ts',
+		],
+	},
 ]

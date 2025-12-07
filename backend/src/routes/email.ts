@@ -16,7 +16,7 @@ interface EmailRequest extends Request {
 const router = Router()
 
 router.post(
-	'/api/send-email',
+	'/send-email',
 	emailRateLimiter,
 	async (req: EmailRequest, res: Response<ApiResponse>) => {
 		const { from, message, project } = req.body

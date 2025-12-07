@@ -20,7 +20,6 @@ const requiredEnvVars: Record<string, string | undefined> = {
 	EMAIL_TO,
 	EMAIL_TLS,
 	ALLOWED_ORIGINS,
-	GITHUB_TOKEN,
 }
 
 for (const [key, value] of Object.entries(requiredEnvVars)) {

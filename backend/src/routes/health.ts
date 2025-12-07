@@ -23,7 +23,7 @@ interface HealthResponse {
 const router = Router()
 
 router.get(
-	'/api/health',
+	'/health',
 	healthRateLimiter,
 	async (_req: Request, res: Response<HealthResponse>) => {
 		const timestamp = new Date().toISOString()

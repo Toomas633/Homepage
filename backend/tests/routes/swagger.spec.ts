@@ -7,7 +7,6 @@ import { swaggerSpec } from '../../src/config/swagger.js'
 describe('Swagger Documentation Routes', () => {
 	const app = express()
 
-	// Setup Swagger routes for testing
 	app.use('/api/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 	app.get('/api/swagger-ui.json', (_req, res) => {
 		res.setHeader('Content-Type', 'application/json')
@@ -29,7 +28,7 @@ describe('Swagger Documentation Routes', () => {
 			const response = await request(app).get('/api/swagger-ui.json')
 
 			expect(response.body.info.title).toBe("Toomas633's Dungeon API")
-			expect(response.body.info.version).toBe('2.0.3')
+			expect(response.body.info.version).toBe('2.1.0')
 			expect(response.body.openapi).toBe('3.0.0')
 		})
 

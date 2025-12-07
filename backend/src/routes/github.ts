@@ -6,7 +6,7 @@ import type { ApiResponse, GitHubResponse } from '../types/index.js'
 const router = Router()
 
 router.post(
-	'/api/github',
+	'/github',
 	async (req: Request, res: Response<ApiResponse<GitHubResponse | null>>) => {
 		const { repo } = req.body
 

@@ -18,7 +18,6 @@ await build({
 	logLevel: 'info',
 })
 
-// Copy YAML configuration files to dist
 const configDir = join('dist', 'config')
 mkdirSync(configDir, { recursive: true })
 copyFileSync(

@@ -40,9 +40,9 @@ app.get('/api/swagger-ui.json', (_req: Request, res: Response) => {
 	res.send(swaggerSpec)
 })
 
-app.use('/', healthRoutes)
-app.use('/', emailRoutes)
-app.use('/', githubRoutes)
+app.use('/api', healthRoutes)
+app.use('/api', emailRoutes)
+app.use('/api', githubRoutes)
 
 app.use((req: Request, res: Response<ErrorResponse>) => {
 	res.status(404).json({
@@ -105,7 +105,6 @@ export const startServer = async (): Promise<void> => {
 	process.on('SIGINT', () => gracefulShutdown('SIGINT'))
 }
 
-// Only start server if this module is run directly (not imported in tests)
 if (process.env.NODE_ENV !== 'test') {
 	startServer()
 }

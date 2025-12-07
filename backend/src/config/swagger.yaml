@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: "Toomas633's Dungeon API"
-  version: '2.0.3'
+  version: '2.1.0'
   description: 'Backend API server for Toomas633 personal projects homepage'
   contact:
     name: Toomas633
@@ -10,12 +10,6 @@ info:
   license:
     name: GPL-3.0-only
     url: https://www.gnu.org/licenses/gpl-3.0.html
-
-servers:
-  - url: http://localhost:3000
-    description: Development server
-  - url: https://toomas633.com/api
-    description: Production server
 
 tags:
   - name: Health

@@ -24,4 +24,4 @@ const options: Options = {
 	apis: [],
 }
 
-export const swaggerSpec = swaggerJsdoc(options)
+export const swaggerSpec = swaggerJsdoc(options) as swaggerJsdoc.OAS3Definition
