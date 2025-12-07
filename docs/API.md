@@ -12,6 +12,7 @@ Backend API documentation for Toomas633's Dungeon.
 - [Endpoints](#endpoints)
   - [Health Check](#health-check)
   - [Send Email](#send-email)
+  - [Get GitHub Repository Info](#get-github-repository-info)
 - [Error Codes](#error-codes)
 - [Examples](#examples)
 
@@ -68,6 +69,7 @@ Rate limiting is applied per IP address to prevent abuse.
 |----------|-------|--------|
 | `/api/health` | 60 requests | 1 minute |
 | `/send-email` | 10 requests | 15 minutes |
+| `/api/github` | 60 requests | 1 minute |
 
 **Rate Limit Headers**:
 ```
@@ -147,7 +149,7 @@ Host: localhost:3000
 {
   "status": "healthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -161,7 +163,7 @@ Host: localhost:3000
 |-------|------|-------------|
 | `status` | string | Overall health status (`"healthy"` or `"unhealthy"`) |
 | `timestamp` | string | ISO 8601 timestamp of the health check |
-| `version` | string | Backend API version (e.g., `"2.0.3"`) |
+| `version` | string | Backend API version (e.g., `"2.1.0"`) |
 | `email.status` | string | Email service status (`"connected"` or `"disconnected"`) |
 | `email.responseTime` | string | Time taken to verify email connection (e.g., `"150ms"`) |
 
@@ -173,7 +175,7 @@ Host: localhost:3000
 {
   "status": "unhealthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "email": {
     "status": "disconnected",
     "error": "Connection timeout"
@@ -372,6 +374,208 @@ if (result.success) {
 
 ---
 
+### Get GitHub Repository Info
+
+Fetch repository information from GitHub API including license, languages, and latest release.
+
+**Endpoint**: `POST /api/github`
+
+**Description**: Retrieves GitHub repository data via the backend service. This endpoint acts as a proxy to the GitHub API, handling authentication and rate limiting.
+
+**Request**:
+
+```http
+POST /api/github HTTP/1.1
+Host: localhost:3000
+Content-Type: application/json
+Origin: http://localhost:5173
+
+{
+  "repo": "Toomas633/homepage"
+}
+```
+
+**Request Headers**:
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | Must be `application/json` |
+| `Origin` | Yes | Must be in ALLOWED_ORIGINS (CORS) |
+
+**Request Body**:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `repo` | string | Yes | Repository in format `owner/repo` |
+
+**Success Response**:
+
+*Status Code*: `200 OK`
+
+```json
+{
+  "success": true,
+  "data": {
+    "license": {
+      "key": "gpl-3.0",
+      "name": "GNU General Public License v3.0",
+      "spdx_id": "GPL-3.0",
+      "url": "https://api.github.com/licenses/gpl-3.0",
+      "node_id": "MDc6TGljZW5zZTk="
+    },
+    "languages": [
+      { "name": "TypeScript", "count": 125000 },
+      { "name": "Vue", "count": 95000 },
+      { "name": "JavaScript", "count": 15000 }
+    ],
+    "latestRelease": "5.1.1"
+  }
+}
+```
+
+**Response Fields**:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | boolean | Whether the request was successful |
+| `data` | object | Repository information |
+| `data.license` | object \| undefined | Repository license information (if available) |
+| `data.license.key` | string | License identifier |
+| `data.license.name` | string | Full license name |
+| `data.license.spdx_id` | string | SPDX license identifier |
+| `data.languages` | array | List of programming languages used |
+| `data.languages[].name` | string | Language name |
+| `data.languages[].count` | number | Bytes of code in this language |
+| `data.latestRelease` | string \| undefined | Latest release tag name (if available) |
+
+**Error Responses**:
+
+**400 Bad Request** - Invalid repository format:
+```json
+{
+  "success": false,
+  "message": "Invalid repository format. Use 'owner/repo'"
+}
+```
+
+**404 Not Found** - Repository doesn't exist:
+```json
+{
+  "success": false,
+  "message": "Error fetching GitHub Data",
+  "error": "Repository not found"
+}
+```
+
+**500 Internal Server Error** - GitHub API error:
+```json
+{
+  "success": false,
+  "message": "Error fetching GitHub Data",
+  "error": "GitHub API rate limit exceeded"
+}
+```
+
+**Example**:
+
+```bash
+curl -X POST http://localhost:3000/api/github \
+  -H "Content-Type: application/json" \
+  -H "Origin: http://localhost:5173" \
+  -d '{"repo": "Toomas633/homepage"}'
+```
+
+**JavaScript Example**:
+
+```javascript
+const response = await fetch('http://localhost:3000/api/github', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    repo: 'Toomas633/homepage'
+  })
+})
+
+const data = await response.json()
+
+if (data.success) {
+  console.log('License:', data.data.license?.name)
+  console.log('Languages:', data.data.languages)
+  console.log('Latest release:', data.data.latestRelease)
+} else {
+  console.error('Error:', data.message)
+}
+```
+
+**Vue/Axios Example**:
+
+```typescript
+import axios from 'axios'
+
+interface GitHubPayload {
+  repo: string
+}
+
+interface Language {
+  name: string
+  count: number
+}
+
+interface License {
+  key: string
+  name: string
+  spdx_id: string
+  url: string
+}
+
+interface GitHubResponse {
+  success: boolean
+  data?: {
+    license?: License
+    languages: Language[]
+    latestRelease?: string
+  }
+  message?: string
+  error?: string
+}
+
+async function getRepoInfo(payload: GitHubPayload): Promise<GitHubResponse> {
+  try {
+    const response = await axios.post<GitHubResponse>(
+      `${import.meta.env.VITE_API_URL}/github`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data
+    }
+    throw error
+  }
+}
+
+// Usage
+const result = await getRepoInfo({ repo: 'Toomas633/homepage' })
+
+if (result.success && result.data) {
+  console.log('Repository data:', result.data)
+} else {
+  console.error('Failed:', result.message)
+}
+```
+
+**Notes**:
+
+- The backend uses a GitHub token (if configured) to increase rate limits
+- Without authentication, GitHub API allows 60 requests per hour per IP
+- With authentication, the limit increases to 5,000 requests per hour
+- Configure `GITHUB_TOKEN` in backend environment for higher limits
+- Some fields (license, latestRelease) may be `undefined` if not available
+
+---
+
 ## Error Codes
 
 | HTTP Status | Code | Description |
@@ -549,5 +753,5 @@ For API issues or questions:
 
 ---
 
-**Last Updated**: December 5, 2025  
-**API Version**: 2.0.3
+**Last Updated**: December 7, 2025  
+**API Version**: 2.1.0

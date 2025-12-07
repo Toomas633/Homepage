@@ -111,6 +111,7 @@ EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
 EMAIL_TO=contact@yourdomain.com
 ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+GITHUB_TOKEN=your-github-token-here
 ```
 
 ### 3. Build the Docker Image
@@ -253,6 +254,7 @@ pm2 logs homepage-backend
 | `EMAIL_PASS` | SMTP password/app password | `your-app-password` |
 | `EMAIL_TO` | Recipient email | `contact@yourdomain.com` |
 | `ALLOWED_ORIGINS` | CORS allowed origins (comma-separated) | `https://yourdomain.com` |
+| `GITHUB_TOKEN` | GitHub API token (optional, for higher rate limits) | `ghp_xxxxxxxxxxxxxxxxxxxx` |
 
 ### Gmail Setup
 

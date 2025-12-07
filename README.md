@@ -52,7 +52,7 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 
 ### Tech Stack
 
-#### Frontend (v4.3.3)
+#### Frontend (v4.4.0)
 - **Framework**: Vue 3.5.25 with Composition API
 - **Language**: TypeScript 5.9.3
 - **UI Library**: Vuetify 3.11.2
@@ -62,14 +62,15 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 - **Maps**: Leaflet 1.9.4
 - **Testing**: Vitest 4.0.15
 
-#### Backend (v2.0.3)
+#### Backend (v2.1.0)
 - **Runtime**: Node.js 18+ (24+ recommended)
 - **Framework**: Express.js 5.2.1
 - **Language**: TypeScript 5.9.3 with ESM modules
 - **Build Tool**: esbuild 0.27.1
 - **Email**: Nodemailer 7.0.11
+- **HTTP Client**: Axios 1.13.2
 - **Security**: CORS 2.8.5, Rate Limiting 8.2.1
-- **API Docs**: Swagger UI with OpenAPI 3.0
+- **API Docs**: Swagger UI 5.0.1 with OpenAPI 3.0
 - **Testing**: Vitest 4.0.15
 
 ---
@@ -730,6 +731,7 @@ Located in `backend/.env`:
 | `/health`         | GET    | Server health status         | 60 req / 1 min      |
 | `/api/health`     | GET    | Health check (via Nginx)     | 60 req / 1 min      |
 | `/api/send-email` | POST   | Send contact form email      | 10 req / 15 min     |
+| `/api/github`     | POST   | Get GitHub repository info   | 60 req / 1 min      |
 
 For detailed API documentation with request/response examples, see [docs/API.md](docs/API.md).
 

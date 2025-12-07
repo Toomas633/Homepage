@@ -1,6 +1,6 @@
 # Toomas633's Dungeon - Frontend
 
-> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.3.3)
+> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.4.0)
 
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -229,21 +229,14 @@ The included `docker-compose.yml` provides:
 
 Copy `.env.example` to `.env` and configure:
 
-| Variable            | Description                          | Required | Example                     |
-| ------------------- | ------------------------------------ | -------- | --------------------------- |
-| `VITE_GITHUB_TOKEN` | GitHub API token for repository data | ❌       | `ghp_xxxxxxxxxxxxxxxxxxxx`  |
-| `VITE_API_URL`      | Backend API endpoint URL             | ✅       | `http://localhost:3000/api` |
-
-#### GitHub Token Setup
-
-1. Go to [GitHub Settings > Tokens](https://github.com/settings/tokens)
-2. Create a new token with `public_repo` scope
-3. Add to your `.env` file as `VITE_GITHUB_TOKEN`
+| Variable       | Description              | Required | Example                     |
+| -------------- | ------------------------ | -------- | --------------------------- |
+| `VITE_API_URL` | Backend API endpoint URL | ✅       | `http://localhost:3000/api` |
 
 **Note**:
 
-- GitHub token is optional but enables repository data fetching, language statistics, and latest release information
-- Backend API URL is **required** when using the separate Express.js backend service
+- Backend API URL is **required** for API communication (email, GitHub integration)
+- GitHub API requests are now handled by the backend service
 
 ### Build Configuration
 
@@ -254,13 +247,9 @@ For production builds with environment variables:
 ```bash
 # Build with API URL
 docker build --build-arg VITE_API_URL=https://api.yoursite.com/api -t toomas633-frontend .
-
-# For GitHub token, use .env file instead of build args for security
-# Ensure your .env file contains: VITE_GITHUB_TOKEN=your_token_here
-docker build -t toomas633-frontend .
 ```
 
-**Security Note**: Sensitive data like GitHub tokens should be in `.env` files rather than passed as build arguments, as build args are visible in the image history.
+**Note**: The GitHub API token is now configured in the backend service, not the frontend.
 
 ## 🏗️ Project Structure
 

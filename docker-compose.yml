@@ -17,6 +17,7 @@ services:
       - EMAIL_PASS=${EMAIL_PASS}
       - EMAIL_TO=${EMAIL_TO}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
     volumes:
       - ./logs:/app/logs
     restart: unless-stopped

@@ -186,8 +186,8 @@ This project uses **semantic versioning** (SemVer):
 
 The project consists of two main modules with independent versioning:
 
-- **Frontend**: Currently v4.3.3
-- **Backend**: Currently v2.0.3
+- **Frontend**: Currently v4.4.0
+- **Backend**: Currently v2.1.0
 
 The overall project version (5.x.x) represents the combined release version.
 

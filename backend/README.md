@@ -5,12 +5,13 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 ## 🚀 Features
 
 - **Email Service**: Contact form email forwarding via SMTP
+- **GitHub Integration**: Fetch repository information (license, languages, releases)
 - **CORS Protection**: Configurable allowed origins
 - **Rate Limiting**: Email endpoint protection (10 requests per 15 minutes)
 - **Health Monitoring**: Health check endpoint for Docker/monitoring
-- **API Documentation**: Interactive Swagger UI at `/api-docs`
+- **API Documentation**: Interactive Swagger UI at `/api/swagger-ui`
 - **Security**: Non-root user in Docker, environment validation
-- **Development**: Hot reload with Node.js `--watch` mode
+- **Development**: Hot reload with tsx watch mode
 
 ## 📋 Requirements
 
@@ -66,10 +67,13 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 
 ### Docker Deployment
 
-1. **Using docker-compose** (recommended):
+**Note**: The backend is typically deployed as part of the full-stack application using the root `docker-compose.yml`. For standalone backend deployment:
+
+1. **Create environment file**:
 
    ```bash
-   docker-compose up -d
+   cp .env.example .env
+   # Edit .env with your configuration
    ```
 
 2. **Manual Docker build**:
@@ -79,22 +83,22 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
    docker run -d -p 3000:3000 --env-file .env toomas633-backend
    ```
 
-3. **Stop containers**:
-   ```bash
-   docker-compose down
-   ```
+3. **For full-stack deployment** (frontend + backend):
+
+   See the root [docker-compose.yml](../docker-compose.yml) which includes both services with proper environment configuration.
 
 ## 📝 Environment Configuration
 
 ### Required Environment Variables
 
-| Variable          | Description                                  | Example                                     |
-| :---------------- | :------------------------------------------- | :------------------------------------------ |
-| `EMAIL_HOST`      | SMTP server hostname                         | `mail.example.com`                          |
-| `EMAIL_USER`      | SMTP authentication username                 | `info@example.com`                          |
-| `EMAIL_PASS`      | SMTP authentication password                 | `secure_password_123`                       |
-| `EMAIL_TO`        | Recipient email for contact form submissions | `admin@example.com`                         |
-| `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins | `http://localhost:5173,https://example.com` |
+| Variable          | Description                                         | Example                                     |
+| :---------------- | :-------------------------------------------------- | :------------------------------------------ |
+| `EMAIL_HOST`      | SMTP server hostname                                | `mail.example.com`                          |
+| `EMAIL_USER`      | SMTP authentication username                        | `info@example.com`                          |
+| `EMAIL_PASS`      | SMTP authentication password                        | `secure_password_123`                       |
+| `EMAIL_TO`        | Recipient email for contact form submissions        | `admin@example.com`                         |
+| `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins        | `http://localhost:5173,https://example.com` |
+| `GITHUB_TOKEN`    | GitHub API token (optional, for higher rate limits) | `ghp_xxxxxxxxxxxxxxxxxxxx`                  |
 
 ### Environment Setup
 
@@ -215,6 +219,7 @@ https://yourdomain.com/api/swagger-ui
 ```
 
 The Swagger UI provides:
+
 - ✅ Interactive API testing
 - ✅ Complete request/response schemas
 - ✅ Example payloads for all endpoints
@@ -422,6 +427,6 @@ GPL-3.0-only - See [LICENSE](../LICENSE) file for details.
 
 ---
 
-**Version**: 2.0.3  
+**Version**: 2.1.0  
 **Node.js**: 18+ (24+ recommended)  
 **License**: GPL-3.0-only
