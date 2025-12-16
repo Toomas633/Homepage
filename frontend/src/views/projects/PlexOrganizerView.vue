@@ -12,7 +12,7 @@
 		</p>
 		<p :class="!isMobile ? 'text-center' : ''">
 			<b>
-				<i>
+				<i style="color: rgb(var(--v-theme-primary))">
 					Any data loss is not on me, but you can still report any bugs or
 					faults you find in issues
 				</i>
@@ -63,11 +63,20 @@
 				Handles plex directories and optimized versions.
 			</li>
 			<li>
+				<b>Audio language tagging (optional):</b>
+				If enabled, detects missing audio track languages and writes ISO 639-2
+				tags into the container metadata.
+			</li>
+			<li>
+				<b>Subtitle embedding (optional):</b>
+				If enabled, detects subtitles that can and should be embedded to the
+				video file. Also detects subtitle language and type and tags the
+				metadata.
+			</li>
+			<li>
 				<b>Config File:</b>
 				Ini file for common configuration options that can be set, disabled or
-				enabled (beware, some settings might not do anything if already run and
-				info removed from file names, for example turning off quality inclusion
-				and then enabling it)
+				enabled easily.
 			</li>
 		</ul>
 		<v-divider
@@ -96,6 +105,14 @@
 				Install dependencies:
 				<CodeBlock code="pip install -r requirements.txt" />
 			</li>
+			<li>
+				Ensure you have ffmpeg and ffprobe installed and accessible.
+				<CodeBlock code="sudo apt install ffmpeg" />
+			</li>
+			<li>
+				Run install script to set up initial configuration:
+				<CodeBlock code="./install.sh" />
+			</li>
 		</ul>
 		<v-divider
 			class="mt-4 mb-2 border-opacity-100"
@@ -120,69 +137,45 @@ git clean -fd" />
 			thickness="2"
 			color="primary" />
 		<LinkableTitle h1 title="Usage" centered />
-		<ul class="ml-4">
-			<LinkableTitle h2 title="Manual running" />
-			To run manually just go to the Plex-Organizer cloned or downloaded folder
-			and run:
-			<InlineCode code="./run.sh <start_directory>" />
-			<v-divider thickness="2" class="border-opacity-100 mt-6 mb-6" />
-			<LinkableTitle h2 title="Automated running" />
-			Add this command to qBittorrent options under "Run external program on
-			torrent finished":
-			<br />
-			<InlineCode
-				code="/bin/bash <path_to_script>/run.sh <start_directory> <torrent_hash>" />
-			<br />
-			<b>Arguments:</b>
-			<ul class="ml-4">
-				<li>
-					&lt;start_directory&gt;: The base directory containing the tv and
-					movies subdirectories. Either the full path to the folder containing
-					movies and tv folders or <b>%D</b> to organize only the specific
-					completed torrent folder.
-				</li>
-				<li>
-					&lt;torrent_hash&gt; <i>(Optional)</i>: The hash of the torrent to be
-					removed (omit for testing purposes or to ignore torrent automatic
-					removal). Argument %I in qBittorrent ui.
-				</li>
-			</ul>
-		</ul>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-6"
-			color="primary" />
-		<LinkableTitle h1 title="Configuration" centered />
-		Config.ini is updated and created on run automatically if missing or if
-		updated options added. Will not clear user changes.
-		<ul class="ml-4 mb-4">
-			<li>
-				All user configurations are handled in the
-				<InlineCode code="config.ini" /> file.
-				<b>
-					<i>
-						Make sure the host value under qBittorrent is correct. Otherwise it
-						will fail to delete the completed torrent if desired.
-					</i>
-				</b>
-			</li>
-			<li>
-				Start directory should have either...
-				<ul class="ml-4">
-					<li>
-						The folders for movies and tv as shown in the example. Show names
-						are taken from the parent folder inside tv folder and only episode,
-						season and quality are taken from the file names.
-					</li>
-					<li>
-						Just the given torrent save path folder (%D option in qBittorrent)
-					</li>
-				</ul>
-			</li>
-		</ul>
 		<v-row class="d-block d-md-flex" justify="center">
 			<v-col>
-				<CodeBlock :code="exampleConfig" />
+				<ul class="ml-4">
+					<LinkableTitle h2 title="Manual running" />
+					To run manually just go to the Plex-Organizer cloned or downloaded
+					folder and run:
+					<InlineCode code="./run.sh <start_directory>" />
+					<v-divider thickness="2" class="border-opacity-100 mt-6 mb-6" />
+					<LinkableTitle h2 title="Automated running" />
+					Add this command to qBittorrent options under "Run external program on
+					torrent finished":
+					<br />
+					<InlineCode
+						code="/bin/bash <path_to_script>/run.sh <start_directory> <torrent_hash>" />
+					<br />
+					<b>Arguments:</b>
+					<ul class="ml-4">
+						<li>
+							&lt;start_directory&gt;: The base directory containing the tv and
+							movies subdirectories. Either the full path to the folder
+							containing movies and tv folders or <b>%D</b> to organize only the
+							specific completed torrent folder.
+							<b>
+								For performance and safety reasons it is highly recommended to
+								use the torrent specific folder option (<b>%D</b>) when running
+								automatically.
+							</b>
+						</li>
+						<li>
+							&lt;torrent_hash&gt; <i>(Optional)</i>: The hash of the torrent to
+							be removed (omit for testing purposes or to ignore torrent
+							automatic removal). Argument %I in qBittorrent ui.
+						</li>
+					</ul>
+					<b>
+						Be sure to put arguments between quotes like "%D" or for path to
+						prevent whitesplace issues.
+					</b>
+				</ul>
 			</v-col>
 			<v-col md="6" lg="5">
 				<v-img
@@ -194,6 +187,18 @@ git clean -fd" />
 					@click="openImageInNewTab(Example)" />
 			</v-col>
 		</v-row>
+		<v-divider
+			thickness="2"
+			class="border-opacity-100 mt-6 mb-6"
+			color="primary" />
+		<LinkableTitle h1 title="Configuration" centered />
+		All user configurations are handled in the
+		<InlineCode code="config.ini" /> file. Configuration is updated and created
+		on run or install script automatically if missing or if updated options
+		added. Will not clear user changes. <br />
+		Make sure the host value under qBittorrent is correct. Otherwise it will
+		fail to delete the completed torrent if desired
+		<CodeBlock :code="exampleConfig" />
 		<v-divider
 			class="mt-4 mb-2 border-opacity-100"
 			thickness="2"
@@ -261,6 +266,8 @@ const repo = 'toomas633/plex-organizer'
 
 const exampleConfig = `[qBittorrent]
 host = http://localhost:8081 #host address and port of qBittorrent webui api
+username = admin #username for qBittorrent webui api
+password = adminadmin #password for qBittorrent webui api
 
 [Settings]
 delete_duplicates = true #should duplicate files be deleted or kept
@@ -272,5 +279,13 @@ enable_logging = true #if logging should be enabled
 log_file = qbittorrent.log #log file name
 clear_log = false #if log should be cleared on start
 timestamped_log_files = false #if log files should be timestamped and not overwritten on each run
+level = INFO #log level (DEBUG, INFO)
+
+[Audio]
+enable_audio_tagging = true #if audio language tags should be embedded
+whisper_model_size = tiny #whisper model size to use for audio language detection (tiny, base, small, medium, large)
+
+[Subtitles]
+enable_subtitle_embedding = true #if subtitles should be embedded into video files
 `
 </script>
