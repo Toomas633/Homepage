@@ -36,6 +36,15 @@
 - **API Docs:** Swagger UI 5.0.1 with OpenAPI 3.0 specification
 - **When working in `backend/`:** Always follow the patterns and conventions specified in the backend instructions
 
+## Project Page Generation (README → `projects/` view)
+
+When asked to create or update a project page under the frontend Projects section from a GitHub repo or README:
+
+- Use the prompt template at `.github/prompts/generate-project-view-from-readme.md` as the default standard.
+- Prefer “auto-fill mode”: infer repo slug, display name, target view filename, and README raw URL from the GitHub repo link.
+- Generate a Vue view in `frontend/src/views/projects/` that matches existing project pages (Vuetify layout + shared components + local Table of Contents component).
+- If wiring is requested (or necessary), also update the router/navigation using the established patterns in `frontend/`.
+
 ## Workspace Structure
 
 This is a multi-folder VS Code workspace with three main directories:
