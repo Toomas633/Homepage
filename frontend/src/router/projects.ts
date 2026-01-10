@@ -71,4 +71,16 @@ export const projectRoutes: Array<RouteRecord> = [
 			image: 'https://toomas633.com/assets/images/xmrig-proxy/image.png',
 		},
 	},
+	{
+		path: '/projects/adlist-parser',
+		component: () => import('@/views/projects/AdlistParserView.vue'),
+		meta: {
+			title: 'Adlist Parser',
+			description:
+				'A high-performance Python utility that fetches and merges multiple adlists into domain-only output for DNS blockers like Pi-hole, AdGuard, and similar DNS filtering solutions.',
+			icon: 'mdi-advertisements-off',
+			keywords:
+				'adlist parser, DNS blocker, Pi-hole, AdGuard, domain filtering, Python utility, adlist merging, high-performance',
+		},
+	},
 ]

@@ -21,7 +21,7 @@
 		"length": 500,
 		"temperature": 0.1
 	},
-	"powershell.cwd": "Homepage",
+	"powershell.cwd": "homepage",
 	"window.openFoldersInNewWindow": "on",
 	"window.restoreWindows": "all",
 	"files.exclude": {
