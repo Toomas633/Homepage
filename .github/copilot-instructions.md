@@ -18,21 +18,21 @@
 
 ### Frontend Module (`frontend/`)
 - **Detailed Instructions:** See `frontend/.github-copilot-instructions.md`
-- **Stack:** Vue 3.5.25 + TypeScript 5.9.3 + Vuetify 3.11.2 + Vite 7.2.6
+- **Stack:** Vue 3.5.26 + TypeScript 5.9.3 + Vuetify 3.11.6 + Vite 7.3.1
 - **Architecture:** Component-based with strict TypeScript typing
-- **Routing:** Modular Vue Router 4.6.3 with service layer organization
+- **Routing:** Modular Vue Router 4.6.4 with service layer organization
 - **Build:** Modern Vite with extensive optimization plugins
-- **Testing:** Vitest 4.0.15 with Vue Test Utils 2.4.6 and happy-dom 20.0.11 in `tests/` directory
+- **Testing:** Vitest 4.0.16 with Vue Test Utils 2.4.6 and happy-dom 20.1.0 in `tests/` directory
 - **When working in `frontend/`:** Always follow the patterns and conventions specified in the frontend instructions
 
 ### Backend Module (`backend/`)
 - **Detailed Instructions:** See `backend/.github-copilot-instructions.md`
 - **Stack:** Node.js 18+ (24+ recommended) with TypeScript 5.9.3 and Express.js 5.2.1 using ESM modules
 - **Architecture:** Modular structure with TypeScript types, middleware, routes, and services
-- **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.11 email service, body-parser 2.2.1, GitHub API integration with Axios 1.13.2
+- **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.12 email service, body-parser 2.2.2, GitHub API integration with Axios 1.13.2
 - **Security:** Environment validation, non-root Docker user, health monitoring
-- **Testing:** Vitest 4.0.15 with supertest 7.1.4 for API testing in `tests/` directory
-- **Build:** esbuild 0.27.1 for fast production builds
+- **Testing:** Vitest 4.0.16 with supertest 7.2.2 for API testing in `tests/` directory
+- **Build:** esbuild 0.27.2 for fast production builds
 - **API Docs:** Swagger UI 5.0.1 with OpenAPI 3.0 specification
 - **When working in `backend/`:** Always follow the patterns and conventions specified in the backend instructions
 
@@ -92,14 +92,14 @@ This is a multi-folder VS Code workspace with three main directories:
 - **Backend build:** `npm run build` (TypeScript compilation with esbuild to `dist/`) — Fast bundler
 - **Backend test:** `npm run test` (Vitest in watch mode)
 - **Backend coverage:** `npm run test:coverage` (generates coverage reports)
-- **Backend prod:** `node backend/dist/app.js` (or use `ecosystem.config.js` for PM2)
+- **Backend prod:** `node backend/dist/app.js` (or use `ecosystem.config.cjs` for PM2)
 - **Docker:** Use `Dockerfile` for containerized build/deploy with TypeScript compilation
   - **Security:** Uses BuildKit secrets for sensitive data (no ARG/ENV for tokens)
   - **Multi-platform:** Supports linux/amd64 and linux/arm64 via `TARGETPLATFORM` variable
   - **Build command:** `docker build --secret id=sonar_token,env=SONAR_TOKEN .`
 - **Lint:** `npm run lint` (uses TypeScript ESLint) — Module-specific configurations
 - **Style lint:** `npm run stylelint` (CSS/SCSS/Vue styles) — Frontend only
-- **Format:** `npm run format` (code formatting) — Both modules configured
+- **Format:** `npm run prettier` (code formatting) — Run in each module
 - **Quality scans:** `npm run scan:lint` and `npm run scan:stylelint` (for SonarQube)
 
 ## Testing

@@ -2,10 +2,10 @@
 
 > Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.4.0)
 
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.26-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7.2.6-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.2-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vite](https://img.shields.io/badge/Vite-7.3.1-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.6-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 
 ## 🏗️ Architecture
 
@@ -54,8 +54,8 @@ This is a modern Vue.js 3 single-page application (SPA) built with:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Toomas633/Toomas633.git
-cd Toomas633/frontend
+git clone https://github.com/Toomas633/homepage.git
+cd homepage/frontend
 
 # Copy environment file
 cp .env.example .env
@@ -155,7 +155,9 @@ Coverage reports are generated in `coverage/` directory:
 - `tests/App.spec.ts` - Root application component tests
 - `tests/main.spec.ts` - Application entry point tests
 
-For more detailed testing information, see [DEVELOPMENT.md](../DEVELOPMENT.md#-testing).
+For more detailed full-stack testing information, see the main [Testing section](../README.md#-testing).
+
+For contribution and workflow details, see [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ### Development Workflow
 
@@ -188,7 +190,7 @@ npm run serve
 docker build -t toomas633-frontend .
 
 # Build with specific tag
-docker build -t toomas633-frontend:v4.3.0 .
+docker build -t toomas633-frontend:v4.4.0 .
 ```
 
 ### Running the Container
@@ -413,7 +415,7 @@ The project includes configurations for:
 
 ## 📄 License
 
-This project is licensed under the **GPL-3.0** License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the **GPL-3.0-only** License - see the [LICENCE](../LICENCE) file for details.
 
 ## 🔗 Links
 

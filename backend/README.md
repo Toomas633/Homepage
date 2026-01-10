@@ -200,7 +200,7 @@ Coverage reports are generated in `coverage/` directory:
 - `tests/middleware/rateLimiter.spec.ts` - Rate limiter tests
 - `tests/services/emailService.spec.ts` - Email service tests
 
-For more detailed testing information, see [DEVELOPMENT.md](../DEVELOPMENT.md#-testing).
+For more detailed full-stack testing information, see the main [Testing section](../README.md#-testing).
 
 ## 🌐 API Endpoints
 
@@ -246,7 +246,7 @@ Returns server health status, timestamp, version, and email service verification
 {
 	"status": "healthy",
 	"timestamp": "2025-11-21T12:00:00.000Z",
-	"version": "2.0.3",
+	"version": "2.1.0",
 	"email": {
 		"status": "connected",
 		"responseTime": "150ms"
@@ -415,7 +415,7 @@ For detailed API endpoint documentation with request/response examples, see [doc
 
 ## 📝 License
 
-GPL-3.0-only - See [LICENSE](../LICENSE) file for details.
+GPL-3.0-only - See [LICENCE](../LICENCE) file for details.
 
 ## 🤝 Contributing
 

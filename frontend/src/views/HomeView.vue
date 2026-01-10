@@ -49,14 +49,12 @@
 				<v-row class="pa-0 ma-0" justify="center">
 					<v-col>
 						<ButtonCard
-							size="100"
 							text="GitHub"
 							href="https://github.com/Toomas633/"
 							icon="mdi-github" />
 					</v-col>
 					<v-col>
 						<ButtonCard
-							size="100"
 							text="Thingiverse"
 							href="https://www.thingiverse.com/toomas633/designs"
 							icon="mdi-rocket-launch"

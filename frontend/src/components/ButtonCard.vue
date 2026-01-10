@@ -11,16 +11,15 @@
 			class="pa-0"
 			elevation="0"
 			:class="[isDark ? 'bg-black' : '', props.text ? 'mb-0' : 'mb-9']"
-			:href="href"
-			:aria-label="label ?? text ?? title">
+			:aria-label="label ?? text ?? title"
+			@click="navigate">
 			<v-icon :icon="icon" :color="iconColor" :size="size" />
 		</v-btn>
 		<v-img
 			v-if="image"
 			:src="isDark && imageDark ? imageDark : image"
 			rounded
-			height="240"
-			class="mt-5"
+			:height="imageSize"
 			:class="[!text ? 'mb-5' : '', href ? 'cursor-pointer' : '']"
 			@click="navigate" />
 		<v-card-text v-if="text" class="pb-2 pr-2 pl-2">
@@ -32,17 +31,24 @@
 <script setup lang="ts">
 import useThemeMixin from '@/helpers/themeMixin'
 
-const props = defineProps<{
-	label?: string
-	title?: string
-	href?: string
-	icon?: string
-	iconColor?: string
-	text?: string
-	image?: string
-	imageDark?: string
-	size: string
-}>()
+const props = withDefaults(
+	defineProps<{
+		label?: string
+		title?: string
+		href?: string
+		icon?: string
+		iconColor?: string
+		text?: string
+		image?: string
+		imageDark?: string
+		imageSize?: string
+		size?: string
+	}>(),
+	{
+		size: '100',
+		imageSize: '100',
+	}
+)
 
 const { isDark } = useThemeMixin()
 

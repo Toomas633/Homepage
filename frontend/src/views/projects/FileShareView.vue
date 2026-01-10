@@ -19,14 +19,12 @@
 				<v-row class="pa-0 ma-0" justify="center">
 					<v-col>
 						<ButtonCard
-							size="100"
 							text="GitHub"
 							href="https://github.com/Toomas633/FileShare"
 							icon="mdi-github" />
 					</v-col>
 					<v-col>
 						<ButtonCard
-							size="100"
 							text="Docker Hub"
 							href="https://hub.docker.com/r/toomas633/fileshare"
 							icon="mdi-docker"

@@ -477,12 +477,10 @@ curl https://toomas633.com/api/health
 # {
 #   "status": "healthy",
 #   "timestamp": "2025-12-02T12:00:00.000Z",
-#   "version": "2.0.3",
+#   "version": "2.1.0",
 #   "email": {
 #     "status": "connected",
 #     "responseTime": "150ms"
-#   }
-# }
 #   }
 # }
 ```

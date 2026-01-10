@@ -23,21 +23,18 @@
 				<v-row class="pa-0 ma-0" justify="center">
 					<v-col>
 						<ButtonCard
-							size="100"
 							text="Download ZIP"
 							href="https://github.com/Toomas633/T6-Drone/archive/v2.zip"
 							icon="mdi-file-download-outline" />
 					</v-col>
 					<v-col>
 						<ButtonCard
-							size="100"
 							text="GitHub"
 							href="https://github.com/Toomas633/T6-Drone"
 							icon="mdi-github" />
 					</v-col>
 					<v-col>
 						<ButtonCard
-							size="100"
 							text="Thingiverse"
 							href="https://www.thingiverse.com/thing:4804605"
 							icon="mdi-rocket-launch"

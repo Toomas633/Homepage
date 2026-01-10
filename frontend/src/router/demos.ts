@@ -3,8 +3,22 @@ import { RouteRecord } from '@/types/route'
 const StudentApiView = () => import('@/views/demos/StudentApiView.vue')
 const ContactApiView = () => import('@/views/demos/ContactApiView.vue')
 const ClickCounterView = () => import('@/views/demos/ClickCounterView.vue')
+const HomepageView = () => import('@/views/demos/HomepageView.vue')
 
 export const demoRoutes: Array<RouteRecord> = [
+	{
+		path: '/demos/homepage',
+		component: HomepageView,
+		meta: {
+			title: 'Homepage',
+			canonical: '/demos/homepage',
+			description:
+				'A modern full-stack personal projects homepage built with Vue 3, TypeScript, and Node.js.',
+			icon: 'mdi-home-account',
+			keywords:
+				'homepage, portfolio, vue, vuetify, typescript, node, express, docker, nginx, sonarcloud, vitest',
+		},
+	},
 	{
 		path: '/demos/student-api',
 		component: StudentApiView,

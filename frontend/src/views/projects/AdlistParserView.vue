@@ -15,7 +15,6 @@
 			</v-col>
 			<v-col class="align-content-space-around" lg="2" md="3" sm="4" xl="1">
 				<ButtonCard
-					size="100"
 					text="GitHub"
 					href="https://github.com/Toomas633/Adlist-Parser"
 					icon="mdi-github" />

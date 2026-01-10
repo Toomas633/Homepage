@@ -115,7 +115,7 @@ HTTP Status: `429 Too Many Requests`
 {
   "status": "healthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -735,8 +735,8 @@ If you receive a CORS error, ensure your request's `Origin` header matches one o
 
 ## Changelog
 
-### v2.0.3 (Current)
-- Email service with Nodemailer 7.0.11
+### v2.1.0 (Current)
+- Email service with Nodemailer 7.0.12
 - Rate limiting with express-rate-limit 8.2.1
 - CORS protection with cors 2.8.5
 - Health check endpoint with email verification and version information

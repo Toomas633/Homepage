@@ -13,7 +13,6 @@
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard
-					size="100"
 					text="GitHub"
 					href="https://github.com/Toomas633/click-counter"
 					icon="mdi-github" />

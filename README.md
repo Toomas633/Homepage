@@ -3,12 +3,12 @@
 <div align="center">
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Toomas633_Homepage&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Toomas633_Homepage)
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.2-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.26-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.6-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-24+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
-[![Test Build](https://github.com/Toomas633/Homepage/actions/workflows/test-build.yml/badge.svg)](https://github.com/Toomas633/Homepage/actions/workflows/test-build.yml)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENCE)
+[![Test Build](https://github.com/Toomas633/homepage/actions/workflows/test-build.yml/badge.svg)](https://github.com/Toomas633/homepage/actions/workflows/test-build.yml)
 
 **A modern full-stack personal projects homepage built with Vue 3, TypeScript, and Node.js**
 
@@ -53,27 +53,25 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 ### Tech Stack
 
 #### Frontend (v4.4.0)
-- **Framework**: Vue 3.5.25 with Composition API
+- **Framework**: Vue 3.5.26 with Composition API
 - **Language**: TypeScript 5.9.3
-- **UI Library**: Vuetify 3.11.2
-- **Build Tool**: Vite 7.2.6
-- **Router**: Vue Router 4.6.3
+- **UI Library**: Vuetify 3.11.6
+- **Build Tool**: Vite 7.3.1
+- **Router**: Vue Router 4.6.4
 - **HTTP Client**: Axios 1.13.2
 - **Maps**: Leaflet 1.9.4
-- **Testing**: Vitest 4.0.15
+- **Testing**: Vitest 4.0.16
 
 #### Backend (v2.1.0)
 - **Runtime**: Node.js 18+ (24+ recommended)
 - **Framework**: Express.js 5.2.1
 - **Language**: TypeScript 5.9.3 with ESM modules
-- **Build Tool**: esbuild 0.27.1
-- **Email**: Nodemailer 7.0.11
+- **Build Tool**: esbuild 0.27.2
+- **Email**: Nodemailer 7.0.12
 - **HTTP Client**: Axios 1.13.2
 - **Security**: CORS 2.8.5, Rate Limiting 8.2.1
 - **API Docs**: Swagger UI 5.0.1 with OpenAPI 3.0
-- **Testing**: Vitest 4.0.15
-
----
+- **Testing**: Vitest 4.0.16
 
 ---
 
@@ -90,7 +88,7 @@ This is a multi-workspace project with separate frontend and backend modules, de
 │  │              Nginx (Port 80)                       │ │
 │  │  ┌──────────────────┐    ┌──────────────────────┐ │ │
 │  │  │  Static Files    │    │   API Proxy          │ │ │
-│  │  │  (Vue 3 dist/)   │    │   /api/* → :3000     │ │ │
+│  │  │  (Vue 3 dist/)   │    │   /api/* → backend:3000 │ │ │
 │  │  └──────────────────┘    └──────────┬───────────┘ │ │
 │  └───────────────────────────────────────┼────────────┘ │
 │                                          │               │
@@ -803,9 +801,8 @@ For detailed contribution guidelines, coding standards, and development workflow
 
 ## 📄 License
 
-This project is licensed under the **GPL-3.0-only** License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GPL-3.0-only** License - see the [LICENCE](LICENCE) file for details.
 
----
 
 ## 🙏 Acknowledgments
 
