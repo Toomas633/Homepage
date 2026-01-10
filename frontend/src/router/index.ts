@@ -26,23 +26,114 @@ const router = createRouter({
 
 const defaultTitle = "Toomas633's Dungeon"
 
-router.beforeEach((to, _from, next) => {
-	if (!routes.some((route) => route.path === to.path)) {
-		const matchedRoute = routes.find(
-			(route) => route.path.split('/')[2] === to.path.split('/')[2]
-		)
+const siteOrigin = 'https://toomas633.com'
 
-		if (matchedRoute) {
-			return next({ path: matchedRoute.path })
+const normalizePath = (rawPath: string): string => {
+	if (!rawPath) return '/'
+	let path = rawPath
+	while (path.length > 1 && path.endsWith('/')) {
+		path = path.slice(0, -1)
+	}
+	return path
+}
+
+const routePathSet = new Set(routes.map((route) => normalizePath(route.path)))
+
+const buildCanonicalUrl = (normalizedPath: string, rawCanonical?: string) => {
+	if (!rawCanonical) return `${siteOrigin}${normalizedPath}`
+
+	const canonical = rawCanonical.trim()
+	if (!canonical) return `${siteOrigin}${normalizedPath}`
+	if (canonical.startsWith('http://') || canonical.startsWith('https://')) {
+		return canonical
+	}
+
+	const canonicalPath = canonical.startsWith('/') ? canonical : `/${canonical}`
+	return `${siteOrigin}${canonicalPath}`
+}
+
+const getSlug = (path: string): string | undefined => {
+	const segments = normalizePath(path).split('/').filter(Boolean)
+	const last = segments.at(-1)
+	return last ? last.toLowerCase() : undefined
+}
+
+const slugToPaths = routes.reduce<Map<string, string[]>>((acc, route) => {
+	const normalized = normalizePath(route.path)
+	if (normalized === '/' || normalized === '/404') return acc
+
+	const slug = getSlug(normalized)
+	if (!slug) return acc
+
+	const list = acc.get(slug)
+	if (list) {
+		list.push(normalized)
+	} else {
+		acc.set(slug, [normalized])
+	}
+
+	return acc
+}, new Map())
+
+const findMovedPagePath = (rawPath: string): string | undefined => {
+	const path = normalizePath(rawPath)
+	const segments = path.split('/').filter(Boolean)
+	const last = segments.at(-1)?.toLowerCase()
+	if (!last || last === '404') return undefined
+
+	const candidates = slugToPaths.get(last)
+	if (!candidates || candidates.length === 0) return undefined
+	if (candidates.length === 1) return candidates[0]
+
+	const section = segments[0]?.toLowerCase()
+	if (section) {
+		const sameSection = candidates.filter(
+			(candidate) => candidate.split('/')[1]?.toLowerCase() === section
+		)
+		if (sameSection.length === 1) return sameSection[0]
+	}
+
+	return undefined
+}
+
+const findClosestMatchingPath = (rawPath: string): string | undefined => {
+	const path = normalizePath(rawPath)
+	const segments = path.split('/').filter(Boolean)
+
+	while (segments.length > 0) {
+		const candidatePath = `/${segments.join('/')}`
+		if (candidatePath !== '/' && routePathSet.has(candidatePath)) {
+			return candidatePath
+		}
+		segments.pop()
+	}
+
+	return undefined
+}
+
+router.beforeEach((to, _from, next) => {
+	const normalizedToPath = normalizePath(to.path)
+
+	if (!routePathSet.has(normalizedToPath)) {
+		const moved = findMovedPagePath(normalizedToPath)
+		if (moved) {
+			return next({ path: moved, replace: true })
 		}
 
-		return next({ path: '/404' })
+		const closest = findClosestMatchingPath(normalizedToPath)
+		if (closest) {
+			return next({ path: closest, replace: true })
+		}
+
+		return next({ path: '/404', replace: true })
 	}
 
 	const defaultDescription = "Toomas633's projects homepage"
-	const canonicalUrl = `https://toomas633.com${to.path}`
+	const rawCanonical = to.meta.canonical?.toString()
+	const canonicalUrl = buildCanonicalUrl(normalizedToPath, rawCanonical)
 	const pageTitle = to.meta.title?.toString() ?? defaultTitle
 	const pageDescription = to.meta.description?.toString() ?? defaultDescription
+	const pageRobots = to.meta.robots?.toString() ?? 'index,follow'
 	const pageImage =
 		to.meta.image?.toString() ?? 'https://toomas633.com/logo.svg'
 	const pageKeywords =
@@ -59,7 +150,10 @@ router.beforeEach((to, _from, next) => {
 			},
 		],
 		meta: [
-			// Standard meta tags
+			{
+				name: 'robots',
+				content: pageRobots,
+			},
 			{
 				name: 'description',
 				content: pageDescription,
@@ -72,7 +166,6 @@ router.beforeEach((to, _from, next) => {
 				name: 'author',
 				content: 'Toomas633',
 			},
-			// Open Graph / Facebook
 			{
 				property: 'og:type',
 				content: 'website',
@@ -101,7 +194,6 @@ router.beforeEach((to, _from, next) => {
 				property: 'og:locale',
 				content: 'en_US',
 			},
-			// Twitter Card
 			{
 				name: 'twitter:card',
 				content: 'summary_large_image',
