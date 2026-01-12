@@ -1,13 +1,14 @@
 <template>
 	<v-btn
 		v-if="isBtn"
-		icon="fa:fa-brands fa-cc-paypal"
 		class="mx-2"
 		color="blue"
 		size="medium"
 		variant="plain"
 		aria-label="PayPal link"
-		@click="showPayPal" />
+		@click="showPayPal">
+		<v-img :src="paypalIcon" height="24" width="24" alt="PayPal" />
+	</v-btn>
 	<v-card v-else class="text-center pb-5" elevation="4" justfy="center">
 		<h1>PayPal</h1>
 		<v-img
