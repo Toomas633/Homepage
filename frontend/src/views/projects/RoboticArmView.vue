@@ -21,24 +21,64 @@
 		</v-tabs>
 		<v-tabs-window v-model="tab" class="v-tabs-wrapper">
 			<v-tabs-window-item :value="Tabs.V1">
+				<div :id="ANCHOR_ID_BY_TAB[Tabs.V1]" />
 				<ArmV1 />
 			</v-tabs-window-item>
 			<v-tabs-window-item :value="Tabs.V2">
+				<div :id="ANCHOR_ID_BY_TAB[Tabs.V2]" />
 				<ArmV2 />
 			</v-tabs-window-item>
 		</v-tabs-window>
 	</v-container>
 </template>
-
 <script setup lang="ts">
 import { Tabs } from '@/enums/roboticArm'
-import { ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import ArmV1 from './RoboticArm/ArmV1.vue'
 import ArmV2 from './RoboticArm/ArmV2.vue'
 import { isMobile } from '@basitcodeenv/vue3-device-detect'
 
 const tab = ref<Tabs>(Tabs.V1)
 const repo = 'toomas633/arduino-robotic-arm'
+
+const route = useRoute()
+const router = useRouter()
+
+const HASH_BY_TAB: Record<Tabs, string> = {
+	[Tabs.V1]: '#v1',
+	[Tabs.V2]: '#v2',
+}
+
+const ANCHOR_ID_BY_TAB: Record<Tabs, string> = {
+	[Tabs.V1]: 'v1',
+	[Tabs.V2]: 'v2',
+}
+
+function parseTabFromHash(hash: string): Tabs | null {
+	const normalized = decodeURIComponent(hash).trim().toLowerCase()
+	if (normalized === '#v1') return Tabs.V1
+	if (normalized === '#v2') return Tabs.V2
+	return null
+}
+
+watch(
+	() => route.hash,
+	(newHash) => {
+		const parsed = parseTabFromHash(newHash)
+		if (parsed === null || tab.value === parsed) return
+		tab.value = parsed
+	},
+	{ immediate: true }
+)
+
+watch(tab, async (newTab) => {
+	const desiredHash = HASH_BY_TAB[newTab]
+	if (route.hash === desiredHash) return
+
+	await nextTick()
+	await router.replace({ hash: desiredHash })
+})
 </script>
 <style scoped lang="scss">
 .v-slide-group {

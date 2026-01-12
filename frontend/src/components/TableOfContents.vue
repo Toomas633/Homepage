@@ -40,6 +40,7 @@ import { useRoute } from 'vue-router'
 const drawer = ref(false)
 const selected = ref<string[]>([])
 const ticking = ref(false)
+const lastUrlHash = ref('')
 
 type HeadingItem = {
 	id: string
@@ -62,6 +63,7 @@ watch(
 )
 
 onMounted(() => {
+	lastUrlHash.value = globalThis.location.hash
 	getContainer().addEventListener('scroll', onScroll, { passive: true })
 	getContainer().addEventListener('resize', onScroll, { passive: true })
 	document.addEventListener('click', handleGlobalClick, { passive: true })
@@ -131,7 +133,21 @@ function updateActiveHeading() {
 
 	if (selected.value[0] !== closestHash) {
 		selected.value = [closestHash]
+		replaceUrlHashSilently(closestHash)
 	}
+}
+
+function replaceUrlHashSilently(hash: string) {
+	if (!hash) return
+
+	const normalized = decodeURIComponent(hash).trim().toLowerCase()
+	if (normalized === decodeURIComponent(lastUrlHash.value).trim().toLowerCase())
+		return
+
+	const url = new URL(globalThis.location.href)
+	url.hash = hash
+	globalThis.history.replaceState(globalThis.history.state, '', url.toString())
+	lastUrlHash.value = hash
 }
 
 function handleGlobalClick(e: MouseEvent | TouchEvent) {
