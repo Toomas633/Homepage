@@ -20,54 +20,17 @@
 					icon="mdi-github" />
 			</v-col>
 		</v-row>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Features" centered />
-		<ul class="ml-4">
-			<li>
-				<b>Fast Concurrent Processing:</b>
-				Processes 1.6M+ entries from 50+ sources in ~50-60 seconds.
-			</li>
-			<li>
-				<b>Standard Library Only:</b>
-				Uses only Python standard library (3.8+).
-			</li>
-			<li>
-				<b>Dual Output:</b>
-				Generates both adlists and whitelists simultaneously.
-			</li>
-			<li>
-				<b>ABP + Pi-hole Support:</b>
-				Normalizes ABP rules and converts simple Pi-hole regex patterns.
-			</li>
-			<li>
-				<b>Intelligent Separation:</b>
-				Automatically separates blocklist and whitelist entries.
-			</li>
-			<li>
-				<b>Redundancy Analysis:</b>
-				Detects duplicates and overlap across sources.
-			</li>
-		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
+		<IconList :items="features" />
 		<LinkableTitle h1 title="Installation (optional)" centered />
 		You can run from a checkout (above) or install locally to get the
 		<InlineCode code="adlist-parser" /> command:
 		<CodeBlock
 			code="python -m pip install -e .
 adlist-parser" />
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Configuration" centered />
 		Configure your sources in JSON files:
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<InlineCode code="data/adlists.json" /> Blocklist sources:
 				<CodeBlock :code="adlistsExample" />
@@ -77,9 +40,8 @@ adlist-parser" />
 				<CodeBlock :code="whitelistsExample" />
 			</li>
 		</ul>
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h2 title="Source Types" />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>URLs:</b>
 				HTTP/HTTPS links to remote lists
@@ -95,7 +57,7 @@ adlist-parser" />
 			</li>
 		</ul>
 		Notes:
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Path resolution:</b> relative paths inside the JSON files are
 				resolved relative to the JSON file location (not the CWD).
@@ -107,13 +69,9 @@ adlist-parser" />
 				compatibility; they are merged.
 			</li>
 		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
-		<LinkableTitle h1 title="Output Format" centered />
-		<LinkableTitle h2 title="Supported Input Formats" />
-		<ul class="ml-4">
+		<LinkableTitle h1 title="Formats" centered />
+		<LinkableTitle h2 title="Supported Input Formats" hide-divider />
+		<ul>
 			<li>
 				<b>Plain domains:</b>
 				<InlineCode code="example.com" />
@@ -140,9 +98,8 @@ adlist-parser" />
 				<InlineCode code="//" />, or <InlineCode code=";" />
 			</li>
 		</ul>
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h2 title="Output Processing" />
-		<ol class="ml-4">
+		<ol>
 			<li>
 				<b>Domain Extraction:</b>
 				Extracts clean domains from various host file formats.
@@ -205,9 +162,8 @@ adlist-parser" />
 				(whitelist writes directly).
 			</li>
 		</ol>
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h2 title="Determinism and file format" />
-		<ul class="ml-4">
+		<ul>
 			<li>Outputs use LF-only line endings.</li>
 			<li>
 				Sorting is deterministic and case-insensitive; deduplication is
@@ -218,15 +174,10 @@ adlist-parser" />
 				outputs).
 			</li>
 		</ul>
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h2 title="Output file header (sample)" />
 		<CodeBlock :code="outputHeaderSample" />
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Performance" centered />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Concurrency:</b>
 				Fetches multiple sources simultaneously (max 16 workers).
@@ -244,9 +195,8 @@ adlist-parser" />
 				Tested with 1.6M+ entries from 50+ sources.
 			</li>
 		</ul>
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h2 title="Tuning" />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Concurrency:</b>
 				Network fetching uses up to 16 workers (see
@@ -264,13 +214,9 @@ adlist-parser" />
 				depending on sources.
 			</li>
 		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="How It Works" centered />
 		Two concurrent pipelines run via <InlineCode code="asyncio.gather()" />:
-		<ol class="ml-4">
+		<ol>
 			<li>
 				<b>Fetch Sources</b>
 				→ Download remote lists and read local files.
@@ -298,15 +244,10 @@ adlist-parser" />
 				→ Analyze duplicates and overlaps across sources.
 			</li>
 		</ol>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Architecture" centered />
 		<CodeBlock :code="architectureTree" />
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h2 title="Design Principles" />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Error Isolation:</b>
 				Failed sources do not crash the pipeline.
@@ -321,13 +262,11 @@ adlist-parser" />
 				Sorting and headers are regenerated consistently on each run.
 			</li>
 		</ul>
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h1 title="Redundancy Analysis" centered color="primary" />
 		The parser includes built-in redundancy detection to help optimize your
 		source lists.
-		<v-divider class="mt-4 mb-2 border-opacity-100" thickness="2" />
 		<LinkableTitle h2 title="Features" />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Duplicate Detection:</b>
 				Identifies sources with identical content.
@@ -344,26 +283,18 @@ adlist-parser" />
 		</ul>
 		<LinkableTitle h2 title="Example Output" />
 		<CodeBlock :code="redundancyExample" />
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Input Format Examples" centered />
 		<v-data-table
 			:items="inputFormatExamples"
 			hide-default-footer
 			class="rounded" />
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Troubleshooting" centered />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Network Errors:</b>
 				Failed sources are listed as "UNAVAILABLE SOURCES" in the final report
-				with <InlineCode code="🌐" /> (remote) or
-				<InlineCode code="📄" /> (local) indicators.
+				with <InlineCode code="🌐 (remote)" /> or
+				<InlineCode code="📄 (local)" /> indicators.
 			</li>
 			<li>
 				<b>Proxy Issues:</b>
@@ -388,7 +319,7 @@ adlist-parser" />
 			</li>
 		</ul>
 		<LinkableTitle h2 title="FAQ" />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>
 					Why are element-hiding rules (e.g., <InlineCode code="##" />,
@@ -415,27 +346,15 @@ adlist-parser" />
 				and local entries already provided by remote sources.
 			</li>
 		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Example Output" centered />
 		<CodeBlock :code="exampleOutput" />
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Requirements" centered />
-		<ul class="ml-4">
+		<ul>
 			<li>Python 3.8 or higher</li>
 			<li>No external dependencies (uses only standard library)</li>
 		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Use Cases" centered />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Pi-hole:</b>
 				Use <InlineCode code="output/adlist.txt" /> as a blocklist and
@@ -454,12 +373,8 @@ adlist-parser" />
 				Corporate firewall domain blocking lists.
 			</li>
 		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 title="Acknowledgments" centered />
-		<ul class="ml-4">
+		<ul>
 			<li>Built for the DNS filtering community</li>
 			<li>Inspired by the need for fast, reliable adlist aggregation</li>
 			<li>
@@ -472,24 +387,76 @@ adlist-parser" />
 </template>
 
 <script setup lang="ts">
+import type { IconListItem } from '@/types/iconList'
 import { isMobile } from '@basitcodeenv/vue3-device-detect'
+import useIconListMixin from '@/helpers/iconListMixin'
+
+const { createPreset } = useIconListMixin()
 
 const repo = 'toomas633/adlist-parser'
 
+const adlistFeaturePresets = {
+	fastConcurrent: createPreset({ icon: 'mdi-speedometer', color: '#7e57c2' }),
+	standardLibraryOnly: createPreset({
+		icon: 'mdi-book-open-page-variant',
+		color: '#43a047',
+	}),
+	dualOutput: createPreset({ icon: 'mdi-file-multiple', color: '#1e88e5' }),
+	abpAndPiHoleSupport: createPreset({
+		icon: 'mdi-filter-outline',
+		color: '#fb8c00',
+	}),
+	intelligentSeparation: createPreset({
+		icon: 'mdi-call-split',
+		color: '#00acc1',
+	}),
+	redundancyAnalysis: createPreset({
+		icon: 'mdi-content-duplicate',
+		color: '#e53935',
+	}),
+}
+
+const features: IconListItem[] = [
+	adlistFeaturePresets.fastConcurrent({
+		title: 'Fast Concurrent Processing',
+		text: 'Processes 1.6M+ entries from 50+ sources in ~50-60 seconds.',
+	}),
+	adlistFeaturePresets.standardLibraryOnly({
+		title: 'Standard Library Only',
+		text: 'Uses only Python standard library (3.8+).',
+	}),
+	adlistFeaturePresets.dualOutput({
+		title: 'Dual Output',
+		text: 'Generates both adlists and whitelists simultaneously.',
+	}),
+	adlistFeaturePresets.abpAndPiHoleSupport({
+		title: 'ABP + Pi-hole Support',
+		text: 'Normalizes ABP rules and converts simple Pi-hole regex patterns.',
+	}),
+	adlistFeaturePresets.intelligentSeparation({
+		title: 'Intelligent Separation',
+		text: 'Automatically separates blocklist and whitelist entries.',
+	}),
+	adlistFeaturePresets.redundancyAnalysis({
+		title: 'Redundancy Analysis',
+		text: 'Detects duplicates and overlap across sources.',
+	}),
+]
+
 const adlistsExample = `{
-	"lists": ["blacklist.txt", "old_adlist.txt"],
-	"urls": [
-		"https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-		"https://adaway.org/hosts.txt",
-		"https://v.firebog.net/hosts/AdguardDNS.txt"
+  "lists": ["blacklist.txt", "old_adlist.txt"],
+    "urls": [
+      "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+	  "https://adaway.org/hosts.txt",
+	  "https://v.firebog.net/hosts/AdguardDNS.txt"
 	]
 }`
 
 const whitelistsExample = `{
-	"lists": ["whitelist.txt"],
-	"urls": [
-		"https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/whitelist-referral.txt"
-	]
+  "lists": ["whitelist.txt"],
+    "urls": [
+      "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/whitelist-referral.txt"
+    ]
 }`
 
 const outputHeaderSample = `# Adlist - Generated by Adlist-Parser

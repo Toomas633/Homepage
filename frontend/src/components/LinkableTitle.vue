@@ -1,4 +1,9 @@
 <template>
+	<v-divider
+		v-if="!hideDivider"
+		class="mt-4 mb-2 border-opacity-100"
+		thickness="2"
+		:color="h1 ? 'primary' : ''" />
 	<h1 v-if="h1" :id="tag" :class="centered ? 'text-center' : ''">
 		<v-icon icon="mdi-link-variant" size="24" @click="setTag" />{{ title }}
 	</h1>
@@ -15,6 +20,7 @@ const props = defineProps<{
 	h1?: boolean
 	h2?: boolean
 	h3?: boolean
+	hideDivider?: boolean
 }>()
 
 const tag = computed(() => props.title.toLowerCase().replaceAll(' ', '-'))

@@ -22,7 +22,7 @@
 - **Architecture:** Component-based with strict TypeScript typing
 - **Routing:** Modular Vue Router 4.6.4 with service layer organization
 - **Build:** Modern Vite with extensive optimization plugins
-- **Testing:** Vitest 4.0.16 with Vue Test Utils 2.4.6 and happy-dom 20.1.0 in `tests/` directory
+- **Testing:** Vitest 4.0.17 with Vue Test Utils 2.4.6 and happy-dom 20.3.0 in `tests/` directory
 - **When working in `frontend/`:** Always follow the patterns and conventions specified in the frontend instructions
 
 ### Backend Module (`backend/`)
@@ -31,7 +31,7 @@
 - **Architecture:** Modular structure with TypeScript types, middleware, routes, and services
 - **Features:** CORS 2.8.5, rate limiting 8.2.1, Nodemailer 7.0.12 email service, body-parser 2.2.2, GitHub API integration with Axios 1.13.2
 - **Security:** Environment validation, non-root Docker user, health monitoring
-- **Testing:** Vitest 4.0.16 with supertest 7.2.2 for API testing in `tests/` directory
+- **Testing:** Vitest 4.0.17 with supertest 7.2.2 for API testing in `tests/` directory
 - **Build:** esbuild 0.27.2 for fast production builds
 - **API Docs:** Swagger UI 5.0.1 with OpenAPI 3.0 specification
 - **When working in `backend/`:** Always follow the patterns and conventions specified in the backend instructions
@@ -83,6 +83,10 @@ This is a multi-folder VS Code workspace with three main directories:
 - **See `backend/.github-copilot-instructions.md` for detailed backend patterns**
 
 ## Build & Run
+
+**Node.js / npm expectations**:
+- Frontend dev/build targets Node.js 24+ with npm 10+
+- Backend supports Node.js 18+ with npm 8+ (see `backend/package.json` engines)
 
 - **Frontend dev:** `npm run dev` (Vite, hot reload) — See frontend instructions for detailed setup
 - **Frontend build:** `npm run build` (outputs to `dist/`) — Uses Vite with optimization plugins

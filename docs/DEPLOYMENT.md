@@ -31,7 +31,7 @@ This guide covers deploying **Toomas633's Dungeon** to production environments.
 ### Software Requirements
 
 - Docker 24+ and Docker Compose 2.x
-- OR Node.js 18+ (24+ recommended) with npm 8+
+- OR Node.js 24+ (recommended; required for frontend builds) with npm 10+
 - Nginx or Traefik for reverse proxy
 - SSL/TLS certificates (Let's Encrypt recommended)
 

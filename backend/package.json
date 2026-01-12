@@ -5,15 +5,14 @@
 	"private": true,
 	"license": "GPL-3.0-only",
 	"type": "module",
-	"main": "dist/app.js",
-	"types": "dist/app.d.ts",
+	"main": "dist/app.cjs",
 	"engines": {
 		"node": ">=18.0.0",
 		"npm": ">=8.0.0"
 	},
 	"scripts": {
 		"build": "node esbuild.config.js",
-		"start": "node dist/app.js",
+		"start": "node dist/app.cjs",
 		"dev": "tsx watch src/app.ts",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage",

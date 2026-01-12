@@ -26,27 +26,23 @@
 			title="screenshot"
 			alt="screenshot"
 			@click="openImageInNewTab(Image)" />
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
 		<LinkableTitle h1 title="Running" centered />
 		<p>
 			Run the Docker container with the following command, passing the necessary
 			environment variables:
 		</p>
 		<CodeBlock :code="dockerCode" />
-		<v-divider thickness="2" class="border-opacity-100 mt-6 mb-4" />
 		<LinkableTitle h2 title="Dockercompose" />
 		<p class="mb-2">Or with <InlineCode code="docker-compose.yml" />:</p>
 		<CodeBlock :code="dockerCompose" />
 		<p class="mt-2">
-			Replace "YOUR_MINING_POOL_URL", "YOUR_WALLET_ADDRESS", "x", and
-			"YOUR_ACCESS_TOKEN" with your actual values. Generate "ACCESS_TOKEN" with
-			openssl rand -hex 16 or random string. <br />
+			Replace <InlineCode code="YOUR_MINING_POOL_URL" />,
+			<InlineCode code="YOUR_WALLET_ADDRESS" />, <InlineCode code="x" />, and
+			<InlineCode code="YOUR_ACCESS_TOKEN" /> with your actual values. Generate
+			<InlineCode code="ACCESS_TOKEN" /> with
+			<InlineCode code="openssl rand -hex 16" /> or random string. <br />
 			Port 8080 is optional if you want direct access to XMRig proxy http api.
 		</p>
-		<v-divider thickness="2" class="border-opacity-100 mt-6 mb-4" />
 		<LinkableTitle h2 title="Env variables" />
 		<v-data-table :items="items" hide-default-footer class="rounded" />
 	</v-container>

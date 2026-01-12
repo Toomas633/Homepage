@@ -1,3 +1,5 @@
+import { Request } from 'express'
+
 export interface EmailConfig {
 	host: string
 	user: string
@@ -62,4 +64,29 @@ export interface Language {
 
 export interface GithubConfig {
 	token?: string
+}
+
+export interface GitHubRequest extends Request {
+	body: {
+		repo?: string
+	}
+}
+
+export interface EmailRequest extends Request {
+	body: {
+		from: string
+		message: string
+		project: string
+	}
+}
+
+export interface HealthResponse {
+	status: 'healthy' | 'unhealthy'
+	timestamp: string
+	version: string
+	email: {
+		status: 'connected' | 'disconnected'
+		responseTime?: string
+		error?: string
+	}
 }

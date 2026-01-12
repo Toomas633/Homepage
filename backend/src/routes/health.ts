@@ -5,20 +5,9 @@ import {
 	verifyEmailConnection,
 } from '../services/emailService.js'
 import { healthRateLimiter } from '../middleware/rateLimiter.js'
+import { HealthResponse } from '../types/index.js'
 
-// Version is injected at build time or use environment variable
-const APP_VERSION = process.env.APP_VERSION || '2.0.3'
-
-interface HealthResponse {
-	status: 'healthy' | 'unhealthy'
-	timestamp: string
-	version: string
-	email: {
-		status: 'connected' | 'disconnected'
-		responseTime?: string
-		error?: string
-	}
-}
+const APP_VERSION = process.env.APP_VERSION || 'Unknown'
 
 const router = Router()
 

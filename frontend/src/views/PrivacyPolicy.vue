@@ -15,7 +15,7 @@
 			contact us via our contact form.
 		</p>
 		<h2 class="pt-2">2. Information We Collect</h2>
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Contact Form:</b> When you use our contact form, we collect your
 				email address and any other information you provide to respond to your
@@ -33,7 +33,7 @@
 			</li>
 		</ul>
 		<h2 class="pt-2">3. How We Use Your Information</h2>
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Contact Form Data:</b> To respond to your inquiries and provide
 				customer support.

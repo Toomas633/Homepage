@@ -9,6 +9,31 @@ For detailed release notes, see the `changelog/` directory.
 
 ---
 
+## [5.2.0] - 2026-01-16
+
+### Added
+- Backend Swagger/OpenAPI documentation with interactive Swagger UI
+- Backend GitHub proxy endpoint (`/api/github`) for repo license/languages/latest release
+- New frontend demo view (Homepage demo)
+- New project page for Adlist Parser
+- New reusable frontend components/helpers for icon lists and tree views
+
+### Fixed
+- Redirect and 404 handling for smoother SPA navigation
+- PayPal icon rendering (moved away from Font Awesome icon usage)
+- Styling and URL hash handling improvements
+
+### Changed
+- GitHub requests moved from frontend directly to the backend service
+- Dependency updates across frontend and backend
+- Refactoring and cleanup across codebase for maintainability
+
+**Statistics**: ~107 files changed, 7,939 insertions(+), 4,118 deletions(-)
+
+**Full Release Notes**: [changelog-5.2.0.md](changelog/changelog-5.2.0.md)
+
+---
+
 ## [5.1.1] - 2025-12-05
 
 ### Fixed

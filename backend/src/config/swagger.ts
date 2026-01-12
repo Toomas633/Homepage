@@ -3,17 +3,35 @@ import type { Options, SwaggerDefinition } from 'swagger-jsdoc'
 import fs from 'node:fs'
 import path from 'node:path'
 import yaml from 'js-yaml'
-import { fileURLToPath } from 'node:url'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const moduleDirname = (() => {
+	if (typeof __dirname !== 'undefined') {
+		return __dirname
+	}
+
+	return path.join(process.cwd(), 'src')
+})()
+
+const readYamlFileFromKnownLocations = (fileName: string): string => {
+	const configDir =
+		path.basename(moduleDirname) === 'config'
+			? moduleDirname
+			: path.join(moduleDirname, 'config')
+	const yamlPath = path.join(configDir, fileName)
+
+	if (fs.existsSync(yamlPath)) {
+		return fs.readFileSync(yamlPath, 'utf8')
+	}
+
+	throw new Error(`Swagger file '${fileName}' not found. Tried: ${yamlPath}`)
+}
 
 const swaggerDefinition = yaml.load(
-	fs.readFileSync(path.join(__dirname, 'swagger.yaml'), 'utf8')
+	readYamlFileFromKnownLocations('swagger.yaml')
 ) as SwaggerDefinition
 
 const swaggerPaths = yaml.load(
-	fs.readFileSync(path.join(__dirname, 'swagger-paths.yaml'), 'utf8')
+	readYamlFileFromKnownLocations('swagger-paths.yaml')
 ) as { paths: Record<string, unknown> }
 
 const options: Options = {

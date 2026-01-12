@@ -1,17 +1,9 @@
 import { Router } from 'express'
-import type { Request, Response } from 'express'
+import type { Response } from 'express'
 import { sendEmail } from '../services/emailService.js'
 import { emailRateLimiter } from '../middleware/rateLimiter.js'
 import { objectToString } from '../utils/helpers.js'
-import type { ApiResponse } from '../types/index.js'
-
-interface EmailRequest extends Request {
-	body: {
-		from: string
-		message: string
-		project: string
-	}
-}
+import type { ApiResponse, EmailRequest } from '../types/index.js'
 
 const router = Router()
 

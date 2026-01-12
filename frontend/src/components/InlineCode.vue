@@ -1,7 +1,7 @@
 <template>
 	<code class="position-relative" @mousedown="copyCode(code)">
 		<mark>
-			{{ code }}
+			<span v-text="code" />
 			<v-tooltip
 				v-if="isDesktop"
 				activator="parent"

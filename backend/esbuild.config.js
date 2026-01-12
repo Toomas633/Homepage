@@ -1,21 +1,18 @@
 import { build } from 'esbuild'
 import { copyFileSync, mkdirSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 
 await build({
 	entryPoints: ['src/app.ts'],
 	bundle: true,
 	platform: 'node',
 	target: 'es2022',
-	format: 'esm',
-	outfile: 'dist/app.js',
-	external: ['node:*'],
-	banner: {
-		js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
-	},
+	external: ['node:*', 'swagger-ui-dist/absolute-path'],
 	sourcemap: true,
 	minify: true,
 	logLevel: 'info',
+	format: 'cjs',
+	outfile: 'dist/app.cjs',
 })
 
 const configDir = join('dist', 'config')
@@ -28,5 +25,3 @@ copyFileSync(
 	join('src', 'config', 'swagger-paths.yaml'),
 	join(configDir, 'swagger-paths.yaml')
 )
-
-console.log('✓ Copied YAML configuration files to dist/config/')

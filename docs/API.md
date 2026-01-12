@@ -68,7 +68,7 @@ Rate limiting is applied per IP address to prevent abuse.
 | Endpoint | Limit | Window |
 |----------|-------|--------|
 | `/api/health` | 60 requests | 1 minute |
-| `/send-email` | 10 requests | 15 minutes |
+| `/api/send-email` | 10 requests | 15 minutes |
 | `/api/github` | 60 requests | 1 minute |
 
 **Rate Limit Headers**:
@@ -131,13 +131,13 @@ HTTP Status: `429 Too Many Requests`
 
 Check the health status of the API and email service.
 
-**Endpoint**: `GET /health`
+**Endpoint**: `GET /api/health`
 
 **Description**: Returns the current health status of the application, including email service connectivity.
 
 **Request**:
 ```http
-GET /health HTTP/1.1
+GET /api/health HTTP/1.1
 Host: localhost:3000
 ```
 
@@ -186,7 +186,7 @@ Host: localhost:3000
 **Example**:
 
 ```bash
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 ```
 
 ---
@@ -195,14 +195,14 @@ curl http://localhost:3000/health
 
 Send a contact form email via the backend SMTP service.
 
-**Endpoint**: `POST /send-email`
+**Endpoint**: `POST /api/send-email`
 
 **Description**: Sends an email from the contact form to the configured recipient. Rate limited to prevent spam.
 
 **Request**:
 
 ```http
-POST /send-email HTTP/1.1
+POST /api/send-email HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
 Origin: http://localhost:5173
@@ -291,7 +291,7 @@ Origin: http://localhost:5173
 **Example**:
 
 ```bash
-curl -X POST http://localhost:3000/send-email \
+curl -X POST http://localhost:3000/api/send-email \
   -H "Content-Type: application/json" \
   -H "Origin: http://localhost:5173" \
   -d '{
@@ -304,7 +304,7 @@ curl -X POST http://localhost:3000/send-email \
 **JavaScript Example**:
 
 ```javascript
-const response = await fetch('http://localhost:3000/send-email', {
+const response = await fetch('http://localhost:3000/api/send-email', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -611,7 +611,7 @@ if (result.success && result.data) {
 
 **Request**:
 ```http
-POST /send-email HTTP/1.1
+POST /api/send-email HTTP/1.1
 Host: api.toomas633.com
 Content-Type: application/json
 Origin: https://toomas633.com
@@ -649,10 +649,10 @@ X-RateLimit-Reset: 1701518400
 **curl**:
 ```bash
 # Health check
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 
 # Send email
-curl -X POST http://localhost:3000/send-email \
+curl -X POST http://localhost:3000/api/send-email \
   -H "Content-Type: application/json" \
   -H "Origin: http://localhost:5173" \
   -d @- <<EOF
@@ -667,7 +667,7 @@ EOF
 **PowerShell**:
 ```powershell
 # Health check
-Invoke-RestMethod -Uri "http://localhost:3000/health"
+Invoke-RestMethod -Uri "http://localhost:3000/api/health"
 
 # Send email
 $body = @{
@@ -677,14 +677,14 @@ $body = @{
 } | ConvertTo-Json
 
 Invoke-RestMethod -Method Post `
-  -Uri "http://localhost:3000/send-email" `
+  -Uri "http://localhost:3000/api/send-email" `
   -ContentType "application/json" `
   -Headers @{"Origin"="http://localhost:5173"} `
   -Body $body
 ```
 
 **Postman**:
-1. Create new POST request to `http://localhost:3000/send-email`
+1. Create new POST request to `http://localhost:3000/api/send-email`
 2. Set Headers:
    - `Content-Type`: `application/json`
    - `Origin`: `http://localhost:5173`
@@ -753,5 +753,5 @@ For API issues or questions:
 
 ---
 
-**Last Updated**: December 7, 2025  
+**Last Updated**: January 16, 2026  
 **API Version**: 2.1.0

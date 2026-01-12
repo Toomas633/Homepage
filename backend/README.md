@@ -62,7 +62,7 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 
 4. **Verify health**:
    ```bash
-   curl http://localhost:3000/health
+   curl http://localhost:3000/api/health
    ```
 
 ### Docker Deployment
@@ -94,6 +94,8 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 | Variable          | Description                                         | Example                                     |
 | :---------------- | :-------------------------------------------------- | :------------------------------------------ |
 | `EMAIL_HOST`      | SMTP server hostname                                | `mail.example.com`                          |
+| `EMAIL_PORT`      | SMTP server port                                    | `587`                                       |
+| `EMAIL_TLS`       | Use TLS/STARTTLS (true/false)                       | `true`                                      |
 | `EMAIL_USER`      | SMTP authentication username                        | `info@example.com`                          |
 | `EMAIL_PASS`      | SMTP authentication password                        | `secure_password_123`                       |
 | `EMAIL_TO`        | Recipient email for contact form submissions        | `admin@example.com`                         |
@@ -107,6 +109,8 @@ Create a `.env` file in the backend directory:
 ```bash
 # Backend server configuration
 EMAIL_HOST=your.smtp.server.com
+EMAIL_PORT=587
+EMAIL_TLS=true
 EMAIL_USER=your-email@domain.com
 EMAIL_PASS=your-secure-password
 EMAIL_TO=recipient@domain.com
@@ -235,7 +239,7 @@ http://localhost:3000/api/swagger-ui.json
 ### Health Check
 
 ```http
-GET /health
+GET /api/health
 ```
 
 Returns server health status, timestamp, version, and email service verification.
@@ -257,7 +261,7 @@ Returns server health status, timestamp, version, and email service verification
 ### Send Email
 
 ```http
-POST /send-email
+POST /api/send-email
 ```
 
 Send contact form email. Rate limited to 10 requests per 15 minutes per IP.
@@ -383,7 +387,7 @@ The `docker-compose.yml` provides:
 
 - **Development**: Use `npm run dev` for detailed console output
 - **Docker**: View logs with `docker-compose logs backend`
-- **Health Status**: Check `/health` endpoint regularly
+- **Health Status**: Check `/api/health` endpoint regularly
 
 ## 📚 Documentation
 
@@ -410,8 +414,8 @@ For detailed API endpoint documentation with request/response examples, see [doc
 
 **Endpoints**:
 
-- `GET /health` - Health check with email service verification
-- `POST /send-email` - Send contact form emails (rate limited)
+- `GET /api/health` - Health check with email service verification
+- `POST /api/send-email` - Send contact form emails (rate limited)
 
 ## 📝 License
 

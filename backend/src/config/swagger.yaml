@@ -16,6 +16,8 @@ tags:
     description: Health check endpoints
   - name: Email
     description: Email service endpoints
+  - name: GitHub
+    description: GitHub proxy endpoints
 
 components:
   schemas:
@@ -120,3 +122,77 @@ components:
           type: string
           description: Rate limit error message
           example: 'Too many requests, please try again later.'
+
+    GitHubRequest:
+      type: object
+      required:
+        - repo
+      properties:
+        repo:
+          type: string
+          description: Repository in format owner/repo
+          example: 'Toomas633/homepage'
+
+    License:
+      type: object
+      properties:
+        key:
+          type: string
+          description: License identifier
+          example: 'gpl-3.0'
+        name:
+          type: string
+          description: Full license name
+          example: 'GNU General Public License v3.0'
+        node_id:
+          type: string
+          description: GitHub node id
+        spdx_id:
+          type: string
+          description: SPDX license identifier
+          example: 'GPL-3.0'
+        url:
+          type: string
+          format: uri
+          description: GitHub API license URL
+
+    Language:
+      type: object
+      required:
+        - name
+        - count
+      properties:
+        name:
+          type: string
+          description: Language name
+          example: 'TypeScript'
+        count:
+          type: number
+          description: Bytes of code in this language
+          example: 125000
+
+    GitHubData:
+      type: object
+      required:
+        - languages
+      properties:
+        license:
+          $ref: '#/components/schemas/License'
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+        latestRelease:
+          type: string
+          description: Latest release tag name (if available)
+          example: '5.2.0'
+
+    GitHubResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the request was successful
+        data:
+          $ref: '#/components/schemas/GitHubData'
+

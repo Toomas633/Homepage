@@ -34,74 +34,10 @@
 			</v-col>
 		</v-row>
 		<ImageCarosel class="mt-6" :images="images" />
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
 		<LinkableTitle h1 centered title="Features" />
-		<ul class="ml-4 multicolumn">
-			<li>Single file upload</li>
-			<li>Random name toggle</li>
-			<li>Status popups</li>
-			<li>File preview icons</li>
-			<li>Delete time slider (1-12h, 24h, never)</li>
-			<li>Easy link copy</li>
-			<li>Automatic file deletion</li>
-			<li>Responsive css for all screen sizes</li>
-			<li>
-				Download page
-				<ul class="ml-4">
-					<li>Download, delete buttons</li>
-					<li>Delete time</li>
-				</ul>
-			</li>
-			<li>
-				Admin page
-				<ul class="ml-4">
-					<li>Display timezone</li>
-					<li>Delete and download buttons</li>
-					<li>Delete time</li>
-					<li>Hyperlink to download page</li>
-					<li>Custom link address</li>
-				</ul>
-			</li>
-		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
-		<LinkableTitle h1 centered title="Running instructions" />
-		<ul class="ml-4">
-			<li>Install PHP and Python (and add to system path on windows)</li>
-			<li>
-				Clone the GitHub repository to your local machine using the command
-				<InlineCode
-					code="git clone https://github.com/Toomas633/FileShare.git" />
-				or download the zip from releases and unpack it to desired destination
-			</li>
-			<li>
-				Start a local server to access the website in your browser. You can do
-				this by running the command
-				<InlineCode code="php -S localhost:8000" /> (or a different port number)
-				in your terminal from the project directory
-			</li>
-			<li>
-				For timed file delete also run <InlineCode code="cleanup.py" /> on the
-				backround
-			</li>
-			<li>
-				Access the website in your browser. Once the server is running, you can
-				access the website by navigating to
-				<LinkComponent href="http://localhost:8000" /> (or the appropriate URL)
-				in your web browser
-			</li>
-		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
+		<IconList :items="features" multicolumn />
 		<LinkableTitle h1 centered title="Requirements" />
-		<ul class="ml-4">
+		<ul>
 			<li>
 				Make sure you have PHP installed on your local machine. You can check
 				this by running the command <InlineCode code="php -v" /> in your
@@ -125,7 +61,7 @@
 			</li>
 			<li>
 				Check that you have php-sqlite3 and php-curl installed and enabled.
-				<ul class="ml-4">
+				<ul>
 					<li>
 						On debian run
 						<InlineCode code="sudo apt install php-sqlite3 php-curl" />, windows
@@ -147,12 +83,34 @@
 				<InlineCode code="pip install pytz datetime" />
 			</li>
 		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
+		<LinkableTitle h1 centered title="Running instructions" />
+		<ol>
+			<li>Install PHP and Python (and add to system path on windows)</li>
+			<li>
+				Clone the GitHub repository to your local machine using the command
+				<InlineCode
+					code="git clone https://github.com/Toomas633/FileShare.git" />
+				or download the zip from releases and unpack it to desired destination
+			</li>
+			<li>
+				Start a local server to access the website in your browser. You can do
+				this by running the command
+				<InlineCode code="php -S localhost:8000" /> (or a different port number)
+				in your terminal from the project directory
+			</li>
+			<li>
+				For timed file delete also run <InlineCode code="cleanup.py" /> on the
+				backround
+			</li>
+			<li>
+				Access the website in your browser. Once the server is running, you can
+				access the website by navigating to
+				<LinkComponent href="http://localhost:8000" /> (or the appropriate URL)
+				in your web browser
+			</li>
+		</ol>
 		<LinkableTitle h1 centered title="Debian service" />
-		<ul class="ml-4">
+		<ol>
 			<li>
 				Create a new systemd service file for your PHP website by running the
 				command
@@ -188,56 +146,44 @@
 				running the command
 				<InlineCode code="sudo systemctl enable FileShare.service" />
 			</li>
-		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
+		</ol>
 		<LinkableTitle h1 centered title="Windows" />
-		<ul class="ml-4">
+		Enable running the website in the background (or just double click to run
+		once in a dialog box):
+		<ol>
 			<li>
-				Enable running the website in the background (or just double click to
-				run once in a dialog box)
-				<ul class="ml-4">
-					<li>
-						Open the Task Scheduler by pressing the Windows key + R, typing
-						"taskschd.msc" and hitting Enter.
-					</li>
-					<li>
-						Click on the "Create Task" option in the Actions pane on the
-						right-hand side of the window.
-					</li>
-					<li>
-						In the "General" tab of the "Create Task" dialog box, enter a name
-						for the task in the "Name" field.
-					</li>
-					<li>
-						In the "Security options" section, select the user account you want
-						to run the task under.
-					</li>
-					<li>Click on the "Triggers" tab and click "New".</li>
-					<li>
-						In the "New Trigger" dialog box, select "At startup" from the "Begin
-						the task" drop-down menu.
-					</li>
-					<li>Click "OK" to save the trigger.</li>
-					<li>Click on the "Actions" tab and click "New".</li>
-					<li>
-						In the "New Action" dialog box, select "Start a program" from the
-						"Action" drop-down menu.
-					</li>
-					<li>
-						In the "Program/script" field, enter the full path to the
-						<InlineCode code="start.bat" /> file.
-					</li>
-					<li>Click "OK" twice to save the action and task.</li>
-				</ul>
+				Open the Task Scheduler by pressing the Windows key + R, typing
+				"taskschd.msc" and hitting Enter.
 			</li>
-		</ul>
-		<v-divider
-			class="mt-4 mb-2 border-opacity-100"
-			thickness="2"
-			color="primary" />
+			<li>
+				Click on the "Create Task" option in the Actions pane on the right-hand
+				side of the window.
+			</li>
+			<li>
+				In the "General" tab of the "Create Task" dialog box, enter a name for
+				the task in the "Name" field.
+			</li>
+			<li>
+				In the "Security options" section, select the user account you want to
+				run the task under.
+			</li>
+			<li>Click on the "Triggers" tab and click "New".</li>
+			<li>
+				In the "New Trigger" dialog box, select "At startup" from the "Begin the
+				task" drop-down menu.
+			</li>
+			<li>Click "OK" to save the trigger.</li>
+			<li>Click on the "Actions" tab and click "New".</li>
+			<li>
+				In the "New Action" dialog box, select "Start a program" from the
+				"Action" drop-down menu.
+			</li>
+			<li>
+				In the "Program/script" field, enter the full path to the
+				<InlineCode code="start.bat" /> file.
+			</li>
+			<li>Click "OK" twice to save the action and task.</li>
+		</ol>
 		<LinkableTitle h1 centered title="Docker" />
 		<p>
 			Create a <InlineCode code="docker-compose.yml" />, copy the contents under
@@ -252,11 +198,14 @@
 </template>
 
 <script setup lang="ts">
-import { dockerCompose } from '@/constants/fileshare'
 import type { Image } from '@/types/image'
 import download from '@/assets/images/fileshare/download.webp'
 import settings from '@/assets/images/fileshare/settings.webp'
 import upload from '@/assets/images/fileshare/upload.webp'
+import { IconListItem } from '@/types/iconList'
+import useIconListMixin from '@/helpers/iconListMixin'
+
+const { iconListPresets } = useIconListMixin()
 
 const images: Image[] = [
 	{
@@ -274,4 +223,71 @@ const images: Image[] = [
 ]
 
 const repo = 'toomas633/fileshare'
+
+const dockerCompose = `version: '3.9'
+services:
+  fileshare:
+    image: ghcr.io/toomas633/fileshare:latest #or version number instead of latest
+	container_name: fileshare #container name, can be set different
+	ports:
+	  - "8080:80" #map port 8080 from host to 80 on container
+	environment:
+      - TZ=Europe/London #default timezone for the container and on first database creation
+	  - MAX_FILESIZE=5M #allowed uploaded file size
+	  - PASSWORD=Password.123 #password for settings page login, set your own or change it on the page
+	volumes:
+	  - /host/path1:/var/www/html/uploads/ # volume or host dir to a folder where uploads will be held
+	  - /host/path2:/var/www/html/db/ # volume or host dir to a folder where the database will be held
+	restart: always`
+
+const features: IconListItem[] = [
+	{ icon: 'mdi-file-upload', color: '#1e88e5', text: 'Single file upload' },
+	{ icon: 'mdi-dice-multiple', color: '#8e24aa', text: 'Random name toggle' },
+	{ icon: 'mdi-message-alert', color: '#fb8c00', text: 'Status popups' },
+	{ icon: 'mdi-file-eye', color: '#00acc1', text: 'File preview icons' },
+	{
+		icon: 'mdi-timer-sand',
+		color: '#f9a825',
+		text: 'Delete time slider (1-12h, 24h, never)',
+	},
+	{ icon: 'mdi-content-copy', color: '#43a047', text: 'Easy link copy' },
+	{
+		icon: 'mdi-delete-clock',
+		color: '#e53935',
+		text: 'Automatic file deletion',
+	},
+	{
+		icon: 'mdi-responsive',
+		color: '#3949ab',
+		text: 'Responsive css for all screen sizes',
+	},
+	{
+		icon: 'mdi-download-box',
+		color: '#1976d2',
+		text: 'Download page with download and delete actions, file info and delete time',
+	},
+	{
+		icon: 'mdi-cloud-upload',
+		color: '#1e88e5',
+		text: 'Upload page with drag and drop, file select, random name and delete time options',
+	},
+	{
+		icon: 'mdi-database',
+		color: '#6d4c41',
+		text: 'SQLite database for file info storage',
+	},
+	{
+		icon: 'mdi-language-python',
+		color: '#3776ab',
+		text: 'Python cleanup script for timed deletes',
+	},
+	iconListPresets.docker({
+		text: 'Docker image for easy deployment',
+	}),
+	{
+		icon: 'mdi-shield-account',
+		color: '#7e57c2',
+		text: 'Admin page with settings: Display timezone, max upload size, passwordchange, file list with delete buttons, custom link address',
+	},
+]
 </script>

@@ -38,8 +38,8 @@ server: {
 
 **Alternative**: Check for Node.js version mismatch
 ```bash
-node --version  # Should be 18+
-npm --version   # Should be 8+
+node --version  # Should be 24+ (recommended); backend supports 18+
+npm --version   # Should be 10+ (recommended); backend supports 8+
 ```
 
 ### Backend Development Server Crashes on Start
@@ -202,7 +202,7 @@ docker exec toomas633-dungeon netstat -tlnp
 
 # Test from inside container
 docker exec toomas633-dungeon curl http://localhost:80
-docker exec toomas633-dungeon curl http://localhost:3000/health
+docker exec toomas633-dungeon curl http://localhost:3000/api/health
 ```
 
 ---
@@ -274,7 +274,7 @@ pm2 logs backend
 ls backend/dist/app.js
 
 # Check Node.js version
-node --version  # Should be 18+
+node --version  # Should be 24+ (recommended); backend supports 18+
 
 # Try starting manually
 cd backend
@@ -322,7 +322,7 @@ VITE_API_URL=http://localhost:3000/api
 VITE_API_URL=https://yourdomain.com/api
 
 # Verify backend is running
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 
 # Check CORS configuration
 # backend/.env should include frontend URL in ALLOWED_ORIGINS
@@ -390,7 +390,7 @@ docker exec toomas633-dungeon pm2 restart all
 
 ```bash
 # Test health endpoint
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 # Should show email: { status: "connected" }
 
 # Check SMTP credentials in backend/.env
@@ -500,7 +500,7 @@ curl -H "Origin: http://localhost:5173" \
      -H "Access-Control-Request-Method: POST" \
      -H "Access-Control-Request-Headers: Content-Type" \
      -X OPTIONS \
-     http://localhost:3000/send-email
+  http://localhost:3000/api/send-email
 ```
 
 ### Nginx Proxy Issues
@@ -511,7 +511,7 @@ curl -H "Origin: http://localhost:5173" \
 
 ```bash
 # Test backend directly
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 
 # Check Nginx configuration
 sudo nginx -t
@@ -589,7 +589,7 @@ instances: 1  # Instead of 'max'
 
 ```bash
 # Check email service connection time
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 # Look at email.responseTime
 
 # If SMTP is slow, consider:
@@ -634,7 +634,7 @@ docker exec toomas633-dungeon pm2 describe backend
 
 # Network debugging
 docker exec toomas633-dungeon netstat -tlnp
-curl -v http://localhost:3000/health
+curl -v http://localhost:3000/api/health
 nslookup yourdomain.com
 
 # Docker debugging
@@ -646,4 +646,4 @@ docker system prune  # Clean up (careful!)
 
 ---
 
-**Last Updated**: December 4, 2025
+**Last Updated**: January 16, 2026

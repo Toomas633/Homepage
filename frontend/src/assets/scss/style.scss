@@ -71,8 +71,19 @@ pre,
 mark {
 	background-color: rgb(var(--v-theme-code));
 	color: rgb(var(--v-theme-on-code));
-	overflow-wrap: break-word;
-	white-space: pre-line;
+}
+
+pre {
+	margin: 0;
+	overflow: auto;
+	overflow-wrap: normal;
+	white-space: pre;
+	border: 1px solid rgb(var(--v-border-color) / var(--v-border-opacity));
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+		'Courier New', monospace;
+	font-size: 0.9rem;
+	line-height: 1.35;
 }
 
 mark {
@@ -93,6 +104,33 @@ mark {
 	background-color: rgb(var(--v-theme-code)) !important;
 }
 
+/* stylelint-disable selector-class-pattern */
+.v-data-table .v-table__wrapper > table > thead > tr > th,
+.v-data-table .v-table__wrapper > table > thead > tr > td {
+	background-color: #000 !important;
+	color: #fff !important;
+	font-weight: 700 !important;
+}
+
+.v-data-table .v-data-table-header__sort-icon,
+.v-data-table .v-data-table-header__sort-badge,
+.v-data-table .v-data-table-header__content .v-icon {
+	color: #fff !important;
+}
+/* stylelint-enable selector-class-pattern */
+
+.v-data-table.rounded {
+	overflow: hidden;
+}
+
+ul {
+	margin-left: 1rem;
+}
+
+ol {
+	margin-left: 1.25rem;
+}
+
 .multicolumn {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(13.125rem, 1fr));
@@ -105,9 +143,10 @@ mark {
 	margin-left: 1rem;
 }
 
-.multicolumn > li > ul {
+.multicolumn > li > ul,
+.multicolumn > li > ol {
 	display: block;
-	padding-left: 1.25rem;
+	padding-left: 1rem;
 	margin-top: 0.25rem;
 }
 

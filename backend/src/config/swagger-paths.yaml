@@ -105,3 +105,72 @@ paths:
                     success: false
                     message: 'Error sending email'
                     error: 'SMTP connection failed'
+
+  /api/github:
+    post:
+      summary: Get GitHub repository info
+      description: Retrieves GitHub repository data (license, languages, latest release) via the backend proxy service.
+      tags:
+        - GitHub
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitHubRequest'
+            examples:
+              repo:
+                summary: Repository lookup
+                value:
+                  repo: 'Toomas633/homepage'
+      responses:
+        '200':
+          description: Repository info fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitHubResponse'
+              examples:
+                success:
+                  value:
+                    success: true
+                    data:
+                      license:
+                        key: 'gpl-3.0'
+                        name: 'GNU General Public License v3.0'
+                        spdx_id: 'GPL-3.0'
+                        url: 'https://api.github.com/licenses/gpl-3.0'
+                        node_id: 'MDc6TGljZW5zZTk='
+                      languages:
+                        - name: 'TypeScript'
+                          count: 125000
+                        - name: 'Vue'
+                          count: 95000
+                      latestRelease: '5.2.0'
+        '400':
+          description: Invalid input (missing or invalid repo format)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingRepo:
+                  value:
+                    success: false
+                    message: 'Missing required field: repo'
+                invalidFormat:
+                  value:
+                    success: false
+                    message: "Invalid repository format. Use 'owner/repo'"
+        '500':
+          description: GitHub proxy error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                githubError:
+                  value:
+                    success: false
+                    message: 'Error fetching GitHub Data'
+                    error: 'GitHub API rate limit exceeded'

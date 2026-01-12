@@ -1,4 +1,4 @@
-FROM node:24-alpine AS frontend-scan
+FROM node:25-alpine AS frontend-scan
 
 WORKDIR /app/frontend
 
@@ -13,7 +13,7 @@ RUN mkdir -p .reports && \
     npm run type-check && \
     npm run test:coverage
 
-FROM node:24-alpine AS backend-scan
+FROM node:25-alpine AS backend-scan
 
 WORKDIR /app/backend
 
@@ -44,7 +44,9 @@ RUN hadolint --config .hadolint.yaml --format json Dockerfile > .reports/hadolin
 RUN sed -i 's|"file":"Dockerfile"|"file":"./Dockerfile"|g' .reports/hadolint-root.json && \
     sed -i 's|"file":"Dockerfile-sonarscan"|"file":"./Dockerfile-sonarscan"|g' .reports/hadolint-sonarscan.json
 
-FROM sonarsource/sonar-scanner-cli:11 AS sonar-scan
+FROM sonarsource/sonar-scanner-cli:12 AS sonar-scan
+
+USER root
 
 WORKDIR /app
 
@@ -66,7 +68,7 @@ ARG GITHUB_PR_NUMBER=""
 ARG GITHUB_BASE_REF=""
 ARG GITHUB_HEAD_REF=""
 
-RUN --mount=type=secret,id=sonar_token,mode=0444,required=false \
+RUN --mount=type=secret,id=sonar_token,mode=0400,required=false \
     if [ -f /run/secrets/sonar_token ]; then \
       SONAR_TOKEN=$(cat /run/secrets/sonar_token) && \
       if [ -n "$GITHUB_PR_NUMBER" ]; then \

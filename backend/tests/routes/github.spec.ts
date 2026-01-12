@@ -187,15 +187,17 @@ describe('GitHub Route', () => {
 		})
 
 		it('should handle empty repo name', async () => {
-			const mockData = null as unknown as GitHubResponse
-			vi.spyOn(githubService.githubService, 'queryData').mockResolvedValue(
-				mockData
-			)
+			const querySpy = vi.spyOn(githubService.githubService, 'queryData')
 
 			const response = await request(app).post('/api/github').send({ repo: '' })
 
-			expect(response.status).toBe(200)
-			expect(response.body.data).toBeNull()
+			expect(response.status).toBe(400)
+			expect(response.body).toHaveProperty('success', false)
+			expect(response.body).toHaveProperty(
+				'message',
+				'Missing required field: repo'
+			)
+			expect(querySpy).not.toHaveBeenCalled()
 		})
 
 		it('should handle special characters in repo name', async () => {

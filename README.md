@@ -60,7 +60,7 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 - **Router**: Vue Router 4.6.4
 - **HTTP Client**: Axios 1.13.2
 - **Maps**: Leaflet 1.9.4
-- **Testing**: Vitest 4.0.16
+- **Testing**: Vitest 4.0.17
 
 #### Backend (v2.1.0)
 - **Runtime**: Node.js 18+ (24+ recommended)
@@ -71,7 +71,7 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 - **HTTP Client**: Axios 1.13.2
 - **Security**: CORS 2.8.5, Rate Limiting 8.2.1
 - **API Docs**: Swagger UI 5.0.1 with OpenAPI 3.0
-- **Testing**: Vitest 4.0.16
+- **Testing**: Vitest 4.0.17
 
 ---
 
@@ -151,9 +151,11 @@ homepage/
 
 | Technology | Version  | Required |
 |------------|----------|----------|
-| Node.js    | 18+      | ✅       |
-| npm        | 8+       | ✅       |
+| Node.js    | 24.x     | ✅       |
+| npm        | 10.x+    | ✅       |
 | Docker     | 20+      | 🔧 Optional |
+
+**Note:** The frontend toolchain targets Node.js 24+. The backend supports Node.js 18+ (see `backend/package.json` engines).
 
 ### Local Development
 
@@ -491,7 +493,7 @@ The Dockerfile uses multi-stage builds for optimization:
 3. **Production**: Combines both with Nginx and PM2
 
 **Features:**
-- Uses `node:24-slim` for minimal image size
+- Uses `node:24-alpine` for minimal image size
 - Non-root user (`appuser`) for security
 - Health checks built-in
 - Optimized layer caching
@@ -505,7 +507,7 @@ The Dockerfile uses multi-stage builds for optimization:
 curl http://localhost/api/health
 
 # Direct backend access
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 ```
 
 **Healthy Response:**
@@ -513,6 +515,7 @@ curl http://localhost:3000/health
 {
   "status": "healthy",
   "timestamp": "2025-11-23T12:00:00.000Z",
+  "version": "2.1.0",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -611,7 +614,7 @@ netstat -ano | findstr :3000
 ```bash
 # Test health endpoint
 curl http://localhost/api/health
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 
 # Verify processes
 docker exec toomas633-dungeon pm2 list
@@ -708,7 +711,6 @@ Located in `frontend/.env`:
 | Variable            | Description                  | Required | Example                      |
 |---------------------|------------------------------|----------|------------------------------|
 | `VITE_API_URL`      | Backend API endpoint         | ✅       | `http://localhost:3000/api`  |
-| `VITE_GITHUB_TOKEN` | GitHub API token (optional)  | ❌       | `ghp_xxxxxxxxxxxxxxxxxxxx`   |
 
 ### Backend Environment Variables
 
@@ -720,7 +722,10 @@ Located in `backend/.env`:
 | `EMAIL_USER`      | SMTP username                    | ✅       | `info@example.com`                           |
 | `EMAIL_PASS`      | SMTP password/app password       | ✅       | `your-app-password`                          |
 | `EMAIL_TO`        | Recipient email                  | ✅       | `admin@example.com`                          |
+| `EMAIL_PORT`      | SMTP server port                 | ✅       | `587`                                        |
+| `EMAIL_TLS`       | Use TLS/STARTTLS (true/false)    | ✅       | `true`                                       |
 | `ALLOWED_ORIGINS` | CORS allowed origins (comma-sep) | ✅       | `http://localhost:5173,https://example.com`  |
+| `GITHUB_TOKEN`    | GitHub API token (optional)      | ❌       | `ghp_xxxxxxxxxxxxxxxxxxxx`                   |
 
 ### API Endpoints
 

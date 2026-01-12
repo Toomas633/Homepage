@@ -11,6 +11,7 @@ export default [
 		languageOptions: {
 			globals: {
 				...globals.node,
+				NodeJS: 'readonly',
 			},
 			parser: parser,
 			parserOptions: {

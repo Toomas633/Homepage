@@ -13,7 +13,7 @@
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard
 					text="GitHub"
-					href="https://github.com/Toomas633/Homepage"
+					href="https://github.com/Toomas633/homepage"
 					icon="mdi-github" />
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
@@ -23,10 +23,6 @@
 					:image="swaggerIcon" />
 			</v-col>
 		</v-row>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
 		<LinkableTitle h1 title="Overview" centered />
 		<p class="mb-4">
 			Toomas633's Dungeon is a full-stack web application showcasing personal
@@ -35,248 +31,18 @@
 			maintainability, and scalability.
 		</p>
 		<LinkableTitle h2 title="Key features" />
-		<ul class="multicolumn feature-list">
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-palette"
-					color="#9c27b0"
-					aria-hidden="true" />
-				<span>
-					<b>Modern UI:</b> Responsive design with Vuetify Material components.
-				</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-email"
-					color="#1e88e5"
-					aria-hidden="true" />
-				<span>
-					<b>Contact system:</b>
-					Email service with rate limiting and validation.
-				</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-map"
-					color="#43a047"
-					aria-hidden="true" />
-				<span><b>Interactive maps:</b> Leaflet integration for maps.</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-chart-bar"
-					color="#00acc1"
-					aria-hidden="true" />
-				<span>
-					<b>Project showcase:</b> Dynamic galleries with GitHub integration.
-				</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-shield-lock"
-					color="#f9a825"
-					aria-hidden="true" />
-				<span>
-					<b>Security:</b>
-					CORS protection, rate limiting, and security headers.
-				</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-docker"
-					color="#2496ed"
-					aria-hidden="true" />
-				<span>
-					<b>Containerized:</b> Docker support with multi-stage builds.
-				</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-check-bold"
-					color="#2e7d32"
-					aria-hidden="true" />
-				<span><b>Tested:</b> Comprehensive coverage with Vitest.</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-chart-line"
-					color="#7e57c2"
-					aria-hidden="true" />
-				<span>
-					<b>Quality:</b>
-					SonarCloud integration for code quality analysis.
-				</span>
-			</li>
-			<li class="feature-item">
-				<v-icon
-					class="feature-bullet"
-					icon="mdi-book-open-page-variant"
-					color="#fb8c00"
-					aria-hidden="true" />
-				<span>
-					<b>API docs:</b> Interactive Swagger UI for API exploration.
-				</span>
-			</li>
-		</ul>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
+		<IconList :items="keyFeatures" multicolumn />
 		<LinkableTitle h1 title="Tech stack" centered />
 		<v-row class="mt-2" align="start">
 			<v-col cols="12" md="6">
-				<LinkableTitle h2 title="Frontend" />
-				<ul class="feature-list">
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-vuejs"
-							color="#42b883"
-							aria-hidden="true" />
-						<span><b>Framework:</b> Vue 3 with Composition API</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-language-typescript"
-							color="#3178c6"
-							aria-hidden="true" />
-						<span><b>Language:</b> TypeScript</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-view-dashboard"
-							color="#1867c0"
-							aria-hidden="true" />
-						<span><b>UI library:</b> Vuetify</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-flash"
-							color="#646cff"
-							aria-hidden="true" />
-						<span><b>Build tool:</b> Vite</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-routes"
-							color="#673ab7"
-							aria-hidden="true" />
-						<span><b>Router:</b> Vue Router</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-web"
-							color="#5a29e4"
-							aria-hidden="true" />
-						<span><b>HTTP client:</b> Axios</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-map"
-							color="#199900"
-							aria-hidden="true" />
-						<span><b>Maps:</b> Leaflet</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-test-tube"
-							color="#6e9f18"
-							aria-hidden="true" />
-						<span><b>Testing:</b> Vitest</span>
-					</li>
-				</ul>
+				<LinkableTitle h2 title="Frontend" hide-divider />
+				<IconList :items="frontendStack" />
 			</v-col>
-
 			<v-col cols="12" md="6">
-				<LinkableTitle h2 title="Backend" />
-				<ul class="feature-list">
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-nodejs"
-							color="#339933"
-							aria-hidden="true" />
-						<span><b>Runtime:</b> Node.js</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-rocket-launch"
-							color="#424242"
-							aria-hidden="true" />
-						<span><b>Framework:</b> Express.js</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-language-typescript"
-							color="#3178c6"
-							aria-hidden="true" />
-						<span><b>Language:</b> TypeScript (ESM)</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-hammer-wrench"
-							color="#ffcf00"
-							aria-hidden="true" />
-						<span><b>Build tool:</b> esbuild</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-email"
-							color="#1e88e5"
-							aria-hidden="true" />
-						<span><b>Email:</b> Nodemailer</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-shield-lock"
-							color="#f9a825"
-							aria-hidden="true" />
-						<span><b>Security:</b> CORS + rate limiting</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-api"
-							color="#85ea2d"
-							aria-hidden="true" />
-						<span><b>API docs:</b> Swagger UI</span>
-					</li>
-					<li class="feature-item">
-						<v-icon
-							class="feature-bullet"
-							icon="mdi-test-tube"
-							color="#6e9f18"
-							aria-hidden="true" />
-						<span><b>Testing:</b> Vitest + Supertest</span>
-					</li>
-				</ul>
+				<LinkableTitle h2 title="Backend" hide-divider />
+				<IconList :items="backendStack" />
 			</v-col>
 		</v-row>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
-
 		<LinkableTitle h1 title="Architecture" centered />
 		<v-card class="pa-4" elevation="4">
 			<p class="mb-0 text-center">
@@ -314,7 +80,7 @@
 							</div>
 						</div>
 						<v-divider class="my-2" />
-						<ul class="ml-4 mb-0">
+						<ul>
 							<li>Serves static frontend files (<b>Vue dist</b>).</li>
 							<li>Proxies API requests (<b>/api/*</b>) to the backend.</li>
 						</ul>
@@ -338,7 +104,7 @@
 							</div>
 						</div>
 						<v-divider class="my-2" />
-						<ul class="ml-4 mb-0">
+						<ul>
 							<li>Express.js + TypeScript (ESM)</li>
 							<li>Email service (Nodemailer)</li>
 							<li>Health monitoring</li>
@@ -353,146 +119,250 @@
 			</p>
 		</v-card>
 		<v-card class="pa-4 mt-4" elevation="4">
-			<LinkableTitle h2 title="Project structure" />
-			<v-treeview
-				:items="structure"
-				item-value="title"
-				class="bg-secondary mt-2"
-				expand-icon="mdi-folder"
-				collapse-icon="mdi-folder-open"
-				density="compact"
-				fluid
-				open-all
-				open-on-click
-				rounded>
-				<template #prepend="{ item }">
-					<v-icon v-if="!(item.file === 'folder' && item.children?.length)">
-						{{ fileIcons[item.file as FileType] }}
-					</v-icon>
-				</template>
-				<template #title="{ item }">
-					<span>{{ item.title }}</span>
-					<span v-if="item.comment" style="opacity: 0.5">
-						({{ item.comment }})
-					</span>
-				</template>
-			</v-treeview>
+			<LinkableTitle h2 title="Project structure" hide-divider />
+			<TreeviewComponent :items="structure" />
+		</v-card>
+		<v-card class="pa-4 mt-4" elevation="4">
+			<LinkableTitle h2 title="Documentation" hide-divider />
+			<IconList :items="documentationLinks" />
 		</v-card>
 	</v-container>
 	<TableOfContents />
 </template>
 
 <script setup lang="ts">
-import { fileIcons } from '@/constants/fileIcons'
+import useTreeMixin from '@/helpers/treeMixin'
 import { FileType } from '@/enums/fileType'
 import swaggerIcon from '@/assets/icons/logos/swagger.svg'
+import type { IconListItem } from '@/types/iconList'
+import type { TreeItem } from '@/types/treeview'
+import useIconListMixin from '@/helpers/iconListMixin'
 
-const repo = 'Toomas633/Homepage'
+const { iconListPresets } = useIconListMixin()
+const { treeItem, treePresets } = useTreeMixin()
 
-interface TreeItem {
-	title: string
-	file: FileType
-	comment?: string
-	children?: TreeItem[]
-}
+const repo = 'Toomas633/homepage'
+
+const documentationLinks: IconListItem[] = [
+	{
+		icon: 'mdi-file-document-outline',
+		color: '#607d8b',
+		title: 'Root overview',
+		text: 'README.md',
+		href: 'https://github.com/Toomas633/homepage/blob/develop/README.md',
+	},
+	iconListPresets.vue({
+		title: 'Frontend docs',
+		text: 'frontend/README.md',
+		href: 'https://github.com/Toomas633/homepage/blob/develop/frontend/README.md',
+	}),
+	iconListPresets.nodeJs({
+		title: 'Backend docs',
+		text: 'backend/README.md',
+		href: 'https://github.com/Toomas633/homepage/blob/develop/backend/README.md',
+	}),
+	{
+		icon: 'mdi-book-open-page-variant',
+		color: '#fb8c00',
+		title: 'API reference',
+		text: 'docs/API.md',
+		href: 'https://github.com/Toomas633/homepage/blob/develop/docs/API.md',
+	},
+	iconListPresets.swaggerUi({
+		title: 'Swagger UI',
+		text: 'Swagger UI',
+		href: 'https://toomas633.com/api/swagger-ui',
+	}),
+	{
+		icon: 'mdi-rocket-launch',
+		color: '#424242',
+		title: 'Deployment guide',
+		text: 'docs/DEPLOYMENT.md',
+		href: 'https://github.com/Toomas633/homepage/blob/develop/docs/DEPLOYMENT.md',
+	},
+	{
+		icon: 'mdi-bug',
+		color: '#e53935',
+		title: 'Troubleshooting',
+		text: 'docs/TROUBLESHOOTING.md',
+		href: 'https://github.com/Toomas633/homepage/blob/develop/docs/TROUBLESHOOTING.md',
+	},
+	iconListPresets.docker({
+		title: 'Docker linting',
+		text: 'docs/DOCKER_LINTING.md',
+		href: 'https://github.com/Toomas633/homepage/blob/develop/docs/DOCKER_LINTING.md',
+	}),
+]
+
+const keyFeatures: IconListItem[] = [
+	{
+		icon: 'mdi-palette',
+		color: '#9c27b0',
+		title: 'Modern UI',
+		text: 'Responsive design with Vuetify Material components.',
+	},
+	iconListPresets.nodemailer({
+		title: 'Contact system',
+		text: 'Email service with rate limiting and validation.',
+	}),
+	{
+		icon: 'mdi-map',
+		color: '#43a047',
+		title: 'Interactive maps',
+		text: 'Leaflet integration for maps.',
+	},
+	{
+		icon: 'mdi-chart-bar',
+		color: '#00acc1',
+		title: 'Project showcase',
+		text: 'Dynamic galleries with GitHub integration.',
+	},
+	iconListPresets.security({
+		title: 'Security',
+		text: 'CORS protection, rate limiting, and security headers.',
+	}),
+	iconListPresets.docker({
+		title: 'Containerized',
+		text: 'Docker support with multi-stage builds.',
+	}),
+	{
+		icon: 'mdi-check-bold',
+		color: '#2e7d32',
+		title: 'Tested',
+		text: 'Comprehensive coverage with Vitest.',
+	},
+	iconListPresets.codeQuality({
+		title: 'Quality',
+		text: 'SonarCloud integration for code quality analysis.',
+	}),
+	iconListPresets.swaggerUi({
+		title: 'API docs',
+		text: 'Interactive Swagger UI for API exploration.',
+	}),
+]
+
+const frontendStack: IconListItem[] = [
+	iconListPresets.vue({
+		title: 'Framework',
+		text: 'Vue 3 with Composition API',
+	}),
+	iconListPresets.typeScript({
+		title: 'Language',
+		text: 'TypeScript',
+	}),
+	iconListPresets.vuetify({
+		title: 'UI library',
+		text: 'Vuetify',
+	}),
+	iconListPresets.vite({
+		title: 'Build tool',
+		text: 'Vite',
+	}),
+	iconListPresets.vueRouter({
+		title: 'Router',
+		text: 'Vue Router',
+	}),
+	iconListPresets.axios({
+		title: 'HTTP client',
+		text: 'Axios',
+	}),
+	iconListPresets.leaflet({
+		title: 'Maps',
+		text: 'Leaflet',
+	}),
+	iconListPresets.testing({
+		text: 'Vitest',
+	}),
+]
+
+const backendStack: IconListItem[] = [
+	iconListPresets.nodeJs({
+		title: 'Runtime',
+		text: 'Node.js',
+	}),
+	iconListPresets.express({
+		color: '#424242',
+		title: 'Framework',
+		text: 'Express.js',
+	}),
+	iconListPresets.typeScript({
+		title: 'Language',
+		text: 'TypeScript (ESM)',
+	}),
+	iconListPresets.esbuild({
+		title: 'Build tool',
+		text: 'esbuild',
+	}),
+	iconListPresets.nodemailer({
+		title: 'Email',
+		text: 'Nodemailer',
+	}),
+	iconListPresets.security({
+		title: 'Security',
+		text: 'CORS + rate limiting',
+	}),
+	iconListPresets.swaggerUi({
+		title: 'API docs',
+		text: 'Swagger UI',
+	}),
+	iconListPresets.testing({
+		text: 'Vitest + Supertest',
+	}),
+]
 
 const structure: TreeItem[] = [
-	{
-		title: 'homepage',
-		file: FileType.Folder,
+	treeItem.folder('homepage', {
 		children: [
-			{
-				title: 'frontend',
-				file: FileType.Folder,
+			treeItem.folder('frontend', {
 				comment: 'Vue 3 + TypeScript + Vuetify',
 				children: [
-					{
-						title: 'src',
-						file: FileType.Folder,
-						comment: 'App source code',
-						children: [
-							{ title: 'components', file: FileType.Folder },
-							{ title: 'views', file: FileType.Folder },
-							{ title: 'router', file: FileType.Folder },
-							{ title: 'services', file: FileType.Folder },
-							{ title: 'helpers', file: FileType.Folder },
-							{ title: 'types', file: FileType.Folder },
-							{ title: 'assets', file: FileType.Folder },
-						],
-					},
-					{ title: 'tests', file: FileType.Folder, comment: 'Vitest tests' },
-					{ title: 'vite.config.ts', file: FileType.Config },
-					{ title: 'vitest.config.ts', file: FileType.Config },
-					{ title: 'tsconfig.json', file: FileType.Config },
-					{ title: 'package.json', file: FileType.Code },
+					treePresets.srcFolder('App source code', [
+						treeItem.folder('components'),
+						treeItem.folder('views'),
+						treeItem.folder('router'),
+						treeItem.folder('services'),
+						treeItem.folder('helpers'),
+						treeItem.folder('types'),
+						treeItem.folder('assets'),
+					]),
+					treePresets.testsFolder('Vitest tests'),
+					treeItem.file('vite.config.ts', FileType.Config),
+					treeItem.file('vitest.config.ts', FileType.Config),
+					treePresets.tsconfigJson(),
+					treePresets.packageJson(),
 				],
-			},
-			{
-				title: 'backend',
-				file: FileType.Folder,
+			}),
+			treeItem.folder('backend', {
 				comment: 'Express.js + TypeScript (ESM)',
 				children: [
-					{
-						title: 'src',
-						file: FileType.Folder,
-						comment: 'API source code',
-						children: [
-							{ title: 'routes', file: FileType.Folder },
-							{ title: 'services', file: FileType.Folder },
-							{ title: 'middleware', file: FileType.Folder },
-							{ title: 'config', file: FileType.Folder },
-							{ title: 'types', file: FileType.Folder },
-							{ title: 'utils', file: FileType.Folder },
-							{ title: 'app.ts', file: FileType.Code, comment: 'Server entry' },
-						],
-					},
-					{
-						title: 'tests',
-						file: FileType.Folder,
-						comment: 'Vitest + Supertest',
-					},
-					{ title: 'tsconfig.json', file: FileType.Config },
-					{ title: 'esbuild.config.js', file: FileType.Config },
-					{ title: 'package.json', file: FileType.Code },
+					treePresets.srcFolder('API source code', [
+						treeItem.folder('routes'),
+						treeItem.folder('services'),
+						treeItem.folder('middleware'),
+						treeItem.folder('config'),
+						treeItem.folder('types'),
+						treeItem.folder('utils'),
+						treeItem.file('app.ts', FileType.Code, 'Server entry'),
+					]),
+					treePresets.testsFolder('Vitest + Supertest'),
+					treePresets.tsconfigJson(),
+					treeItem.file('esbuild.config.js', FileType.Config),
+					treePresets.packageJson(),
 				],
-			},
-			{
-				title: 'docs',
-				file: FileType.Folder,
-				comment: 'Project documentation',
-			},
-			{ title: 'changelog', file: FileType.Folder, comment: 'Release notes' },
-			{ title: 'Dockerfile', file: FileType.Config },
-			{ title: 'docker-compose.yml', file: FileType.Config },
-			{ title: 'nginx.conf', file: FileType.Config },
-			{ title: 'ecosystem.config.cjs', file: FileType.Config },
-			{ title: 'sonar-project.properties', file: FileType.Config },
-			{ title: 'Homepage.code-workspace', file: FileType.Config },
-			{ title: 'README.md', file: FileType.Txt },
-			{ title: 'CHANGELOG.md', file: FileType.Txt },
-			{ title: 'CONTRIBUTING.md', file: FileType.Txt },
-			{ title: 'LICENCE', file: FileType.License },
+			}),
+			treeItem.folder('docs', { comment: 'Project documentation' }),
+			treeItem.folder('changelog', { comment: 'Release notes' }),
+			treeItem.file('Dockerfile', FileType.Config),
+			treeItem.file('docker-compose.yml', FileType.Config),
+			treeItem.file('nginx.conf', FileType.Config),
+			treeItem.file('ecosystem.config.cjs', FileType.Config),
+			treeItem.file('sonar-project.properties', FileType.Config),
+			treeItem.file('Homepage.code-workspace', FileType.Config),
+			treePresets.readme(),
+			treeItem.file('CHANGELOG.md', FileType.Txt),
+			treeItem.file('CONTRIBUTING.md', FileType.Txt),
+			treeItem.file('LICENCE', FileType.License),
 		],
-	},
+	}),
 ]
 </script>
-
-<style scoped lang="scss">
-.feature-list {
-	list-style: none;
-	padding-left: 0;
-	margin-left: 0;
-}
-
-.feature-item {
-	display: flex;
-	gap: 0.6rem;
-	align-items: flex-start;
-	break-inside: avoid;
-}
-
-.feature-bullet {
-	min-width: 1.25rem;
-	line-height: 1.4;
-}
-</style>

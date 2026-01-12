@@ -263,7 +263,7 @@ frontend/
 │   └── ads.txt           # Ads configuration
 ├── src/
 │   ├── assets/           # Build-time assets
-│   │   ├── icons/        # SVG icons
+│   │   ├── icons/        # SVG icons (controller/, donate/, logos/)
 │   │   ├── images/       # Images
 │   │   ├── json/         # Static data files
 │   │   └── scss/         # Global stylesheets
@@ -286,7 +286,6 @@ frontend/
 │   ├── helpers/         # Helper function tests
 │   ├── services/        # Service tests
 │   └── util/            # Utility tests
-├── icons/               # Technology icons
 ├── plugins/             # Vite plugins
 ├── Dockerfile           # Production container
 ├── nginx.conf           # Nginx configuration
@@ -301,11 +300,10 @@ frontend/
 
 The frontend can be configured through build-time environment variables:
 
-| Variable            | Description                 | Default               |
-| ------------------- | --------------------------- | --------------------- |
-| `VITE_APP_TITLE`    | Application title           | "Toomas633's Dungeon" |
-| `VITE_API_URL`      | Backend API URL             | `/api`                |
-| `VITE_GITHUB_TOKEN` | GitHub API token (optional) | -                     |
+| Variable         | Description       | Default               |
+| ---------------- | ----------------- | --------------------- |
+| `VITE_APP_TITLE` | Application title | "Toomas633's Dungeon" |
+| `VITE_API_URL`   | Backend API URL   | `/api`                |
 
 ### Vite Configuration
 
