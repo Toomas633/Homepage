@@ -5,6 +5,8 @@ import type { Server } from 'node:http'
 import { corsMiddleware } from './middleware/cors.js'
 import healthRoutes from './routes/health.js'
 import emailRoutes from './routes/email.js'
+import githubRoutes from './routes/github.js'
+import swaggerRoutes from './routes/swagger.js'
 import type { ErrorResponse } from './types/index.js'
 import { config } from './config/env.js'
 import {
@@ -20,8 +22,10 @@ app.set('trust proxy', 1)
 app.use(bodyParser.json())
 app.use(corsMiddleware)
 
-app.use('/', healthRoutes)
-app.use('/', emailRoutes)
+app.use('/api', swaggerRoutes)
+app.use('/api', healthRoutes)
+app.use('/api', emailRoutes)
+app.use('/api', githubRoutes)
 
 app.use((req: Request, res: Response<ErrorResponse>) => {
 	res.status(404).json({
@@ -84,7 +88,6 @@ export const startServer = async (): Promise<void> => {
 	process.on('SIGINT', () => gracefulShutdown('SIGINT'))
 }
 
-// Only start server if this module is run directly (not imported in tests)
 if (process.env.NODE_ENV !== 'test') {
 	startServer()
 }

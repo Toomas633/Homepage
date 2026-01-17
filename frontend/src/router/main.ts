@@ -1,6 +1,5 @@
 import { RouteRecord } from '@/types/route'
 
-// Lazy load views for better performance
 const HomeView = () => import('@/views/HomeView.vue')
 const ContactView = () => import('@/views/ContactView.vue')
 const DonateView = () => import('@/views/DonateView.vue')
@@ -14,6 +13,7 @@ export const mainRoutes: Array<RouteRecord> = [
 		component: HomeView,
 		meta: {
 			title: "Toomas633's Dungeon",
+			canonical: '/',
 			description:
 				'Explore the projects and interests of a tech enthusiast and full-time developer. From robotics to 3D printing and find open-source work on GitHub and Thingiverse.',
 			keywords:
@@ -25,6 +25,7 @@ export const mainRoutes: Array<RouteRecord> = [
 		component: ContactView,
 		meta: {
 			title: 'Contact',
+			canonical: '/contact',
 			description:
 				'Get in touch through our contact page! Report issues, ask questions, or provide feedback via our contact form or directly by email. Choose from various project topics and send your message quickly and securely. Spam will be reported and banned.',
 			keywords:
@@ -36,6 +37,7 @@ export const mainRoutes: Array<RouteRecord> = [
 		component: DonateView,
 		meta: {
 			title: 'Donate',
+			canonical: '/donate',
 			description:
 				'Support my student projects with any amount you choose. Explore ways to contribute through Amazon, PayPal, or Bitcoin. Every donation helps fund my ongoing projects and future endeavors.',
 			keywords:
@@ -47,6 +49,7 @@ export const mainRoutes: Array<RouteRecord> = [
 		component: ToS,
 		meta: {
 			title: 'ToS',
+			canonical: '/tos',
 			description:
 				"Review the Terms of Service for Toomas633's Dungeon, effective from July 12, 2024. This page outlines your rights and responsibilities while using our website, including usage guidelines, intellectual property rights, and limitations of liability. For any questions, contact us directly via email.",
 			keywords:
@@ -58,6 +61,7 @@ export const mainRoutes: Array<RouteRecord> = [
 		component: PrivacyPolicy,
 		meta: {
 			title: 'Privacy Policy',
+			canonical: '/privacy',
 			description:
 				"Review Toomas633's Dungeon Privacy Policy, effective July 12, 2024. Learn how we collect, use, and protect your information when using our website and services. Understand our practices regarding cookies, data security, and your rights to manage your personal data. For any questions, contact us directly.",
 			keywords:
@@ -70,6 +74,8 @@ export const mainRoutes: Array<RouteRecord> = [
 		meta: {
 			title: '404 Not Found',
 			description: 'The page you are looking for does not exist.',
+			canonical: '/404',
+			robots: 'noindex,follow',
 			keywords: '404, not found, error page',
 		},
 	},

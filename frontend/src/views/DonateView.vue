@@ -8,6 +8,7 @@
 			<v-col xl="3" lg="4" md="5" sm="6">
 				<ButtonCard
 					size="260"
+					image-size="240"
 					title="Amazon DE"
 					href="https://www.amazon.de/hz/wishlist/ls/2MCH6EAMYMPHL?ref_=wl_share"
 					:image="Amazon"

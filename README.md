@@ -3,12 +3,12 @@
 <div align="center">
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Toomas633_Homepage&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Toomas633_Homepage)
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.2-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.26-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.6-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-24+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
-[![Test Build](https://github.com/Toomas633/Homepage/actions/workflows/test-build.yml/badge.svg)](https://github.com/Toomas633/Homepage/actions/workflows/test-build.yml)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENCE)
+[![Test Build](https://github.com/Toomas633/homepage/actions/workflows/test-build.yml/badge.svg)](https://github.com/Toomas633/homepage/actions/workflows/test-build.yml)
 
 **A modern full-stack personal projects homepage built with Vue 3, TypeScript, and Node.js**
 
@@ -48,29 +48,30 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 - **🐳 Containerized**: Full Docker support with multi-stage builds
 - **✅ Tested**: Comprehensive test coverage with Vitest
 - **📈 Quality**: SonarCloud integration for code quality analysis
+- **📚 API Documentation**: Interactive Swagger UI for API exploration
 
 ### Tech Stack
 
-#### Frontend (v4.3.3)
-- **Framework**: Vue 3.5.25 with Composition API
+#### Frontend (v4.4.0)
+- **Framework**: Vue 3.5.26 with Composition API
 - **Language**: TypeScript 5.9.3
-- **UI Library**: Vuetify 3.11.2
-- **Build Tool**: Vite 7.2.6
-- **Router**: Vue Router 4.6.3
+- **UI Library**: Vuetify 3.11.6
+- **Build Tool**: Vite 7.3.1
+- **Router**: Vue Router 4.6.4
 - **HTTP Client**: Axios 1.13.2
 - **Maps**: Leaflet 1.9.4
-- **Testing**: Vitest 4.0.15
+- **Testing**: Vitest 4.0.17
 
-#### Backend (v2.0.3)
+#### Backend (v2.1.0)
 - **Runtime**: Node.js 18+ (24+ recommended)
 - **Framework**: Express.js 5.2.1
 - **Language**: TypeScript 5.9.3 with ESM modules
-- **Build Tool**: esbuild 0.27.1
-- **Email**: Nodemailer 7.0.11
+- **Build Tool**: esbuild 0.27.2
+- **Email**: Nodemailer 7.0.12
+- **HTTP Client**: Axios 1.13.2
 - **Security**: CORS 2.8.5, Rate Limiting 8.2.1
-- **Testing**: Vitest 4.0.15
-
----
+- **API Docs**: Swagger UI 5.0.1 with OpenAPI 3.0
+- **Testing**: Vitest 4.0.17
 
 ---
 
@@ -87,7 +88,7 @@ This is a multi-workspace project with separate frontend and backend modules, de
 │  │              Nginx (Port 80)                       │ │
 │  │  ┌──────────────────┐    ┌──────────────────────┐ │ │
 │  │  │  Static Files    │    │   API Proxy          │ │ │
-│  │  │  (Vue 3 dist/)   │    │   /api/* → :3000     │ │ │
+│  │  │  (Vue 3 dist/)   │    │   /api/* → backend:3000 │ │ │
 │  │  └──────────────────┘    └──────────┬───────────┘ │ │
 │  └───────────────────────────────────────┼────────────┘ │
 │                                          │               │
@@ -150,9 +151,11 @@ homepage/
 
 | Technology | Version  | Required |
 |------------|----------|----------|
-| Node.js    | 18+      | ✅       |
-| npm        | 8+       | ✅       |
+| Node.js    | 24.x     | ✅       |
+| npm        | 10.x+    | ✅       |
 | Docker     | 20+      | 🔧 Optional |
+
+**Note:** The frontend toolchain targets Node.js 24+. The backend supports Node.js 18+ (see `backend/package.json` engines).
 
 ### Local Development
 
@@ -490,7 +493,7 @@ The Dockerfile uses multi-stage builds for optimization:
 3. **Production**: Combines both with Nginx and PM2
 
 **Features:**
-- Uses `node:24-slim` for minimal image size
+- Uses `node:24-alpine` for minimal image size
 - Non-root user (`appuser`) for security
 - Health checks built-in
 - Optimized layer caching
@@ -504,7 +507,7 @@ The Dockerfile uses multi-stage builds for optimization:
 curl http://localhost/api/health
 
 # Direct backend access
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 ```
 
 **Healthy Response:**
@@ -512,6 +515,7 @@ curl http://localhost:3000/health
 {
   "status": "healthy",
   "timestamp": "2025-11-23T12:00:00.000Z",
+  "version": "2.1.0",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -610,7 +614,7 @@ netstat -ano | findstr :3000
 ```bash
 # Test health endpoint
 curl http://localhost/api/health
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 
 # Verify processes
 docker exec toomas633-dungeon pm2 list
@@ -707,7 +711,6 @@ Located in `frontend/.env`:
 | Variable            | Description                  | Required | Example                      |
 |---------------------|------------------------------|----------|------------------------------|
 | `VITE_API_URL`      | Backend API endpoint         | ✅       | `http://localhost:3000/api`  |
-| `VITE_GITHUB_TOKEN` | GitHub API token (optional)  | ❌       | `ghp_xxxxxxxxxxxxxxxxxxxx`   |
 
 ### Backend Environment Variables
 
@@ -719,7 +722,10 @@ Located in `backend/.env`:
 | `EMAIL_USER`      | SMTP username                    | ✅       | `info@example.com`                           |
 | `EMAIL_PASS`      | SMTP password/app password       | ✅       | `your-app-password`                          |
 | `EMAIL_TO`        | Recipient email                  | ✅       | `admin@example.com`                          |
+| `EMAIL_PORT`      | SMTP server port                 | ✅       | `587`                                        |
+| `EMAIL_TLS`       | Use TLS/STARTTLS (true/false)    | ✅       | `true`                                       |
 | `ALLOWED_ORIGINS` | CORS allowed origins (comma-sep) | ✅       | `http://localhost:5173,https://example.com`  |
+| `GITHUB_TOKEN`    | GitHub API token (optional)      | ❌       | `ghp_xxxxxxxxxxxxxxxxxxxx`                   |
 
 ### API Endpoints
 
@@ -728,6 +734,7 @@ Located in `backend/.env`:
 | `/health`         | GET    | Server health status         | 60 req / 1 min      |
 | `/api/health`     | GET    | Health check (via Nginx)     | 60 req / 1 min      |
 | `/api/send-email` | POST   | Send contact form email      | 10 req / 15 min     |
+| `/api/github`     | POST   | Get GitHub repository info   | 60 req / 1 min      |
 
 For detailed API documentation with request/response examples, see [docs/API.md](docs/API.md).
 
@@ -799,9 +806,8 @@ For detailed contribution guidelines, coding standards, and development workflow
 
 ## 📄 License
 
-This project is licensed under the **GPL-3.0-only** License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GPL-3.0-only** License - see the [LICENCE](LICENCE) file for details.
 
----
 
 ## 🙏 Acknowledgments
 

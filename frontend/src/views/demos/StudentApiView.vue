@@ -1,60 +1,38 @@
 <template>
 	<v-container>
 		<h1 class="text-center">Student API</h1>
-		<StatsAndChips hide-langs hide-version repo="student-api" />
+		<StatsAndChips hide-langs hide-version :repo="repo" />
 		<p class="text-center">
 			This project is a simple Node.js API built with TypeScript and Express. It
 			provides CRUD operations for managing student data.
 		</p>
 		<v-row class="d-block d-sm-flex my-1" justify="center">
 			<v-col>
-				<StatsAndChips repo="student-api" hide-chips />
+				<StatsAndChips :repo="repo" hide-chips />
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard
-					size="100"
 					text="GitHub"
 					href="https://github.com/Toomas633/student-api"
 					icon="mdi-github" />
 			</v-col>
 		</v-row>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
 		<LinkableTitle h1 title="Features" centered />
-		<ul class="ml-4 multicolumn">
-			<li>
-				<b>CRUD Operations:</b> Create, Read, Update, and Delete students.
-			</li>
-			<li><b>TypeScript:</b> Strongly typed codebase.</li>
-			<li><b>Express:</b> Lightweight and fast web framework.</li>
-			<li><b>Testing:</b> Includes integration tests using Jest.</li>
-			<li>
-				<b>Code Quality:</b>
-				Configured with ESLint and Prettier for consistent code formatting and
-				linting.
-			</li>
-		</ul>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
+		<IconList :items="features" multicolumn />
 		<LinkableTitle h1 title="Running" centered />
-		<LinkableTitle h2 title="Installation" />
+		<LinkableTitle h2 title="Installation" hide-divider />
 		<p>
 			1. Clone the repository from GitHub:
 			<InlineCode
 				code="git clone https://github.com/Toomas633/student-api" />.<br />
 			2. Install dependencies by running <InlineCode code="yarn install" />.
 		</p>
-		<v-divider thickness="2" class="border-opacity-100 mt-6 mb-4" />
 		<LinkableTitle h2 title="Scripts" />
 		<p>
 			The following yarn scripts are available defined in
 			<InlineCode code="package.json" />:
 		</p>
-		<ul class="ml-4">
+		<ul>
 			<li>
 				<b>Start Development Server:</b> Runs the server in development mode
 				with hot-reloading.<br />
@@ -77,14 +55,10 @@
 				<InlineCode code="yarn prettier-fix" />
 			</li>
 		</ul>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
 		<LinkableTitle h1 title="API endpoints" centered />
 		<p><b>Base URL:</b> <LinkComponent href="http://localhost:3000" /></p>
 		<p><b>Students</b></p>
-		<ul class="ml-4 mb-4">
+		<ul>
 			<li>
 				<b>GET<InlineCode code="/student" />:</b> Fetch all students.
 			</li>
@@ -111,42 +85,45 @@
 			specific request will only return the given student.
 			<CodeBlock :code="studentData" />
 		</p>
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
 		<LinkableTitle h1 title="Project structure" centered />
 		<v-card class="pa-4" elevation="4">
-			<v-treeview
-				:items="structure"
-				item-value="title"
-				class="bg-secondary mt-2"
-				expand-icon="mdi-folder"
-				collapse-icon="mdi-folder-open"
-				density="compact"
-				fluid
-				open-all
-				open-on-click
-				rounded>
-				<template #prepend="{ item }">
-					<v-icon v-if="!(item.file === 'folder' && item.children?.length)">
-						{{ fileIcons[item.file as FileType] }}
-					</v-icon>
-				</template>
-				<template #title="{ item }">
-					<span>{{ item.title }}</span>
-					<span v-if="item.comment" style="opacity: 0.5">
-						({{ item.comment }})
-					</span>
-				</template>
-			</v-treeview>
+			<TreeviewComponent :items="structure" :open-all="true" />
 		</v-card>
 	</v-container>
 	<TableOfContents />
 </template>
 <script setup lang="ts">
-import { fileIcons } from '@/constants/fileIcons'
 import { FileType } from '@/enums/fileType'
+import useIconListMixin from '@/helpers/iconListMixin'
+import useTreeMixin from '@/helpers/treeMixin'
+import type { IconListItem } from '@/types/iconList'
+import type { TreeItem } from '@/types/treeview'
+
+const { iconListPresets } = useIconListMixin()
+const { treeItem, treePresets } = useTreeMixin()
+
+const repo = 'toomas633/student-api'
+
+const features: IconListItem[] = [
+	{
+		icon: 'mdi-database-edit',
+		color: '#00acc1',
+		title: 'CRUD operations',
+		text: 'Create, Read, Update, and Delete students.',
+	},
+	iconListPresets.typeScript({
+		text: 'Strongly typed codebase.',
+	}),
+	iconListPresets.express({
+		text: 'Lightweight and fast web framework.',
+	}),
+	iconListPresets.testing({
+		text: 'Includes integration tests using Jest.',
+	}),
+	iconListPresets.codeQuality({
+		text: 'Configured with ESLint and Prettier for consistent code formatting and linting.',
+	}),
+]
 
 const studentData = `{
   firstName: string
@@ -155,82 +132,35 @@ const studentData = `{
   studentNumber: string
 }`
 
-const structure = [
+const structure: TreeItem[] = [
 	{
 		title: 'student-api',
 		file: FileType.Folder,
 		comment: '',
 		children: [
-			{ title: '.vscode', file: FileType.Folder, comment: 'VS Code settings' },
-			{ title: 'specs', file: FileType.Folder, comment: 'Jest test files' },
-			{
-				title: 'src',
-				file: FileType.Folder,
-				comment: 'Source files',
-				children: [
-					{
-						title: 'constants',
-						file: FileType.Folder,
-						comment: 'Constants for messages and errors',
-					},
-					{
-						title: 'controllers',
-						file: FileType.Folder,
-						comment: 'Express controllers',
-					},
-					{
-						title: 'models',
-						file: FileType.Folder,
-						comment: 'TypeScript interfaces',
-					},
-					{ title: 'routes', file: FileType.Folder, comment: 'API routes' },
-					{
-						title: 'services',
-						file: FileType.Folder,
-						comment: 'Business logic and data handling',
-					},
-					{
-						title: 'index.ts',
-						file: FileType.Code,
-						comment: 'App entry point',
-					},
-				],
-			},
-			{
-				title: '.eslintrc.json',
-				file: FileType.Config,
-				comment: 'ESLint configuration',
-			},
-			{
-				title: '.gitignore',
-				file: FileType.Config,
-			},
-			{
-				title: '.prettierrc',
-				file: FileType.Config,
-				comment: 'Prettier configuration',
-			},
-			{ title: 'LICENSE', file: FileType.License },
-			{
-				title: 'README.md',
-				file: FileType.Txt,
-			},
-			{
-				title: 'nodemon.json',
-				file: FileType.Config,
-				comment: 'Nodemon configuration ',
-			},
-			{
-				title: 'package.json',
-				file: FileType.Code,
-				comment: 'Project metadata and scripts',
-			},
-			{
-				title: 'tsconfig.json',
-				file: FileType.Config,
-				comment: 'TypeScript configuration',
-			},
-			{ title: 'yarn.lock', file: FileType.Lock },
+			treePresets.vscodeFolder(),
+			treeItem.folder('specs', { comment: 'Jest test files' }),
+			treePresets.srcFolder('Source files', [
+				treeItem.folder('constants', {
+					comment: 'Constants for messages and errors',
+				}),
+				treeItem.folder('controllers', { comment: 'Express controllers' }),
+				treeItem.folder('models', { comment: 'TypeScript interfaces' }),
+				treeItem.folder('routes', { comment: 'API routes' }),
+				treeItem.folder('services', {
+					comment: 'Business logic and data handling',
+				}),
+				treeItem.file('index.ts', FileType.Code, 'App entry point'),
+			]),
+			treeItem.file('.eslintrc.json', FileType.Config, 'ESLint configuration'),
+			treeItem.file('.gitignore', FileType.Config),
+			treeItem.file('.prettierrc', FileType.Config, 'Prettier configuration'),
+			treeItem.file('LICENSE', FileType.License),
+			treePresets.readme(),
+			treeItem.file('nodemon.json', FileType.Config, 'Nodemon configuration '),
+			treePresets.packageJson('Project metadata and scripts'),
+			treePresets.tsconfigJson('TypeScript configuration'),
+			treeItem.file('yarn.lock', FileType.Lock),
 		],
 	},
 ]

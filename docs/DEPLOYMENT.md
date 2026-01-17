@@ -31,7 +31,7 @@ This guide covers deploying **Toomas633's Dungeon** to production environments.
 ### Software Requirements
 
 - Docker 24+ and Docker Compose 2.x
-- OR Node.js 18+ (24+ recommended) with npm 8+
+- OR Node.js 24+ (recommended; required for frontend builds) with npm 10+
 - Nginx or Traefik for reverse proxy
 - SSL/TLS certificates (Let's Encrypt recommended)
 
@@ -111,6 +111,7 @@ EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
 EMAIL_TO=contact@yourdomain.com
 ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+GITHUB_TOKEN=your-github-token-here
 ```
 
 ### 3. Build the Docker Image
@@ -253,6 +254,7 @@ pm2 logs homepage-backend
 | `EMAIL_PASS` | SMTP password/app password | `your-app-password` |
 | `EMAIL_TO` | Recipient email | `contact@yourdomain.com` |
 | `ALLOWED_ORIGINS` | CORS allowed origins (comma-separated) | `https://yourdomain.com` |
+| `GITHUB_TOKEN` | GitHub API token (optional, for higher rate limits) | `ghp_xxxxxxxxxxxxxxxxxxxx` |
 
 ### Gmail Setup
 
@@ -475,12 +477,10 @@ curl https://toomas633.com/api/health
 # {
 #   "status": "healthy",
 #   "timestamp": "2025-12-02T12:00:00.000Z",
-#   "version": "2.0.3",
+#   "version": "2.1.0",
 #   "email": {
 #     "status": "connected",
 #     "responseTime": "150ms"
-#   }
-# }
 #   }
 # }
 ```

@@ -169,6 +169,7 @@
 				:title="item.title"
 				:subtitle="item.subtitle"
 				:prepend-icon="item.icon"
+				:append-icon="item.external ? 'mdi-open-in-new' : undefined"
 				@click="handleSecondClick(item.href?.split('/')[2])" />
 		</v-list>
 	</v-navigation-drawer>
@@ -277,6 +278,7 @@ watch(navSelection, (val, oldVal) => {
 					title: 'TalTech',
 					href: 'https://github.com/Toomas633?tab=repositories&q=TalTech&type=&language=&sort=',
 					icon: 'mdi-school',
+					subtitle: 'GitHub',
 					external: true,
 				},
 			]

@@ -86,15 +86,15 @@ export function createSitemapPlugin(hostname: string): Plugin {
 			const routerFiles = glob.sync('./src/router/*.ts')
 			const allRoutes: Array<SitemapRoute> = []
 
-			routerFiles.forEach((file) => {
+			for (const file of routerFiles) {
 				const routes = extractRoutesFromFile(file)
-				routes.forEach((route) => {
+				for (const route of routes) {
 					allRoutes.push({
 						...route,
 						lastmod: new Date(),
 					})
-				})
-			})
+				}
+			}
 
 			const uniqueRoutes = allRoutes.filter(
 				(route, index, self) =>
@@ -103,13 +103,13 @@ export function createSitemapPlugin(hostname: string): Plugin {
 
 			const sitemapStream = new SitemapStream({ hostname })
 
-			uniqueRoutes.forEach((route) => {
+			for (const route of uniqueRoutes) {
 				sitemapStream.write({
 					url: route.path,
 					priority: route.priority,
 					lastmod: route.lastmod,
 				})
-			})
+			}
 
 			sitemapStream.end()
 

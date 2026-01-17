@@ -10,3 +10,9 @@ export interface Language {
 	name: string
 	count: number
 }
+
+export interface RepoInfo {
+	license?: License
+	languages: Language[]
+	latestRelease?: string
+}

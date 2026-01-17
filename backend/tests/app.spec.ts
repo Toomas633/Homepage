@@ -211,7 +211,7 @@ describe('Express App', () => {
 				.spyOn(console, 'error')
 				.mockImplementation(() => {})
 
-			const response = await request(app)
+			await request(app)
 				.post('/api/email')
 				.send('{"invalid": json}')
 				.set('Content-Type', 'application/json')
@@ -243,7 +243,7 @@ describe('Express App', () => {
 		it('should handle large JSON payloads', async () => {
 			const largeObject = {
 				message: 'a'.repeat(10000),
-				data: Array(100).fill({ key: 'value' }),
+				data: new Array(100).fill({ key: 'value' }),
 			}
 
 			const response = await request(app)
@@ -315,13 +315,13 @@ describe('Server Lifecycle', () => {
 
 		it('should verify email connection on startup', async () => {
 			const { startServer } = await import('../src/app.js')
-			const { createTransporter, verifyEmailConnection } =
+			const { createTransporter } =
 				await import('../src/services/emailService.js')
 
 			const originalEnv = process.env.NODE_ENV
 			process.env.NODE_ENV = 'test'
 
-			const serverPromise = startServer()
+			startServer()
 
 			await new Promise((resolve) => setTimeout(resolve, 10))
 
@@ -339,10 +339,7 @@ describe('Server Lifecycle', () => {
 			const originalEnv = process.env.NODE_ENV
 			process.env.NODE_ENV = 'test'
 
-			const { createTransporter, verifyEmailConnection } =
-				await import('../src/services/emailService.js')
-
-			const serverPromise = startServer()
+			startServer()
 
 			await new Promise((resolve) => setTimeout(resolve, 50))
 
@@ -373,7 +370,7 @@ describe('Server Lifecycle', () => {
 			const originalEnv = process.env.NODE_ENV
 			process.env.NODE_ENV = 'test'
 
-			const serverPromise = startServer()
+			startServer()
 
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -412,7 +409,7 @@ describe('Server Lifecycle', () => {
 			const originalEnv = process.env.NODE_ENV
 			process.env.NODE_ENV = 'test'
 
-			const serverPromise = startServer()
+			startServer()
 
 			await new Promise((resolve) => setTimeout(resolve, 100))
 
@@ -433,8 +430,6 @@ describe('Server Lifecycle', () => {
 
 	describe('Graceful shutdown', () => {
 		it('should handle SIGTERM signal gracefully', async () => {
-			const { logWithTimestamp } = await import('../src/utils/helpers.js')
-
 			const sigtermListeners = process.listenerCount('SIGTERM')
 			const sigintListeners = process.listenerCount('SIGINT')
 
@@ -451,7 +446,7 @@ describe('Server Lifecycle', () => {
 			const sigtermBefore = process.listenerCount('SIGTERM')
 			const sigintBefore = process.listenerCount('SIGINT')
 
-			const serverPromise = startServer()
+			startServer()
 
 			await new Promise((resolve) => setTimeout(resolve, 50))
 

@@ -1,11 +1,11 @@
 # Toomas633's Dungeon - Frontend
 
-> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.3.3)
+> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.4.0)
 
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.25-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.26-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7.2.6-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.2-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vite](https://img.shields.io/badge/Vite-7.3.1-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.6-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 
 ## 🏗️ Architecture
 
@@ -54,8 +54,8 @@ This is a modern Vue.js 3 single-page application (SPA) built with:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Toomas633/Toomas633.git
-cd Toomas633/frontend
+git clone https://github.com/Toomas633/homepage.git
+cd homepage/frontend
 
 # Copy environment file
 cp .env.example .env
@@ -155,7 +155,9 @@ Coverage reports are generated in `coverage/` directory:
 - `tests/App.spec.ts` - Root application component tests
 - `tests/main.spec.ts` - Application entry point tests
 
-For more detailed testing information, see [DEVELOPMENT.md](../DEVELOPMENT.md#-testing).
+For more detailed full-stack testing information, see the main [Testing section](../README.md#-testing).
+
+For contribution and workflow details, see [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ### Development Workflow
 
@@ -188,7 +190,7 @@ npm run serve
 docker build -t toomas633-frontend .
 
 # Build with specific tag
-docker build -t toomas633-frontend:v4.3.0 .
+docker build -t toomas633-frontend:v4.4.0 .
 ```
 
 ### Running the Container
@@ -229,21 +231,14 @@ The included `docker-compose.yml` provides:
 
 Copy `.env.example` to `.env` and configure:
 
-| Variable            | Description                          | Required | Example                     |
-| ------------------- | ------------------------------------ | -------- | --------------------------- |
-| `VITE_GITHUB_TOKEN` | GitHub API token for repository data | ❌       | `ghp_xxxxxxxxxxxxxxxxxxxx`  |
-| `VITE_API_URL`      | Backend API endpoint URL             | ✅       | `http://localhost:3000/api` |
-
-#### GitHub Token Setup
-
-1. Go to [GitHub Settings > Tokens](https://github.com/settings/tokens)
-2. Create a new token with `public_repo` scope
-3. Add to your `.env` file as `VITE_GITHUB_TOKEN`
+| Variable       | Description              | Required | Example                     |
+| -------------- | ------------------------ | -------- | --------------------------- |
+| `VITE_API_URL` | Backend API endpoint URL | ✅       | `http://localhost:3000/api` |
 
 **Note**:
 
-- GitHub token is optional but enables repository data fetching, language statistics, and latest release information
-- Backend API URL is **required** when using the separate Express.js backend service
+- Backend API URL is **required** for API communication (email, GitHub integration)
+- GitHub API requests are now handled by the backend service
 
 ### Build Configuration
 
@@ -254,13 +249,9 @@ For production builds with environment variables:
 ```bash
 # Build with API URL
 docker build --build-arg VITE_API_URL=https://api.yoursite.com/api -t toomas633-frontend .
-
-# For GitHub token, use .env file instead of build args for security
-# Ensure your .env file contains: VITE_GITHUB_TOKEN=your_token_here
-docker build -t toomas633-frontend .
 ```
 
-**Security Note**: Sensitive data like GitHub tokens should be in `.env` files rather than passed as build arguments, as build args are visible in the image history.
+**Note**: The GitHub API token is now configured in the backend service, not the frontend.
 
 ## 🏗️ Project Structure
 
@@ -272,7 +263,7 @@ frontend/
 │   └── ads.txt           # Ads configuration
 ├── src/
 │   ├── assets/           # Build-time assets
-│   │   ├── icons/        # SVG icons
+│   │   ├── icons/        # SVG icons (controller/, donate/, logos/)
 │   │   ├── images/       # Images
 │   │   ├── json/         # Static data files
 │   │   └── scss/         # Global stylesheets
@@ -295,7 +286,6 @@ frontend/
 │   ├── helpers/         # Helper function tests
 │   ├── services/        # Service tests
 │   └── util/            # Utility tests
-├── icons/               # Technology icons
 ├── plugins/             # Vite plugins
 ├── Dockerfile           # Production container
 ├── nginx.conf           # Nginx configuration
@@ -310,11 +300,10 @@ frontend/
 
 The frontend can be configured through build-time environment variables:
 
-| Variable            | Description                 | Default               |
-| ------------------- | --------------------------- | --------------------- |
-| `VITE_APP_TITLE`    | Application title           | "Toomas633's Dungeon" |
-| `VITE_API_URL`      | Backend API URL             | `/api`                |
-| `VITE_GITHUB_TOKEN` | GitHub API token (optional) | -                     |
+| Variable         | Description       | Default               |
+| ---------------- | ----------------- | --------------------- |
+| `VITE_APP_TITLE` | Application title | "Toomas633's Dungeon" |
+| `VITE_API_URL`   | Backend API URL   | `/api`                |
 
 ### Vite Configuration
 
@@ -424,7 +413,7 @@ The project includes configurations for:
 
 ## 📄 License
 
-This project is licensed under the **GPL-3.0** License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the **GPL-3.0-only** License - see the [LICENCE](../LICENCE) file for details.
 
 ## 🔗 Links
 

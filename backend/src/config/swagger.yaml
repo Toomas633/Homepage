@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: "Toomas633's Dungeon API"
+  version: '2.1.0'
+  description: 'Backend API server for Toomas633 personal projects homepage'
+  contact:
+    name: Toomas633
+    email: info@toomas633.com
+    url: https://toomas633.com
+  license:
+    name: GPL-3.0-only
+    url: https://www.gnu.org/licenses/gpl-3.0.html
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Email
+    description: Email service endpoints
+  - name: GitHub
+    description: GitHub proxy endpoints
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+          description: Overall health status
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of the health check
+        version:
+          type: string
+          description: Backend API version
+          example: '2.0.3'
+        email:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: [connected, disconnected]
+              description: Email service connectivity status
+            responseTime:
+              type: string
+              description: Time taken to verify email connection
+              example: '150ms'
+            error:
+              type: string
+              description: Error message if email service is disconnected
+
+    EmailRequest:
+      type: object
+      required:
+        - from
+        - message
+        - project
+      properties:
+        from:
+          type: string
+          format: email
+          description: Sender's email address
+          example: user@example.com
+        message:
+          type: string
+          description: Email message content
+          maxLength: 5000
+          example: 'Hello, I would like to inquire about...'
+        project:
+          type: string
+          description: Email subject/project name
+          maxLength: 200
+          example: General Inquiry
+
+    EmailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the email was sent successfully
+        info:
+          type: object
+          description: Nodemailer response information
+          properties:
+            accepted:
+              type: array
+              items:
+                type: string
+              description: List of accepted recipient addresses
+            rejected:
+              type: array
+              items:
+                type: string
+              description: List of rejected recipient addresses
+            response:
+              type: string
+              description: SMTP server response
+            messageId:
+              type: string
+              description: Unique message identifier
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Always false for errors
+          example: false
+        message:
+          type: string
+          description: Error description
+        error:
+          type: string
+          description: Detailed error information
+
+    RateLimitError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Rate limit error message
+          example: 'Too many requests, please try again later.'
+
+    GitHubRequest:
+      type: object
+      required:
+        - repo
+      properties:
+        repo:
+          type: string
+          description: Repository in format owner/repo
+          example: 'Toomas633/homepage'
+
+    License:
+      type: object
+      properties:
+        key:
+          type: string
+          description: License identifier
+          example: 'gpl-3.0'
+        name:
+          type: string
+          description: Full license name
+          example: 'GNU General Public License v3.0'
+        node_id:
+          type: string
+          description: GitHub node id
+        spdx_id:
+          type: string
+          description: SPDX license identifier
+          example: 'GPL-3.0'
+        url:
+          type: string
+          format: uri
+          description: GitHub API license URL
+
+    Language:
+      type: object
+      required:
+        - name
+        - count
+      properties:
+        name:
+          type: string
+          description: Language name
+          example: 'TypeScript'
+        count:
+          type: number
+          description: Bytes of code in this language
+          example: 125000
+
+    GitHubData:
+      type: object
+      required:
+        - languages
+      properties:
+        license:
+          $ref: '#/components/schemas/License'
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+        latestRelease:
+          type: string
+          description: Latest release tag name (if available)
+          example: '5.2.0'
+
+    GitHubResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the request was successful
+        data:
+          $ref: '#/components/schemas/GitHubData'
+

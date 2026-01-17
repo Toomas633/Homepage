@@ -30,10 +30,12 @@ This project follows a simple code of conduct:
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js**: 18+ (24+ LTS recommended)
-- **npm**: 8+
+- **Node.js**: 24+ (recommended; required for frontend dev/build)
+- **npm**: 10+ (recommended)
 - **Git**: Latest version
 - **VS Code**: (Optional but recommended)
+
+**Note:** The backend supports Node.js 18+ (see `backend/package.json` engines).
 
 ### Fork and Clone
 
@@ -263,9 +265,9 @@ import { describe, it, expect } from 'vitest'
 import request from 'supertest'
 import app from '../src/app.js'
 
-describe('GET /health', () => {
+describe('GET /api/health', () => {
   it('returns health status', async () => {
-    const response = await request(app).get('/health')
+    const response = await request(app).get('/api/health')
     expect(response.status).toBe(200)
     expect(response.body.status).toBe('healthy')
   })

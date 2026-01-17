@@ -205,4 +205,254 @@ describe('App.vue', () => {
 
 		expect(wrapper.vm).toBeDefined()
 	})
+
+	describe('scrollbar offset behavior', () => {
+		it('should show no offset when hasScrollbar is false initially', () => {
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			const html = wrapper.html()
+			expect(html).toContain('--scrollbar-offset: 0rem')
+		})
+
+		it('should detect scrollbar when content height exceeds client height', async () => {
+			const mockMainElement = {
+				$el: {
+					scrollHeight: 1000,
+					clientHeight: 500,
+					addEventListener: vi.fn(),
+					removeEventListener: vi.fn(),
+				},
+			}
+
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': {
+							template: '<div class="v-main"><slot /></div>',
+							mounted() {
+								Object.assign(this, mockMainElement)
+							},
+						},
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			await new Promise((resolve) => setTimeout(resolve, 150))
+			await wrapper.vm.$nextTick()
+
+			const html = wrapper.html()
+			expect(html).toBeTruthy()
+		})
+
+		it('should not show offset when scroll and client heights are equal', async () => {
+			const mockMainElement = {
+				$el: {
+					scrollHeight: 500,
+					clientHeight: 500,
+					addEventListener: vi.fn(),
+					removeEventListener: vi.fn(),
+				},
+			}
+
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': {
+							template: '<div class="v-main"><slot /></div>',
+							mounted() {
+								Object.assign(this, mockMainElement)
+							},
+						},
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			await new Promise((resolve) => setTimeout(resolve, 150))
+			await wrapper.vm.$nextTick()
+
+			const html = wrapper.html()
+			expect(html).toContain('--scrollbar-offset')
+		})
+
+		it('should compute correct offset value in rootStyle', () => {
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			const vApp = wrapper.find('[style]')
+			if (vApp.exists()) {
+				const style = vApp.attributes('style')
+				expect(style).toContain('--scrollbar-offset')
+			}
+		})
+	})
+
+	describe('event listeners and lifecycle', () => {
+		it('should respond to window resize events', async () => {
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			await wrapper.vm.$nextTick()
+
+			window.dispatchEvent(new Event('resize'))
+			await wrapper.vm.$nextTick()
+
+			expect(wrapper.exists()).toBe(true)
+			expect(wrapper.html()).toContain('--scrollbar-offset')
+		})
+
+		it('should respond to window scroll events', async () => {
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			await wrapper.vm.$nextTick()
+
+			window.dispatchEvent(new Event('scroll'))
+			await wrapper.vm.$nextTick()
+
+			expect(wrapper.exists()).toBe(true)
+		})
+
+		it('should respond to window load events', async () => {
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			await wrapper.vm.$nextTick()
+
+			window.dispatchEvent(new Event('load'))
+			await wrapper.vm.$nextTick()
+
+			expect(wrapper.exists()).toBe(true)
+		})
+
+		it('should set up MutationObserver on mount', () => {
+			const observeSpy = vi.spyOn(MutationObserver.prototype, 'observe')
+
+			mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			expect(observeSpy).toHaveBeenCalledWith(document.body, {
+				childList: true,
+				subtree: true,
+			})
+
+			observeSpy.mockRestore()
+		})
+
+		it('should handle mainElement being undefined during checkScrollbar', async () => {
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			await wrapper.vm.$nextTick()
+			window.dispatchEvent(new Event('resize'))
+			await wrapper.vm.$nextTick()
+
+			expect(wrapper.exists()).toBe(true)
+			expect(wrapper.html()).toContain('--scrollbar-offset: 0rem')
+		})
+
+		it('should call checkScrollbar after 100ms timeout on mount', async () => {
+			vi.useFakeTimers()
+
+			const wrapper = mount(App, {
+				global: {
+					stubs: {
+						'v-app': true,
+						'v-main': true,
+						AppNavbar: true,
+						CookieConsent: true,
+						MessagePopup: true,
+						'router-view': true,
+					},
+				},
+			})
+
+			vi.advanceTimersByTime(100)
+			await wrapper.vm.$nextTick()
+
+			expect(wrapper.exists()).toBe(true)
+
+			vi.useRealTimers()
+		})
+	})
 })

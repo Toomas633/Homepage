@@ -1,4 +1,4 @@
-FROM node:24-alpine AS frontend-build
+FROM node:25-alpine AS frontend-build
 
 ARG VITE_APP_ENV="production"
 
@@ -9,9 +9,9 @@ RUN npm ci --ignore-scripts
 
 COPY frontend/ ./
 
-RUN VITE_APP_ENV=${VITE_APP_ENV} npm run build
+RUN VITE_APP_ENV="${VITE_APP_ENV}" npm run build
 
-FROM node:24-alpine AS backend-build
+FROM node:25-alpine AS backend-build
 
 WORKDIR /app/backend
 
@@ -22,7 +22,7 @@ COPY backend/ ./
 
 RUN npm run build
 
-FROM nginx:alpine AS production-stage
+FROM nginx:alpine-slim AS production-stage
 
 ENV NODE_ENV=production
 ENV EMAIL_HOST=""
@@ -36,7 +36,7 @@ ENV PORT=3000
 
 WORKDIR /app
 
-RUN apk add --no-cache nodejs curl tini \
+RUN apk add --no-cache curl nodejs tini \
     && rm -rf /var/cache/apk/* \
     && rm -f /etc/nginx/conf.d/default.conf \
     && sed -i 's|/run/nginx.pid|/tmp/nginx.pid|g' /etc/nginx/nginx.conf \
@@ -46,6 +46,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=frontend-build /app/frontend/dist /app/frontend
 COPY --from=backend-build /app/backend/dist /app/backend
+COPY --from=backend-build /app/backend/node_modules/swagger-ui-dist /app/backend/node_modules/swagger-ui-dist
 
 RUN addgroup -g 1000 appuser \
     && adduser -D -u 1000 -G appuser appuser \
@@ -65,7 +66,7 @@ set -e
 nginx -g "daemon off;" &
 NGINX_PID=$!
 
-cd /app/backend && node app.js &
+cd /app/backend && node app.cjs &
 BACKEND_PID=$!
 
 wait -n $NGINX_PID $BACKEND_PID

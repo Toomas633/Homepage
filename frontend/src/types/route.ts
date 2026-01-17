@@ -9,6 +9,8 @@ export interface RouteRecord {
 interface RouteMeta {
 	title: string
 	description: string
+	canonical?: string
+	robots?: string
 	icon?: string
 	image?: string
 	keywords?: string

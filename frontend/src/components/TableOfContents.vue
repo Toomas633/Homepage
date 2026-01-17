@@ -3,10 +3,10 @@
 		v-if="!drawer"
 		data-contents-button
 		class="toc-fab"
-		:class="isMobile ? 'mobile' : ''"
 		color="black"
 		icon="mdi-format-list-bulleted"
 		elevation="8"
+		position="fixed"
 		@click="drawer = true" />
 	<v-navigation-drawer
 		v-model="drawer"
@@ -14,7 +14,8 @@
 		location="right"
 		temporary
 		floating
-		class="bg-black"
+		class="bg-black toc-drawer"
+		:class="drawer ? 'open' : 'closed'"
 		:scrim="false"
 		touchless>
 		<h2 class="text-center mt-1">Table of contents</h2>
@@ -33,13 +34,13 @@
 	</v-navigation-drawer>
 </template>
 <script lang="ts" setup>
-import { isMobile } from '@basitcodeenv/vue3-device-detect'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const drawer = ref(false)
 const selected = ref<string[]>([])
 const ticking = ref(false)
+const lastUrlHash = ref('')
 
 type HeadingItem = {
 	id: string
@@ -62,6 +63,7 @@ watch(
 )
 
 onMounted(() => {
+	lastUrlHash.value = globalThis.location.hash
 	getContainer().addEventListener('scroll', onScroll, { passive: true })
 	getContainer().addEventListener('resize', onScroll, { passive: true })
 	document.addEventListener('click', handleGlobalClick, { passive: true })
@@ -131,7 +133,21 @@ function updateActiveHeading() {
 
 	if (selected.value[0] !== closestHash) {
 		selected.value = [closestHash]
+		replaceUrlHashSilently(closestHash)
 	}
+}
+
+function replaceUrlHashSilently(hash: string) {
+	if (!hash) return
+
+	const normalized = decodeURIComponent(hash).trim().toLowerCase()
+	if (normalized === decodeURIComponent(lastUrlHash.value).trim().toLowerCase())
+		return
+
+	const url = new URL(globalThis.location.href)
+	url.hash = hash
+	globalThis.history.replaceState(globalThis.history.state, '', url.toString())
+	lastUrlHash.value = hash
 }
 
 function handleGlobalClick(e: MouseEvent | TouchEvent) {
@@ -163,13 +179,18 @@ onUnmounted(() => {
 </script>
 <style scoped lang="scss">
 .toc-fab {
-	position: fixed;
 	right: calc(0.25rem + var(--scrollbar-offset));
 	top: 5.15rem;
 	transform: translateY(-50%);
+}
 
-	&.mobile {
-		right: 0.25rem;
+.toc-drawer {
+	&.open {
+		right: var(--scrollbar-offset) !important;
+	}
+
+	&.closed {
+		right: 0 !important;
 	}
 }
 </style>

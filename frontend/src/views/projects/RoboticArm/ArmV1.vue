@@ -16,21 +16,18 @@
 			<v-row justify="center" class="mt-4 d-block d-sm-flex">
 				<v-col sm="5" md="4" lg="3">
 					<ButtonCard
-						size="100"
 						text="Download"
 						href="https://github.com/Toomas633/Arduino-Robotic-Arm/releases/download/v1/Robotic-Arm-v1.ino"
 						icon="mdi-file-download-outline" />
 				</v-col>
 				<v-col sm="5" md="4" lg="3">
 					<ButtonCard
-						size="100"
 						text="GitHub"
 						href="https://github.com/Toomas633/Arduino-Robotic-Arm/tree/v1"
 						icon="mdi-github" />
 				</v-col>
 				<v-col sm="5" md="4" lg="3">
 					<ButtonCard
-						size="100"
 						text="Thingiverse"
 						href="https://www.thingiverse.com/thing:5391135"
 						icon="mdi-rocket-launch"

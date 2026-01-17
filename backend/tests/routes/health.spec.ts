@@ -10,7 +10,7 @@ describe('Health Route', () => {
 
 	beforeEach(() => {
 		app = express()
-		app.use(healthRouter)
+		app.use('/api', healthRouter)
 		vi.clearAllMocks()
 	})
 

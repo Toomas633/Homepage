@@ -1,13 +1,14 @@
 <template>
 	<v-btn
 		v-if="isBtn"
-		icon="fa:fa-brands fa-cc-paypal"
 		class="mx-2"
 		color="blue"
 		size="medium"
 		variant="plain"
 		aria-label="PayPal link"
-		@click="showPayPal" />
+		@click="showPayPal">
+		<v-img :src="paypalIcon" height="24" width="24" alt="PayPal" />
+	</v-btn>
 	<v-card v-else class="text-center pb-5" elevation="4" justfy="center">
 		<h1>PayPal</h1>
 		<v-img
@@ -15,7 +16,7 @@
 			rounded="xl"
 			height="240"
 			width="240"
-			class="mt-3 mb-2 mx-auto cursor-pointer"
+			class="mx-auto cursor-pointer"
 			@click="showPayPal" />
 	</v-card>
 	<span id="donate-button" style="display: none" />
@@ -23,6 +24,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
+import paypalIcon from '@/assets/icons/donate/paypal.svg'
 import qr from '@/assets/icons/donate/paypal-qr.svg'
 
 withDefaults(

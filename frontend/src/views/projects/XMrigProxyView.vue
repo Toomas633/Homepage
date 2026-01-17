@@ -1,7 +1,7 @@
 <template>
 	<v-container>
 		<h1 class="text-center">XMrig Proxy</h1>
-		<StatsAndChips repo="xmrig-proxy" hide-langs />
+		<StatsAndChips :repo="repo" hide-langs />
 		<p :class="!isMobile ? 'text-center' : ''">
 			Simple ubuntu docker image with the latest XMRig Proxy cloned from
 			<LinkComponent
@@ -11,11 +11,10 @@
 		</p>
 		<v-row class="d-block d-sm-flex my-1" justify="center">
 			<v-col>
-				<StatsAndChips repo="xmrig-proxy" hide-chips />
+				<StatsAndChips :repo="repo" hide-chips />
 			</v-col>
 			<v-col sm="3" md="3" lg="2">
 				<ButtonCard
-					size="100"
 					text="GitHub"
 					href="https://github.com/Toomas633/XMRig-Proxy"
 					icon="mdi-github" />
@@ -27,27 +26,23 @@
 			title="screenshot"
 			alt="screenshot"
 			@click="openImageInNewTab(Image)" />
-		<v-divider
-			thickness="2"
-			class="border-opacity-100 mt-6 mb-4"
-			color="primary" />
 		<LinkableTitle h1 title="Running" centered />
-		<p :class="!isMobile ? 'text-center' : ''">
+		<p>
 			Run the Docker container with the following command, passing the necessary
 			environment variables:
 		</p>
 		<CodeBlock :code="dockerCode" />
-		<v-divider thickness="2" class="border-opacity-100 mt-6 mb-4" />
 		<LinkableTitle h2 title="Dockercompose" />
 		<p class="mb-2">Or with <InlineCode code="docker-compose.yml" />:</p>
 		<CodeBlock :code="dockerCompose" />
 		<p class="mt-2">
-			Replace "YOUR_MINING_POOL_URL", "YOUR_WALLET_ADDRESS", "x", and
-			"YOUR_ACCESS_TOKEN" with your actual values. Generate "ACCESS_TOKEN" with
-			openssl rand -hex 16 or random string. <br />
+			Replace <InlineCode code="YOUR_MINING_POOL_URL" />,
+			<InlineCode code="YOUR_WALLET_ADDRESS" />, <InlineCode code="x" />, and
+			<InlineCode code="YOUR_ACCESS_TOKEN" /> with your actual values. Generate
+			<InlineCode code="ACCESS_TOKEN" /> with
+			<InlineCode code="openssl rand -hex 16" /> or random string. <br />
 			Port 8080 is optional if you want direct access to XMRig proxy http api.
 		</p>
-		<v-divider thickness="2" class="border-opacity-100 mt-6 mb-4" />
 		<LinkableTitle h2 title="Env variables" />
 		<v-data-table :items="items" hide-default-footer class="rounded" />
 	</v-container>
@@ -59,6 +54,8 @@ import Image from '@/assets/images/xmrig-proxy/image.png'
 import useImageMixin from '@/helpers/imageMixin'
 
 const { openImageInNewTab } = useImageMixin()
+
+const repo = 'toomas633/xmrig-proxy'
 
 const dockerCode = `docker pull toomas633/xmrig-proxy:latest && \
 docker run -d -p 3333:3333 -p 8080:8080 -p 80:80\

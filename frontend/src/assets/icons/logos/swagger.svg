@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+    <title>Swagger</title>
+    <circle cx="128" cy="128" r="108" fill="#7EDC3F" stroke="#1B3A57" stroke-width="14" />
+
+    <path
+        fill="none"
+        stroke="#1B3A57"
+        stroke-width="18"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M96 78 C78 78 78 98 78 104 C78 116 66 116 66 128 C66 140 78 140 78 152 C78 158 78 178 96 178" />
+    <path
+        fill="none"
+        stroke="#1B3A57"
+        stroke-width="18"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M160 78 C178 78 178 98 178 104 C178 116 190 116 190 128 C190 140 178 140 178 152 C178 158 178 178 160 178" />
+
+    <circle cx="110" cy="128" r="10" fill="#1B3A57" />
+    <circle cx="128" cy="128" r="10" fill="#1B3A57" />
+    <circle cx="146" cy="128" r="10" fill="#1B3A57" />
+</svg>

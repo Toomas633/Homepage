@@ -48,12 +48,12 @@
 </template>
 <script setup lang="ts">
 import { langColorMap } from '@/constants/languageColors'
-import { getLanguages } from '@/services/githubService'
 import { Language } from '@/types/github'
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
-	repo: string
+	loading: boolean
+	languages: Language[] | undefined
 }>()
 
 interface Segment extends Language {
@@ -61,36 +61,23 @@ interface Segment extends Language {
 	color: string
 }
 
-const rawLanguages = ref<Language[]>([])
-const loading = ref<boolean>(false)
-
-const totalBytes = computed(() =>
-	rawLanguages.value.reduce((a, c) => a + c.count, 0)
+const totalBytes = computed(
+	() => props.languages?.reduce((a, c) => a + c.count, 0) ?? 0
 )
 
 const segments = computed<Segment[]>(() => {
-	if (!totalBytes.value) return []
-	return rawLanguages.value
-		.slice()
-		.sort((a, b) => b.count - a.count)
-		.map((l) => ({
-			...l,
-			color: langColorMap[l.name],
-			percent: (l.count / totalBytes.value) * 100,
-		}))
+	if (!totalBytes.value || !props.languages) return []
+	return (
+		props.languages
+			.slice()
+			.sort((a, b) => b.count - a.count)
+			.map((l) => ({
+				...l,
+				color: langColorMap[l.name],
+				percent: (l.count / totalBytes.value) * 100,
+			})) ?? []
+	)
 })
-
-onMounted(loadLanguages)
-
-async function loadLanguages() {
-	if (!props.repo) return
-	loading.value = true
-	try {
-		rawLanguages.value = await getLanguages(props.repo)
-	} finally {
-		loading.value = false
-	}
-}
 </script>
 <style scoped lang="scss">
 .lang-bar {

@@ -1,6 +1,7 @@
 import { FileType } from '@/enums/fileType'
+import { TreeItem } from '@/types/treeview'
 
-export const inputItems = [
+export const ORGANIZER_INPUT: TreeItem[] = [
 	{
 		title: 'your files',
 		file: FileType.Folder,
@@ -122,87 +123,6 @@ export const inputItems = [
 							{
 								title: 'other files',
 								file: FileType.Txt,
-							},
-						],
-					},
-				],
-			},
-		],
-	},
-	{
-		title: 'your files.txt',
-		file: FileType.Txt,
-	},
-]
-
-export const outputItems = [
-	{
-		title: 'your folders',
-		file: FileType.Folder,
-	},
-	{
-		title: 'movies',
-		file: FileType.Folder,
-		children: [
-			{
-				title: '1917 (2019) 1080p.mp4',
-				file: FileType.Video,
-			},
-			{
-				title: '2 Fast 2 Furious (2003) 1080p.mp4',
-				file: FileType.Video,
-			},
-			{
-				title: 'Venom (2018).mp4',
-				file: FileType.Video,
-			},
-			{
-				title: 'Warcraft (2016) 1080p.mkv',
-				file: FileType.Video,
-			},
-		],
-	},
-	{
-		title: 'tv',
-		file: FileType.Folder,
-		children: [
-			{
-				title: 'Black Bird',
-				file: FileType.Folder,
-				children: [
-					{
-						title: 'Season 1',
-						file: FileType.Folder,
-						children: [
-							{
-								title: 'Black Bird S01E01.mp4',
-								file: FileType.Video,
-							},
-						],
-					},
-					{
-						title: 'Season 2',
-						file: FileType.Folder,
-						children: [
-							{
-								title: 'Black Bird S02E01.mp4',
-								file: FileType.Video,
-							},
-						],
-					},
-				],
-			},
-			{
-				title: 'Colony',
-				file: FileType.Folder,
-				children: [
-					{
-						title: 'Season 1',
-						file: FileType.Folder,
-						children: [
-							{
-								title: 'Colony S01E01.mp4',
-								file: FileType.Video,
 							},
 						],
 					},

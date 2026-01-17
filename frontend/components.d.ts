@@ -20,6 +20,7 @@ declare module 'vue' {
     CookieConsent: typeof import('./src/components/CookieConsent.vue')['default']
     CookieDialog: typeof import('./src/components/cookies/CookieDialog.vue')['default']
     CopyButton: typeof import('./src/components/CopyButton.vue')['default']
+    IconList: typeof import('./src/components/IconList.vue')['default']
     ImageCarousel: typeof import('./src/components/ImageCarousel.vue')['default']
     InlineCode: typeof import('./src/components/InlineCode.vue')['default']
     InlineTextCopy: typeof import('./src/components/InlineTextCopy.vue')['default']
@@ -35,5 +36,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     StatsAndChips: typeof import('./src/components/StatsAndChips.vue')['default']
     TableOfContents: typeof import('./src/components/TableOfContents.vue')['default']
+    TreeviewComponent: typeof import('./src/components/TreeviewComponent.vue')['default']
   }
 }

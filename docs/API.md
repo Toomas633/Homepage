@@ -4,6 +4,7 @@ Backend API documentation for Toomas633's Dungeon.
 
 ## 📋 Table of Contents
 
+- [Interactive Documentation](#interactive-documentation)
 - [Base URL](#base-url)
 - [Authentication](#authentication)
 - [Rate Limiting](#rate-limiting)
@@ -11,8 +12,32 @@ Backend API documentation for Toomas633's Dungeon.
 - [Endpoints](#endpoints)
   - [Health Check](#health-check)
   - [Send Email](#send-email)
+  - [Get GitHub Repository Info](#get-github-repository-info)
 - [Error Codes](#error-codes)
 - [Examples](#examples)
+
+---
+
+## Interactive Documentation
+
+For the best API exploration experience, use the **interactive Swagger UI**:
+
+**Development**:
+```
+http://localhost:3000/api/swagger-ui
+```
+
+**Production**:
+```
+https://yourdomain.com/api/swagger-ui
+```
+
+The Swagger UI provides:
+- ✅ **Try it out**: Test endpoints directly from your browser
+- ✅ **Detailed schemas**: Complete request/response specifications
+- ✅ **Examples**: Pre-filled example payloads
+- ✅ **Real-time validation**: Instant feedback on request format
+- ✅ **OpenAPI spec**: Download the OpenAPI JSON at `/api/swagger-ui.json`
 
 ---
 
@@ -43,7 +68,8 @@ Rate limiting is applied per IP address to prevent abuse.
 | Endpoint | Limit | Window |
 |----------|-------|--------|
 | `/api/health` | 60 requests | 1 minute |
-| `/send-email` | 10 requests | 15 minutes |
+| `/api/send-email` | 10 requests | 15 minutes |
+| `/api/github` | 60 requests | 1 minute |
 
 **Rate Limit Headers**:
 ```
@@ -89,7 +115,7 @@ HTTP Status: `429 Too Many Requests`
 {
   "status": "healthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -105,13 +131,13 @@ HTTP Status: `429 Too Many Requests`
 
 Check the health status of the API and email service.
 
-**Endpoint**: `GET /health`
+**Endpoint**: `GET /api/health`
 
 **Description**: Returns the current health status of the application, including email service connectivity.
 
 **Request**:
 ```http
-GET /health HTTP/1.1
+GET /api/health HTTP/1.1
 Host: localhost:3000
 ```
 
@@ -123,7 +149,7 @@ Host: localhost:3000
 {
   "status": "healthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "email": {
     "status": "connected",
     "responseTime": "150ms"
@@ -137,7 +163,7 @@ Host: localhost:3000
 |-------|------|-------------|
 | `status` | string | Overall health status (`"healthy"` or `"unhealthy"`) |
 | `timestamp` | string | ISO 8601 timestamp of the health check |
-| `version` | string | Backend API version (e.g., `"2.0.3"`) |
+| `version` | string | Backend API version (e.g., `"2.1.0"`) |
 | `email.status` | string | Email service status (`"connected"` or `"disconnected"`) |
 | `email.responseTime` | string | Time taken to verify email connection (e.g., `"150ms"`) |
 
@@ -149,7 +175,7 @@ Host: localhost:3000
 {
   "status": "unhealthy",
   "timestamp": "2025-12-02T12:00:00.000Z",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "email": {
     "status": "disconnected",
     "error": "Connection timeout"
@@ -160,7 +186,7 @@ Host: localhost:3000
 **Example**:
 
 ```bash
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 ```
 
 ---
@@ -169,14 +195,14 @@ curl http://localhost:3000/health
 
 Send a contact form email via the backend SMTP service.
 
-**Endpoint**: `POST /send-email`
+**Endpoint**: `POST /api/send-email`
 
 **Description**: Sends an email from the contact form to the configured recipient. Rate limited to prevent spam.
 
 **Request**:
 
 ```http
-POST /send-email HTTP/1.1
+POST /api/send-email HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
 Origin: http://localhost:5173
@@ -265,7 +291,7 @@ Origin: http://localhost:5173
 **Example**:
 
 ```bash
-curl -X POST http://localhost:3000/send-email \
+curl -X POST http://localhost:3000/api/send-email \
   -H "Content-Type: application/json" \
   -H "Origin: http://localhost:5173" \
   -d '{
@@ -278,7 +304,7 @@ curl -X POST http://localhost:3000/send-email \
 **JavaScript Example**:
 
 ```javascript
-const response = await fetch('http://localhost:3000/send-email', {
+const response = await fetch('http://localhost:3000/api/send-email', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -348,6 +374,208 @@ if (result.success) {
 
 ---
 
+### Get GitHub Repository Info
+
+Fetch repository information from GitHub API including license, languages, and latest release.
+
+**Endpoint**: `POST /api/github`
+
+**Description**: Retrieves GitHub repository data via the backend service. This endpoint acts as a proxy to the GitHub API, handling authentication and rate limiting.
+
+**Request**:
+
+```http
+POST /api/github HTTP/1.1
+Host: localhost:3000
+Content-Type: application/json
+Origin: http://localhost:5173
+
+{
+  "repo": "Toomas633/homepage"
+}
+```
+
+**Request Headers**:
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | Must be `application/json` |
+| `Origin` | Yes | Must be in ALLOWED_ORIGINS (CORS) |
+
+**Request Body**:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `repo` | string | Yes | Repository in format `owner/repo` |
+
+**Success Response**:
+
+*Status Code*: `200 OK`
+
+```json
+{
+  "success": true,
+  "data": {
+    "license": {
+      "key": "gpl-3.0",
+      "name": "GNU General Public License v3.0",
+      "spdx_id": "GPL-3.0",
+      "url": "https://api.github.com/licenses/gpl-3.0",
+      "node_id": "MDc6TGljZW5zZTk="
+    },
+    "languages": [
+      { "name": "TypeScript", "count": 125000 },
+      { "name": "Vue", "count": 95000 },
+      { "name": "JavaScript", "count": 15000 }
+    ],
+    "latestRelease": "5.1.1"
+  }
+}
+```
+
+**Response Fields**:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | boolean | Whether the request was successful |
+| `data` | object | Repository information |
+| `data.license` | object \| undefined | Repository license information (if available) |
+| `data.license.key` | string | License identifier |
+| `data.license.name` | string | Full license name |
+| `data.license.spdx_id` | string | SPDX license identifier |
+| `data.languages` | array | List of programming languages used |
+| `data.languages[].name` | string | Language name |
+| `data.languages[].count` | number | Bytes of code in this language |
+| `data.latestRelease` | string \| undefined | Latest release tag name (if available) |
+
+**Error Responses**:
+
+**400 Bad Request** - Invalid repository format:
+```json
+{
+  "success": false,
+  "message": "Invalid repository format. Use 'owner/repo'"
+}
+```
+
+**404 Not Found** - Repository doesn't exist:
+```json
+{
+  "success": false,
+  "message": "Error fetching GitHub Data",
+  "error": "Repository not found"
+}
+```
+
+**500 Internal Server Error** - GitHub API error:
+```json
+{
+  "success": false,
+  "message": "Error fetching GitHub Data",
+  "error": "GitHub API rate limit exceeded"
+}
+```
+
+**Example**:
+
+```bash
+curl -X POST http://localhost:3000/api/github \
+  -H "Content-Type: application/json" \
+  -H "Origin: http://localhost:5173" \
+  -d '{"repo": "Toomas633/homepage"}'
+```
+
+**JavaScript Example**:
+
+```javascript
+const response = await fetch('http://localhost:3000/api/github', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    repo: 'Toomas633/homepage'
+  })
+})
+
+const data = await response.json()
+
+if (data.success) {
+  console.log('License:', data.data.license?.name)
+  console.log('Languages:', data.data.languages)
+  console.log('Latest release:', data.data.latestRelease)
+} else {
+  console.error('Error:', data.message)
+}
+```
+
+**Vue/Axios Example**:
+
+```typescript
+import axios from 'axios'
+
+interface GitHubPayload {
+  repo: string
+}
+
+interface Language {
+  name: string
+  count: number
+}
+
+interface License {
+  key: string
+  name: string
+  spdx_id: string
+  url: string
+}
+
+interface GitHubResponse {
+  success: boolean
+  data?: {
+    license?: License
+    languages: Language[]
+    latestRelease?: string
+  }
+  message?: string
+  error?: string
+}
+
+async function getRepoInfo(payload: GitHubPayload): Promise<GitHubResponse> {
+  try {
+    const response = await axios.post<GitHubResponse>(
+      `${import.meta.env.VITE_API_URL}/github`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data
+    }
+    throw error
+  }
+}
+
+// Usage
+const result = await getRepoInfo({ repo: 'Toomas633/homepage' })
+
+if (result.success && result.data) {
+  console.log('Repository data:', result.data)
+} else {
+  console.error('Failed:', result.message)
+}
+```
+
+**Notes**:
+
+- The backend uses a GitHub token (if configured) to increase rate limits
+- Without authentication, GitHub API allows 60 requests per hour per IP
+- With authentication, the limit increases to 5,000 requests per hour
+- Configure `GITHUB_TOKEN` in backend environment for higher limits
+- Some fields (license, latestRelease) may be `undefined` if not available
+
+---
+
 ## Error Codes
 
 | HTTP Status | Code | Description |
@@ -383,7 +611,7 @@ if (result.success) {
 
 **Request**:
 ```http
-POST /send-email HTTP/1.1
+POST /api/send-email HTTP/1.1
 Host: api.toomas633.com
 Content-Type: application/json
 Origin: https://toomas633.com
@@ -421,10 +649,10 @@ X-RateLimit-Reset: 1701518400
 **curl**:
 ```bash
 # Health check
-curl http://localhost:3000/health
+curl http://localhost:3000/api/health
 
 # Send email
-curl -X POST http://localhost:3000/send-email \
+curl -X POST http://localhost:3000/api/send-email \
   -H "Content-Type: application/json" \
   -H "Origin: http://localhost:5173" \
   -d @- <<EOF
@@ -439,7 +667,7 @@ EOF
 **PowerShell**:
 ```powershell
 # Health check
-Invoke-RestMethod -Uri "http://localhost:3000/health"
+Invoke-RestMethod -Uri "http://localhost:3000/api/health"
 
 # Send email
 $body = @{
@@ -449,14 +677,14 @@ $body = @{
 } | ConvertTo-Json
 
 Invoke-RestMethod -Method Post `
-  -Uri "http://localhost:3000/send-email" `
+  -Uri "http://localhost:3000/api/send-email" `
   -ContentType "application/json" `
   -Headers @{"Origin"="http://localhost:5173"} `
   -Body $body
 ```
 
 **Postman**:
-1. Create new POST request to `http://localhost:3000/send-email`
+1. Create new POST request to `http://localhost:3000/api/send-email`
 2. Set Headers:
    - `Content-Type`: `application/json`
    - `Origin`: `http://localhost:5173`
@@ -507,8 +735,8 @@ If you receive a CORS error, ensure your request's `Origin` header matches one o
 
 ## Changelog
 
-### v2.0.3 (Current)
-- Email service with Nodemailer 7.0.11
+### v2.1.0 (Current)
+- Email service with Nodemailer 7.0.12
 - Rate limiting with express-rate-limit 8.2.1
 - CORS protection with cors 2.8.5
 - Health check endpoint with email verification and version information
@@ -525,5 +753,5 @@ For API issues or questions:
 
 ---
 
-**Last Updated**: December 5, 2025  
-**API Version**: 2.0.3
+**Last Updated**: January 16, 2026  
+**API Version**: 2.1.0
