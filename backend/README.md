@@ -91,16 +91,17 @@ Backend API server for Toomas633's projects homepage. A Node.js Express server t
 
 ### Required Environment Variables
 
-| Variable          | Description                                         | Example                                     |
-| :---------------- | :-------------------------------------------------- | :------------------------------------------ |
-| `EMAIL_HOST`      | SMTP server hostname                                | `mail.example.com`                          |
-| `EMAIL_PORT`      | SMTP server port                                    | `587`                                       |
-| `EMAIL_TLS`       | Use TLS/STARTTLS (true/false)                       | `true`                                      |
-| `EMAIL_USER`      | SMTP authentication username                        | `info@example.com`                          |
-| `EMAIL_PASS`      | SMTP authentication password                        | `secure_password_123`                       |
-| `EMAIL_TO`        | Recipient email for contact form submissions        | `admin@example.com`                         |
-| `ALLOWED_ORIGINS` | Comma-separated list of allowed CORS origins        | `http://localhost:5173,https://example.com` |
-| `GITHUB_TOKEN`    | GitHub API token (optional, for higher rate limits) | `ghp_xxxxxxxxxxxxxxxxxxxx`                  |
+| Variable                    | Description                                                                       | Example                                     |
+| :-------------------------- | :-------------------------------------------------------------------------------- | :------------------------------------------ |
+| `EMAIL_HOST`                | SMTP server hostname                                                              | `mail.example.com`                          |
+| `EMAIL_PORT`                | SMTP server port                                                                  | `587`                                       |
+| `EMAIL_TLS`                 | Use TLS/STARTTLS (true/false)                                                     | `true`                                      |
+| `EMAIL_REJECT_UNAUTHORIZED` | Reject invalid/self-signed TLS certs (default: `true`). Set `false` for custom CA | `true`                                      |
+| `EMAIL_USER`                | SMTP authentication username                                                      | `info@example.com`                          |
+| `EMAIL_PASS`                | SMTP authentication password                                                      | `secure_password_123`                       |
+| `EMAIL_TO`                  | Recipient email for contact form submissions                                      | `admin@example.com`                         |
+| `ALLOWED_ORIGINS`           | Comma-separated list of allowed CORS origins                                      | `http://localhost:5173,https://example.com` |
+| `GITHUB_TOKEN`              | GitHub API token (optional, for higher rate limits)                               | `ghp_xxxxxxxxxxxxxxxxxxxx`                  |
 
 ### Environment Setup
 
@@ -111,6 +112,7 @@ Create a `.env` file in the backend directory:
 EMAIL_HOST=your.smtp.server.com
 EMAIL_PORT=587
 EMAIL_TLS=true
+EMAIL_REJECT_UNAUTHORIZED=true  # set false if using a self-signed/private CA
 EMAIL_USER=your-email@domain.com
 EMAIL_PASS=your-secure-password
 EMAIL_TO=recipient@domain.com
