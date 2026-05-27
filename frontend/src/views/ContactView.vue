@@ -56,12 +56,13 @@
 									:items="projects"
 									prepend-inner-icon="mdi-toolbox"
 									:rules="autocompleteRules"
+									:item-props="
+										(item: { title: string; icon: string }) => ({
+											prependIcon: item.icon,
+										})
+									"
 									min-width="300"
-									required>
-									<template #item="{ props, item }">
-										<v-list-item v-bind="props" :prepend-icon="item.raw.icon" />
-									</template>
-								</v-autocomplete>
+									required />
 							</v-col>
 						</v-row>
 						<v-textarea

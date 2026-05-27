@@ -16,8 +16,8 @@
 		"dev": "tsx watch src/app.ts",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage",
-		"lint": "eslint src/**/* tests/**/*",
-		"scan:lint": "eslint src/**/* tests/**/* --format json --output-file .reports/eslint-report.json --no-fix",
+		"lint": "eslint src/**/*.ts tests/**/*.ts",
+		"scan:lint": "eslint src/**/*.ts tests/**/*.ts --format json --output-file .reports/eslint-report.json --no-fix",
 		"prettier": "prettier --write '**/*.{ts,js,jsx,json,css,scss,vue,html}'",
 		"type-check": "tsc --noEmit"
 	},
