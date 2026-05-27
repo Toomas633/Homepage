@@ -7,7 +7,10 @@ import {
 import { healthRateLimiter } from '../middleware/rateLimiter.js'
 import { HealthResponse } from '../types/index.js'
 
-const APP_VERSION = process.env.APP_VERSION || 'Unknown'
+const APP_VERSION =
+	process.env.APP_VERSION ||
+	(globalThis as { __APP_VERSION__?: string }).__APP_VERSION__ ||
+	'unknown'
 
 const router = Router()
 

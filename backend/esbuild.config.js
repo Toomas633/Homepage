@@ -1,6 +1,8 @@
 import { build } from 'esbuild'
-import { copyFileSync, mkdirSync } from 'node:fs'
+import { copyFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+
+const { version } = JSON.parse(readFileSync('package.json', 'utf8'))
 
 await build({
 	entryPoints: ['src/app.ts'],
@@ -13,6 +15,9 @@ await build({
 	logLevel: 'info',
 	format: 'cjs',
 	outfile: 'dist/app.cjs',
+	define: {
+		'globalThis.__APP_VERSION__': JSON.stringify(version),
+	},
 })
 
 const configDir = join('dist', 'config')
