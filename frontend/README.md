@@ -1,11 +1,11 @@
 # Toomas633's Dungeon - Frontend
 
-> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.4.0)
+> Vue.js 3 + TypeScript frontend for Toomas633's personal projects homepage (v4.5.0)
 
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.26-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-7.3.1-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Vuetify](https://img.shields.io/badge/Vuetify-3.11.6-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.5.34-4FC08D?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.0.14-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Vuetify](https://img.shields.io/badge/Vuetify-4.0.7-1867C0?style=flat&logo=vuetify&logoColor=white)](https://vuetifyjs.com/)
 
 ## 🏗️ Architecture
 
@@ -13,13 +13,13 @@ This is a modern Vue.js 3 single-page application (SPA) built with:
 
 - **Framework**: Vue 3 with Composition API
 - **Build Tool**: Vite for fast development and optimized builds
-- **UI Library**: Vuetify 3 for Material Design components
+- **UI Library**: Vuetify 4 for Material Design components
 - **Language**: TypeScript for type safety
 - **Styling**: SCSS with Material Design Icons
 - **Maps**: Leaflet for interactive mapping
 - **HTTP Client**: Axios for API communication
 - **State Management**: Vue 3 reactivity system
-- **Routing**: Vue Router 4 for client-side navigation
+- **Routing**: Vue Router 5 for client-side navigation
 
 ## 🚀 Features
 
@@ -190,7 +190,7 @@ npm run serve
 docker build -t toomas633-frontend .
 
 # Build with specific tag
-docker build -t toomas633-frontend:v4.4.0 .
+docker build -t toomas633-frontend:v4.5.0 .
 ```
 
 ### Running the Container

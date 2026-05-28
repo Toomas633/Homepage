@@ -437,7 +437,9 @@ telnet smtp.gmail.com 587
 # If using a self-signed or private CA certificate (e.g. Mailcow with custom CA):
 # Set EMAIL_REJECT_UNAUTHORIZED=false in .env
 # Note: the backend retries the SMTP connection up to 2 times automatically
-# to handle brief outages during certificate rotation
+# when sending email, to handle brief outages during certificate rotation.
+# The health endpoint (/api/health) makes only one attempt so it always
+# responds within the Docker healthcheck timeout.
 ```
 
 ### Rate Limiting Errors
@@ -652,4 +654,4 @@ docker system prune  # Clean up (careful!)
 
 ---
 
-**Last Updated**: January 16, 2026
+**Last Updated**: May 27, 2026

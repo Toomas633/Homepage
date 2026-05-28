@@ -9,6 +9,34 @@ For detailed release notes, see the `changelog/` directory.
 
 ---
 
+## [5.3.0] - 2026-05-27
+
+### Added
+- New MeshForge project page with full feature documentation and router entry
+- Dedicated SonarQube analysis GitHub workflow (`sonar.yml`) replacing the previous `Dockerfile-sonarscan` approach
+- `EMAIL_REJECT_UNAUTHORIZED` environment variable for configurable email TLS certificate validation
+
+### Fixed
+- Email service failures caused by TLS certificate changes on the SMTP host
+- Backend health endpoint version field now injected at build time (eliminates runtime `require` failure in Docker images and `ReferenceError` in tests)
+- Health endpoint capped to a single SMTP attempt so Docker healthcheck timeout (~10 s) is never exceeded during SMTP outages
+- `PostgreSQL` capitalization in `HomeView.vue`
+- Work information text in `HomeView.vue`
+- Contact form project autocomplete prepend icon (migrated to Vuetify 4 `:item-props` API)
+- Stale `2.0.3` version examples in OpenAPI spec updated to match `2.1.1`
+
+### Changed
+- Refreshed Plex Organizer and Adlist Parser project pages (improved layout, simplified content)
+- Refactored and updated all GitHub CI/CD workflows (`docker.yml`, `test-build.yml`, `codeql.yml`, `epic-manager.yml`)
+- Updated `sonar-project.properties` to align with new workflow paths
+- Major dependency upgrades: Vuetify 3→4, Vue Router 4→5, Vite 7→8, TypeScript 5→6, Nodemailer 7→8, and many others
+
+**Statistics**: 26 files changed, 4,925 insertions(+), 6,112 deletions(-)
+
+**Full Release Notes**: [changelog-5.3.0.md](changelog/changelog-5.3.0.md)
+
+---
+
 ## [5.2.0] - 2026-01-16
 
 ### Added
@@ -211,8 +239,8 @@ This project uses **semantic versioning** (SemVer):
 
 The project consists of two main modules with independent versioning:
 
-- **Frontend**: Currently v4.4.0
-- **Backend**: Currently v2.1.0
+- **Frontend**: Currently v4.5.0
+- **Backend**: Currently v2.1.1
 
 The overall project version (5.x.x) represents the combined release version.
 

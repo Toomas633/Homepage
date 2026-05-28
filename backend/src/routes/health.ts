@@ -22,7 +22,11 @@ router.get(
 
 		try {
 			const transporter = createTransporter()
-			const emailCheckDuration = await verifyEmailConnection(transporter, undefined, 0)
+			const emailCheckDuration = await verifyEmailConnection(
+				transporter,
+				undefined,
+				0
+			)
 
 			res.status(200).json({
 				status: 'healthy',

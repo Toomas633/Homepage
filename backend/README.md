@@ -252,7 +252,7 @@ Returns server health status, timestamp, version, and email service verification
 {
 	"status": "healthy",
 	"timestamp": "2025-11-21T12:00:00.000Z",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"email": {
 		"status": "connected",
 		"responseTime": "150ms"
@@ -433,6 +433,6 @@ GPL-3.0-only - See [LICENCE](../LICENCE) file for details.
 
 ---
 
-**Version**: 2.1.0  
+**Version**: 2.1.1  
 **Node.js**: 18+ (24+ recommended)  
 **License**: GPL-3.0-only
