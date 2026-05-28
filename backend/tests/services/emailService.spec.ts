@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import nodemailer from 'nodemailer'
 import type { Transporter } from 'nodemailer'
 import {
@@ -38,6 +38,10 @@ describe('emailService', () => {
 					user: config.email.user,
 					pass: config.email.password,
 				},
+				tls: {
+					servername: config.email.host,
+					rejectUnauthorized: config.email.tlsRejectUnauthorized,
+				},
 			})
 			expect(transporter).toBe(mockTransporter)
 		})
@@ -62,7 +66,7 @@ describe('emailService', () => {
 
 		it('should measure and return connection response time', async () => {
 			vi.mocked(mockTransporter.verify).mockImplementation(
-				createDelayedVerify(10)
+				createDelayedVerify(50)
 			)
 
 			const responseTime = await verifyEmailConnection(mockTransporter)
@@ -77,6 +81,53 @@ describe('emailService', () => {
 			await expect(verifyEmailConnection(mockTransporter)).rejects.toThrow(
 				'Connection failed'
 			)
+		})
+
+		describe('retry behaviour', () => {
+			beforeEach(() => {
+				vi.useFakeTimers()
+			})
+
+			afterEach(() => {
+				vi.useRealTimers()
+			})
+
+			it('should succeed on a subsequent attempt after a transient failure', async () => {
+				vi.mocked(mockTransporter.verify)
+					.mockRejectedValueOnce(new Error('Transient error'))
+					.mockResolvedValueOnce(true)
+
+				const promise = verifyEmailConnection(mockTransporter, 5000, 1)
+				await vi.advanceTimersByTimeAsync(1500)
+
+				const responseTime = await promise
+
+				expect(mockTransporter.verify).toHaveBeenCalledTimes(2)
+				expect(typeof responseTime).toBe('number')
+			})
+
+			it('should exhaust all retries and throw the last error', async () => {
+				const error = new Error('Persistent failure')
+				vi.mocked(mockTransporter.verify).mockRejectedValue(error)
+
+				const promise = verifyEmailConnection(mockTransporter, 5000, 2)
+				// Attach the handler before advancing timers so the rejection is
+				// never left unhandled between the promise settling and the assertion.
+				const assertion = expect(promise).rejects.toThrow('Persistent failure')
+				await vi.advanceTimersByTimeAsync(3000)
+				await assertion
+				expect(mockTransporter.verify).toHaveBeenCalledTimes(3)
+			})
+
+			it('should make exactly one attempt when maxRetries is 0', async () => {
+				const error = new Error('Connection failed')
+				vi.mocked(mockTransporter.verify).mockRejectedValue(error)
+
+				await expect(
+					verifyEmailConnection(mockTransporter, 5000, 0)
+				).rejects.toThrow('Connection failed')
+				expect(mockTransporter.verify).toHaveBeenCalledTimes(1)
+			})
 		})
 	})
 

@@ -19,8 +19,8 @@
 						</template>
 					</v-list-item>
 					<v-list-item
-						title="Junior DevOps Engineer"
-						subtitle="Angular, Vue, Spring, k8s">
+						title="Junior Full Stack Developer"
+						subtitle="Angular, Vue, Spring Boot, PostgreSQL">
 						<template #prepend>
 							<v-icon>mdi-briefcase</v-icon>
 						</template>

@@ -40,7 +40,7 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 
 ### Key Features
 
-- **🎨 Modern UI**: Responsive design with Vuetify 3 Material Design components
+- **🎨 Modern UI**: Responsive design with Vuetify 4 Material Design components
 - **📧 Contact System**: Integrated email service with rate limiting and validation
 - **🗺️ Interactive Maps**: Leaflet integration for location visualization
 - **📊 Project Showcase**: Dynamic galleries with GitHub integration
@@ -52,26 +52,26 @@ Toomas633's Dungeon is a full-stack web application showcasing personal projects
 
 ### Tech Stack
 
-#### Frontend (v4.4.0)
-- **Framework**: Vue 3.5.26 with Composition API
-- **Language**: TypeScript 5.9.3
-- **UI Library**: Vuetify 3.11.6
-- **Build Tool**: Vite 7.3.1
-- **Router**: Vue Router 4.6.4
-- **HTTP Client**: Axios 1.13.2
+#### Frontend (v4.5.0)
+- **Framework**: Vue 3.5.34 with Composition API
+- **Language**: TypeScript 6.0.3
+- **UI Library**: Vuetify 4.0.7
+- **Build Tool**: Vite 8.0.14
+- **Router**: Vue Router 5.0.7
+- **HTTP Client**: Axios 1.16.1
 - **Maps**: Leaflet 1.9.4
-- **Testing**: Vitest 4.0.17
+- **Testing**: Vitest 4.1.7
 
-#### Backend (v2.1.0)
+#### Backend (v2.1.1)
 - **Runtime**: Node.js 18+ (24+ recommended)
 - **Framework**: Express.js 5.2.1
-- **Language**: TypeScript 5.9.3 with ESM modules
-- **Build Tool**: esbuild 0.27.2
-- **Email**: Nodemailer 7.0.12
-- **HTTP Client**: Axios 1.13.2
-- **Security**: CORS 2.8.5, Rate Limiting 8.2.1
+- **Language**: TypeScript 6.0.3 with ESM modules
+- **Build Tool**: esbuild 0.28.0
+- **Email**: Nodemailer 8.0.9
+- **HTTP Client**: Axios 1.16.1
+- **Security**: CORS 2.8.6, Rate Limiting 8.5.2
 - **API Docs**: Swagger UI 5.0.1 with OpenAPI 3.0
-- **Testing**: Vitest 4.0.17
+- **Testing**: Vitest 4.1.7
 
 ---
 
@@ -812,7 +812,7 @@ This project is licensed under the **GPL-3.0-only** License - see the [LICENCE](
 ## 🙏 Acknowledgments
 
 Built with modern web technologies:
-- Vue.js 3 & Vuetify 3 for the frontend
+- Vue.js 3 & Vuetify 4 for the frontend
 - Node.js & Express.js for the backend
 - TypeScript for type safety
 - Vitest for testing

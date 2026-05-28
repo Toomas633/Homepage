@@ -15,10 +15,11 @@ describe('Health Route', () => {
 	})
 
 	it('should return healthy status when email connection is successful', async () => {
-		vi.spyOn(emailService, 'createTransporter').mockReturnValue(
-			{} as Transporter
-		)
-		vi.spyOn(emailService, 'verifyEmailConnection').mockResolvedValue(50)
+		const mockTransporter = {} as Transporter
+		vi.spyOn(emailService, 'createTransporter').mockReturnValue(mockTransporter)
+		const verifySpy = vi
+			.spyOn(emailService, 'verifyEmailConnection')
+			.mockResolvedValue(50)
 
 		const response = await request(app).get('/api/health')
 
@@ -27,15 +28,15 @@ describe('Health Route', () => {
 		expect(response.body).toHaveProperty('timestamp')
 		expect(response.body.email).toHaveProperty('status', 'connected')
 		expect(response.body.email).toHaveProperty('responseTime', '50ms')
+		expect(verifySpy).toHaveBeenCalledWith(mockTransporter, undefined, 0)
 	})
 
 	it('should return unhealthy status when email connection fails', async () => {
-		vi.spyOn(emailService, 'createTransporter').mockReturnValue(
-			{} as Transporter
-		)
-		vi.spyOn(emailService, 'verifyEmailConnection').mockRejectedValue(
-			new Error('Connection failed')
-		)
+		const mockTransporter = {} as Transporter
+		vi.spyOn(emailService, 'createTransporter').mockReturnValue(mockTransporter)
+		const verifySpy = vi
+			.spyOn(emailService, 'verifyEmailConnection')
+			.mockRejectedValue(new Error('Connection failed'))
 
 		const response = await request(app).get('/api/health')
 
@@ -44,6 +45,7 @@ describe('Health Route', () => {
 		expect(response.body).toHaveProperty('timestamp')
 		expect(response.body.email).toHaveProperty('status', 'disconnected')
 		expect(response.body.email).toHaveProperty('error', 'Connection failed')
+		expect(verifySpy).toHaveBeenCalledWith(mockTransporter, undefined, 0)
 	})
 
 	it('should include timestamp in ISO format', async () => {

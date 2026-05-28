@@ -38,16 +38,41 @@ export const createTransporter = (): Transporter => {
 			user: config.email.user,
 			pass: config.email.password,
 		},
+		tls: {
+			servername: config.email.host,
+			rejectUnauthorized: config.email.tlsRejectUnauthorized,
+		},
 	})
 }
 
+const RETRY_DELAY_MS = 1500
+const MAX_RETRIES = 2
+
 export const verifyEmailConnection = async (
 	transporter: Transporter,
-	timeoutMs = DEFAULT_SMTP_TIMEOUT_MS
+	timeoutMs = DEFAULT_SMTP_TIMEOUT_MS,
+	maxRetries = MAX_RETRIES
 ): Promise<number> => {
 	const start = Date.now()
-	await withTimeout(transporter.verify(), timeoutMs, 'SMTP connection timeout')
-	return Date.now() - start
+	let lastError: unknown
+
+	for (let attempt = 0; attempt <= maxRetries; attempt++) {
+		try {
+			await withTimeout(
+				transporter.verify(),
+				timeoutMs,
+				'SMTP connection timeout'
+			)
+			return Date.now() - start
+		} catch (error) {
+			lastError = error
+			if (attempt < maxRetries) {
+				await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+			}
+		}
+	}
+
+	throw lastError
 }
 
 interface SendEmailParams {

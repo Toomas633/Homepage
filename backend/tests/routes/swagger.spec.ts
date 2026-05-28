@@ -28,7 +28,7 @@ describe('Swagger Documentation Routes', () => {
 			const response = await request(app).get('/api/swagger-ui.json')
 
 			expect(response.body.info.title).toBe("Toomas633's Dungeon API")
-			expect(response.body.info.version).toBe('2.1.0')
+			expect(response.body.info.version).toBe('2.1.1')
 			expect(response.body.openapi).toBe('3.0.0')
 		})
 

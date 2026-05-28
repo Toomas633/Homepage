@@ -43,62 +43,78 @@
 				<InlineCode code="Subtitles/" />) are removed.
 			</li>
 			<li>
-				If you are organizing while torrents are still downloading, ensure the
-				qBittorrent setting
-				<b><InlineCode code="Append .!qB extension to incomplete files" /></b>
-				is enabled, otherwise incomplete files may be treated as regular files
-				and get removed during cleanup.
-			</li>
-			<li>
 				The organizer keeps a per-library index (<InlineCode
 					code=".plex_organizer.index" />) so already-processed files can be
 				skipped on future runs.
 			</li>
 			<li>
-				If torrent removal is enabled (by providing a torrent hash), the
-				qBittorrent Web API must be reachable and credentials must be set.
+				If the start directory is not a recognised media folder (does not
+				contain <InlineCode code="tv" /> or <InlineCode code="movies" /> in its
+				path and is not a main folder with <InlineCode code="tv/" /> or
+				<InlineCode code="movies/" /> subfolders), the organizer removes the
+				torrent (if a hash was provided) and exits — no files are deleted,
+				moved, or modified.
+			</li>
+			<li>
+				If qBittorrent torrent removal is enabled (by providing a torrent hash),
+				the qBittorrent Web API must be reachable and credentials must be set.
 			</li>
 		</ul>
 		<LinkableTitle h1 title="Requirements" centered />
 		<ul>
-			<li>Python 3.x</li>
-			<li>Dependencies listed in <InlineCode code="requirements.txt" /></li>
+			<li>Python 3.10+</li>
 			<li>
-				<InlineCode code="ffmpeg" /> / <InlineCode code="ffprobe" /> available
-				on PATH (required if
-				<InlineCode code="enable_audio_tagging = true" /> and/or
-				<InlineCode code="enable_subtitle_embedding = true" />)
+				<b>Root privileges</b> — the organizer must be run as root (<InlineCode
+					code="sudo" />)
+			</li>
+			<li>
+				<InlineCode code="ffmpeg" /> / <InlineCode code="ffprobe" /> — required
+				when <InlineCode code="enable_audio_tagging = true" /> and/or
+				<InlineCode code="enable_subtitle_embedding = true" /> (must be
+				available on PATH)
+			</li>
+			<li>
+				<InlineCode code="ffsubsync" /> — required when
+				<InlineCode code="enable_subtitle_syncing = true" /> (install via
+				<InlineCode code="pip install ffsubsync" />)
 			</li>
 		</ul>
+		<LinkableTitle h1 title="Data directory" centered />
+		By default, <InlineCode code="config.ini" />, log files, and the lock file
+		are stored in <InlineCode code="/root/.config/plex-organizer/" />.
+		<br /><br />
+		The location can be overridden with the
+		<InlineCode code="PLEX_ORGANIZER_DIR" /> environment variable, or by running
+		from a directory that already contains a <InlineCode code="config.ini" />.
 		<LinkableTitle h1 title="Installation" centered />
-		<ol>
-			<li>
-				Clone the repository:
-				<CodeBlock
-					code="git clone https://github.com/Toomas633/Plex-Organizer.git
-cd Plex-Organizer" />
-			</li>
-			<li>
-				Install dependencies (recommended):
-				<CodeBlock code="bash ./install.sh" />
-			</li>
-		</ol>
+		Install directly from GitHub with
+		<a href="https://pipx.pypa.io/" target="_blank" rel="noopener noreferrer"
+			>pipx</a
+		>
+		(recommended) — no need to clone the repo. Since the organizer requires root
+		privileges, install as root so the command is available on root's PATH:
+		<CodeBlock
+			code="sudo pipx install git+https://github.com/Toomas633/Plex-Organizer.git
+sudo pipx ensurepath" />
+		This gives you the <InlineCode code="plex-organizer" /> command on root's
+		PATH.
 		<LinkableTitle h1 title="Update" centered />
-		To update to the latest version just run (it will also run
-		<InlineCode code="install.sh" /> afterwards):
-		<CodeBlock code="./update.sh" />
+		To update to the latest version run:
+		<CodeBlock code="sudo pipx upgrade plex-organizer" />
 		<LinkableTitle h1 title="Usage" centered />
 		<v-row class="d-block d-md-flex" justify="center">
 			<v-col>
 				<LinkableTitle h2 title="Manual running" hide-divider />
-				To run manually just go to the Plex-Organizer cloned or downloaded
-				folder and run:
-				<CodeBlock code="./run.sh <start_directory>" />
+				Run the main pipeline:
+				<CodeBlock code="sudo plex-organizer <start_directory>" />
+				Launch the interactive management menu (logs, config migration, custom
+				runs):
+				<CodeBlock code="sudo plex-organizer --manage" />
 				<LinkableTitle h2 title="Automated running" />
 				Add this command to qBittorrent options under "Run external program on
 				torrent finished":
 				<CodeBlock
-					code="/bin/bash <path_to_script>/run.sh <start_directory> <torrent_hash>" />
+					code="sudo plex-organizer <start_directory> <torrent_hash>" />
 				<b>Arguments:</b>
 				<ul>
 					<li>
@@ -176,7 +192,11 @@ cd Plex-Organizer" />
 			</li>
 			<li>
 				<InlineCode code="[Subtitles]" /> (<InlineCode
-					code="enable_subtitle_embedding" />)
+					code="enable_subtitle_embedding" />,
+				<InlineCode code="analyze_embedded_subtitles" />,
+				<InlineCode code="fetch_subtitles" />,
+				<InlineCode code="subtitle_providers" />,
+				<InlineCode code="sync_subtitles" />)
 			</li>
 		</ul>
 		<b>NB!!</b> Make sure the qBittorrent <InlineCode code="host" /> is correct.
@@ -241,6 +261,15 @@ const plexFeaturePresets = {
 		color: '#00acc1',
 	}),
 	subtitleEmbedding: createPreset({ icon: 'mdi-subtitles', color: '#43a047' }),
+	subtitleFetching: createPreset({
+		icon: 'mdi-cloud-download-outline',
+		color: '#f57c00',
+	}),
+	subtitleSyncing: createPreset({ icon: 'mdi-sync', color: '#7b1fa2' }),
+	qualityDetection: createPreset({
+		icon: 'mdi-quality-high',
+		color: '#00796b',
+	}),
 }
 
 const features: IconListItem[] = [
@@ -276,6 +305,18 @@ const features: IconListItem[] = [
 		title: 'Subtitle embedding (optional)',
 		text: 'If enabled, embeds external subtitles into the video file and tags subtitle language/type metadata (uses ffprobe / ffmpeg + langdetect).',
 	}),
+	plexFeaturePresets.subtitleFetching({
+		title: 'Subtitle fetching (optional)',
+		text: 'If enabled, searches free online subtitle providers (OpenSubtitles, Podnapisi, Gestdown, TVsubtitles) for missing subtitles in configured languages and embeds them into videos.',
+	}),
+	plexFeaturePresets.subtitleSyncing({
+		title: 'Subtitle syncing (optional)',
+		text: 'If enabled, synchronizes embedded subtitle timing to the audio track using ffsubsync. Only text-based subtitle streams are synced; bitmap formats (PGS, VobSub) are left unchanged.',
+	}),
+	plexFeaturePresets.qualityDetection({
+		title: 'Quality detection fallback',
+		text: 'When include_quality is enabled but no quality tag is found in the filename, the organizer probes the actual video stream height via ffprobe and maps it to the nearest standard label (2160p, 1440p, 1080p, 720p, 480p).',
+	}),
 	iconListPresets.configFile({
 		title: 'Config File',
 		text: 'Ini file for common configuration options that can be set, disabled or enabled easily.',
@@ -306,6 +347,10 @@ whisper_model_size = tiny #whisper model size to use for audio language detectio
 
 [Subtitles]
 enable_subtitle_embedding = true #if subtitles should be embedded into video files
+analyze_embedded_subtitles = true #if already-embedded subtitle streams should also be analyzed for missing/unknown language tags
+fetch_subtitles = eng #comma-separated ISO 639-2 language codes to fetch (e.g. eng or eng, est); leave empty to disable
+subtitle_providers = opensubtitles, podnapisi, gestdown, tvsubtitles #comma-separated list of subtitle providers
+sync_subtitles = true #if embedded subtitle timing should be synchronized to the audio track after all other subtitle operations
 `
 
 const outputItems: TreeItem[] = [

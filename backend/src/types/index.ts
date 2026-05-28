@@ -7,6 +7,7 @@ export interface EmailConfig {
 	to: string
 	port: number
 	requireTLS: boolean
+	tlsRejectUnauthorized: boolean
 }
 
 export interface ServerConfig {

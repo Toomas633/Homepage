@@ -107,6 +107,7 @@ nano backend/.env
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_TLS=true
+EMAIL_REJECT_UNAUTHORIZED=true
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
 EMAIL_TO=contact@yourdomain.com
@@ -250,6 +251,7 @@ pm2 logs homepage-backend
 | `EMAIL_HOST` | SMTP server hostname | `smtp.gmail.com` |
 | `EMAIL_PORT` | SMTP server port | `587` |
 | `EMAIL_TLS` | Use TLS encryption | `true` |
+| `EMAIL_REJECT_UNAUTHORIZED` | Reject invalid/self-signed TLS certs (default: `true`) | `true` |
 | `EMAIL_USER` | SMTP username | `your-email@gmail.com` |
 | `EMAIL_PASS` | SMTP password/app password | `your-app-password` |
 | `EMAIL_TO` | Recipient email | `contact@yourdomain.com` |

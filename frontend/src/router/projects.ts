@@ -89,4 +89,17 @@ export const projectRoutes: Array<RouteRecord> = [
 				'adlist parser, DNS blocker, Pi-hole, AdGuard, domain filtering, Python utility, adlist merging, high-performance',
 		},
 	},
+	{
+		path: '/projects/meshforge',
+		component: () => import('@/views/projects/MeshForgeView.vue'),
+		meta: {
+			title: 'MeshForge',
+			canonical: '/projects/meshforge',
+			description:
+				'Convert STL and OBJ mesh files into clean STEP solids — entirely in the browser, with a real-time progress feed and an interactive 3D preview.',
+			icon: 'mdi-rotate-3d',
+			keywords:
+				'MeshForge, STL to STEP, OBJ to STEP, mesh conversion, 3D preview, PyMeshLab, pythonocc, Docker, Three.js',
+		},
+	},
 ]

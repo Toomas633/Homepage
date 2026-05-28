@@ -1,0 +1,166 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci --ignore-scripts
+
+      - name: Run scans
+        working-directory: frontend
+        run: |
+          mkdir -p .reports
+          npm run scan:lint & LINT_PID=$!
+          npm run scan:stylelint & STYLELINT_PID=$!
+          npm run type-check & TYPECHECK_PID=$!
+          npm run test:coverage & COVERAGE_PID=$!
+          wait $LINT_PID      || FAILED=1
+          wait $STYLELINT_PID || FAILED=1
+          wait $TYPECHECK_PID || FAILED=1
+          wait $COVERAGE_PID  || FAILED=1
+          [ -z "$FAILED" ] || exit 1
+
+      - name: Stage reports
+        run: |
+          mkdir -p .stage/frontend/.reports .stage/frontend/coverage
+          cp frontend/.reports/eslint-report.json .stage/frontend/.reports/ 2>/dev/null || true
+          cp frontend/.reports/stylelint-report.json .stage/frontend/.reports/ 2>/dev/null || true
+          cp frontend/coverage/lcov.info .stage/frontend/coverage/ 2>/dev/null || true
+
+      - name: Upload reports
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: frontend-reports
+          path: ${{ github.workspace }}/.stage
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 1
+
+  scan-backend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci --ignore-scripts
+
+      - name: Run scans
+        working-directory: backend
+        run: |
+          mkdir -p .reports
+          npm run scan:lint & LINT_PID=$!
+          npm run type-check & TYPECHECK_PID=$!
+          npm run test:coverage & COVERAGE_PID=$!
+          wait $LINT_PID      || FAILED=1
+          wait $TYPECHECK_PID || FAILED=1
+          wait $COVERAGE_PID  || FAILED=1
+          [ -z "$FAILED" ] || exit 1
+
+      - name: Stage reports
+        run: |
+          mkdir -p .stage/backend/.reports .stage/backend/coverage
+          cp backend/.reports/eslint-report.json .stage/backend/.reports/ 2>/dev/null || true
+          cp backend/coverage/lcov.info .stage/backend/coverage/ 2>/dev/null || true
+
+      - name: Upload reports
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: backend-reports
+          path: ${{ github.workspace }}/.stage
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 1
+
+  lint-dockerfiles:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Install hadolint
+        run: |
+          sudo curl --proto '=https' --tlsv1.2 -sSfL https://github.com/hadolint/hadolint/releases/download/v2.14.0/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint
+          sudo chmod +x /usr/local/bin/hadolint
+
+      - name: Run Dockerfile linting
+        run: |
+          mkdir -p .reports
+          hadolint --config .hadolint.yaml --format json Dockerfile 2>/dev/null > .reports/hadolint-root.json || true
+          [ -s .reports/hadolint-root.json ] || echo '[]' > .reports/hadolint-root.json
+          sed -i 's|"file":"Dockerfile"|"file":"./Dockerfile"|g' .reports/hadolint-root.json
+
+      - name: Stage reports
+        run: |
+          mkdir -p .stage/.reports
+          cp .reports/hadolint-root.json .stage/.reports/ 2>/dev/null || true
+
+      - name: Upload reports
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: hadolint-reports
+          path: ${{ github.workspace }}/.stage
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 1
+
+  sonar:
+    needs: [scan-frontend, scan-backend, lint-dockerfiles]
+    runs-on: ubuntu-latest
+    # SONAR_TOKEN is not available for workflows triggered from forked PRs,
+    # so skip analysis in that case rather than failing.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      - name: Download reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: '*-reports'
+          merge-multiple: true
+          path: ${{ github.workspace }}
+
+      - name: Run SonarQube Analysis
+        uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

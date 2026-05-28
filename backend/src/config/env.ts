@@ -11,6 +11,7 @@ const {
 	ALLOWED_ORIGINS,
 	EMAIL_PORT,
 	EMAIL_TLS,
+	EMAIL_REJECT_UNAUTHORIZED,
 	GITHUB_TOKEN,
 } = process.env
 
@@ -37,6 +38,7 @@ export const config: AppConfig = {
 		to: EMAIL_TO!,
 		port: Number(EMAIL_PORT),
 		requireTLS: EMAIL_TLS === 'true',
+		tlsRejectUnauthorized: EMAIL_REJECT_UNAUTHORIZED !== 'false',
 	},
 	server: {
 		port: 3000,

@@ -735,7 +735,14 @@ If you receive a CORS error, ensure your request's `Origin` header matches one o
 
 ## Changelog
 
-### v2.1.0 (Current)
+### v2.1.1 (Current)
+- Email service with Nodemailer 8.0.9
+- Rate limiting with express-rate-limit 8.5.2
+- CORS protection with cors 2.8.6
+- Health check endpoint with email verification and version information
+- Health endpoint rate limiting (60 requests per minute)
+
+### v2.1.0
 - Email service with Nodemailer 7.0.12
 - Rate limiting with express-rate-limit 8.2.1
 - CORS protection with cors 2.8.5
@@ -753,5 +760,5 @@ For API issues or questions:
 
 ---
 
-**Last Updated**: January 16, 2026  
-**API Version**: 2.1.0
+**Last Updated**: May 27, 2026  
+**API Version**: 2.1.1

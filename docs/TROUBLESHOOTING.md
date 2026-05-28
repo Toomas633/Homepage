@@ -397,6 +397,7 @@ curl http://localhost:3000/api/health
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_TLS=true
+EMAIL_REJECT_UNAUTHORIZED=true
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password  # Not your regular password!
 EMAIL_TO=recipient@domain.com
@@ -432,6 +433,13 @@ telnet smtp.gmail.com 587
 # Verify EMAIL_TLS setting matches port:
 # Port 587: EMAIL_TLS=true
 # Port 465: EMAIL_TLS=false (uses SSL)
+
+# If using a self-signed or private CA certificate (e.g. Mailcow with custom CA):
+# Set EMAIL_REJECT_UNAUTHORIZED=false in .env
+# Note: the backend retries the SMTP connection up to 2 times automatically
+# when sending email, to handle brief outages during certificate rotation.
+# The health endpoint (/api/health) makes only one attempt so it always
+# responds within the Docker healthcheck timeout.
 ```
 
 ### Rate Limiting Errors
@@ -646,4 +654,4 @@ docker system prune  # Clean up (careful!)
 
 ---
 
-**Last Updated**: January 16, 2026
+**Last Updated**: May 27, 2026
