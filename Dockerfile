@@ -33,6 +33,7 @@ ENV EMAIL_TLS="true"
 ENV EMAIL_PORT="587"
 ENV ALLOWED_ORIGINS=""
 ENV PORT=3000
+ENV NGINX_SERVER_NAME="localhost"
 
 WORKDIR /app
 
@@ -42,7 +43,7 @@ RUN apk add --no-cache curl nodejs tini \
     && sed -i 's|/run/nginx.pid|/tmp/nginx.pid|g' /etc/nginx/nginx.conf \
     && sed -i '/^user /d' /etc/nginx/nginx.conf
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 COPY --from=frontend-build /app/frontend/dist /app/frontend
 COPY --from=backend-build /app/backend/dist /app/backend
@@ -57,11 +58,14 @@ RUN addgroup -g 1000 appuser \
     && chown -R appuser:appuser /var/lib/nginx \
     && chown -R appuser:appuser /tmp/nginx \
     && touch /tmp/nginx.pid \
-    && chown appuser:appuser /tmp/nginx.pid
+    && chown appuser:appuser /tmp/nginx.pid \
+    && chown -R appuser:appuser /etc/nginx/conf.d
 
 COPY <<'EOF' /app/entrypoint.sh
 #!/bin/sh
 set -e
+
+envsubst '${NGINX_SERVER_NAME}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
 
 nginx -g "daemon off;" &
 NGINX_PID=$!
