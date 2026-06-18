@@ -1,24 +1,20 @@
-FROM node:25-alpine AS frontend-build
+FROM node:alpine AS frontend-build
 
 ARG VITE_APP_ENV="production"
 
 WORKDIR /app/frontend
 
-COPY frontend/package*.json ./
-RUN npm ci --ignore-scripts
-
 COPY frontend/ ./
+RUN npm ci --ignore-scripts
 
 RUN VITE_APP_ENV="${VITE_APP_ENV}" npm run build
 
-FROM node:25-alpine AS backend-build
+FROM node:alpine AS backend-build
 
 WORKDIR /app/backend
 
-COPY backend/package*.json ./
-RUN npm ci --ignore-scripts
-
 COPY backend/ ./
+RUN npm ci --ignore-scripts
 
 RUN npm run build
 
@@ -31,7 +27,7 @@ ENV EMAIL_PASS=""
 ENV EMAIL_TO=""
 ENV EMAIL_TLS="true"
 ENV EMAIL_PORT="587"
-ENV ALLOWED_ORIGINS=""
+ENV ALLOWED_ORIGINS="http://localhost"
 ENV PORT=3000
 ENV NGINX_SERVER_NAME="localhost"
 
