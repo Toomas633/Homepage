@@ -50,27 +50,29 @@ app.use(
 )
 
 export const startServer = async (): Promise<void> => {
-	logWithTimestamp('info', 'Verifying email server connection...')
-	const transporter = createTransporter()
-	verifyEmailConnection(transporter)
-		.then((duration) => {
-			logWithTimestamp('info', 'Email server connection verified', duration)
-		})
-		.catch((err) => {
-			logWithTimestamp(
-				'warn',
-				'Email server connection failed - email features may be unavailable'
-			)
-			const errorInfo =
-				err instanceof Error
-					? objectToString({
-							name: err.name,
-							message: err.message,
-							stack: err.stack,
-						})
-					: 'Unknown error'
-			console.error(errorInfo)
-		})
+	if (config.email.host) {
+		logWithTimestamp('info', 'Verifying email server connection...')
+		const transporter = createTransporter()
+		verifyEmailConnection(transporter)
+			.then((duration) => {
+				logWithTimestamp('info', 'Email server connection verified', duration)
+			})
+			.catch((err) => {
+				logWithTimestamp(
+					'warn',
+					'Email server connection failed - email features may be unavailable'
+				)
+				const errorInfo =
+					err instanceof Error
+						? objectToString({
+								name: err.name,
+								message: err.message,
+								stack: err.stack,
+							})
+						: 'Unknown error'
+				console.error(errorInfo)
+			})
+	}
 
 	const server: Server = app.listen(config.server.port, () => {
 		logWithTimestamp('info', `Backend listening on port ${config.server.port}`)

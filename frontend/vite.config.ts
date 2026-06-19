@@ -4,7 +4,8 @@ import vue from '@vitejs/plugin-vue'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import compression from 'vite-plugin-compression'
 import { constants } from 'node:zlib'
-import imagemin from 'unplugin-imagemin/vite'
+import viteImagemin from 'vite-plugin-imagemin'
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Components from 'unplugin-vue-components/vite'
 import { createSitemapPlugin } from './plugins/sitemap-plugin'
@@ -35,18 +36,21 @@ export default defineConfig(({ command, mode }): UserConfig => {
 					},
 				},
 			}),
-			imagemin({
-				compress: {
-					mozjpeg: { quality: 90, progressive: true },
-					webp: { quality: 100, lossless: 1 },
-					png: { quality: 95, lossless: 1 },
-					avif: { cqLevel: 12, speed: 6 },
-				},
-				conversion: [
-				 	{ from: 'png', to: 'webp' },
-				 	{ from: 'jpg', to: 'webp' },
-					{ from: 'jpeg', to: 'webp' }
-				 ],
+			ViteImageOptimizer({
+				png: { quality: 95 },
+				jpg: { quality: 90, progressive: true },
+				jpeg: { quality: 90, progressive: true },
+				webp: { lossless: true, quality: 100 },
+				avif: { lossless: false, quality: 12, speed: 6 },
+				cache: true,
+				cacheLocation: '.cache/image-optimizer',
+			}),
+			viteImagemin({
+				webp: { quality: 100, method: 6 },
+				mozjpeg: { quality: 90, progressive: true },
+				pngquant: { quality: [0.9, 0.95] },
+				optipng: { optimizationLevel: 5 },
+				svgo: { plugins: [{ name: 'preset-default' }] },
 			}),
 			createSitemapPlugin('https://toomas633.com'),
 		],
