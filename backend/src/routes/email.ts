@@ -3,6 +3,7 @@ import type { Response } from 'express'
 import { sendEmail } from '../services/emailService.js'
 import { emailRateLimiter } from '../middleware/rateLimiter.js'
 import { objectToString } from '../utils/helpers.js'
+import { config } from '../config/env.js'
 import type { ApiResponse, EmailRequest } from '../types/index.js'
 
 const router = Router()
@@ -11,6 +12,13 @@ router.post(
 	'/send-email',
 	emailRateLimiter,
 	async (req: EmailRequest, res: Response<ApiResponse>) => {
+		if (!config.email.host) {
+			return res.status(503).json({
+				success: false,
+				message: 'Email service is not configured',
+			})
+		}
+
 		const { from, message, project } = req.body
 
 		try {

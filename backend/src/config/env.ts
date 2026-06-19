@@ -15,7 +15,7 @@ const {
 	GITHUB_TOKEN,
 } = process.env
 
-const requiredEnvVars: Record<string, string | undefined> = {
+const optionalEnvVars: Record<string, string | undefined> = {
 	EMAIL_HOST,
 	EMAIL_PORT,
 	EMAIL_TO,
@@ -23,20 +23,19 @@ const requiredEnvVars: Record<string, string | undefined> = {
 	ALLOWED_ORIGINS,
 }
 
-for (const [key, value] of Object.entries(requiredEnvVars)) {
+for (const [key, value] of Object.entries(optionalEnvVars)) {
 	if (value === undefined || value === '') {
-		console.error(`Missing required environment variable: ${key}`)
-		process.exit(1)
+		console.warn(`Optional environment variable not set: ${key}`)
 	}
 }
 
 export const config: AppConfig = {
 	email: {
-		host: EMAIL_HOST!,
-		user: EMAIL_USER!,
-		password: EMAIL_PASS!,
-		to: EMAIL_TO!,
-		port: Number(EMAIL_PORT),
+		host: EMAIL_HOST || '',
+		user: EMAIL_USER || '',
+		password: EMAIL_PASS || '',
+		to: EMAIL_TO || '',
+		port: Number(EMAIL_PORT) || 587,
 		requireTLS: EMAIL_TLS === 'true',
 		tlsRejectUnauthorized: EMAIL_REJECT_UNAUTHORIZED !== 'false',
 	},
