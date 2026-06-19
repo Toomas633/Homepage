@@ -9,6 +9,21 @@ For detailed release notes, see the `changelog/` directory.
 
 ---
 
+## [5.3.1] - 2026-06-19
+
+### Fixed
+- Assets not loading in production due to Vite build configuration (fixed asset path handling and updated documentation)
+- Backend not starting when email configuration is missing (added better error handling and documentation for required environment variables)
+
+### Changed
+- Dependency updates across frontend and backend
+
+**Statistics**: 13 files changed, 9,057 insertions(+), 3,771 deletions(-)
+
+**Full Release Notes**: [changelog-5.3.1.md](changelog/changelog-5.3.1.md)
+
+---
+
 ## [5.3.0] - 2026-05-27
 
 ### Added

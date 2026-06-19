@@ -1,7 +1,7 @@
 {
 	"name": "toomas633s-dungeon-backend",
 	"description": "Backend server for Toomas633's projects homepage",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"private": true,
 	"license": "GPL-3.0-only",
 	"type": "module",
