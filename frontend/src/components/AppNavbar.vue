@@ -33,7 +33,6 @@
 				prepend-icon="mdi-play-box-multiple"
 				title="Demos"
 				value="demos" />
-			<v-list-item prepend-icon="mdi-archive" title="Archive" value="archive" />
 			<v-list-item
 				prepend-icon="mdi-card-account-mail"
 				title="Contact"
@@ -192,7 +191,6 @@ import { isMobile } from '@basitcodeenv/vue3-device-detect'
 import { projectRoutes } from '@/router/projects'
 import { demoRoutes } from '@/router/demos'
 import { RouteRecord } from '@/types/route'
-import { archiveRoutes } from '@/router/archive'
 import { serversRoutes } from '@/router/servers'
 import { getBackendVersion } from '@/services/backendService'
 
@@ -251,7 +249,7 @@ watch(navSelection, (val, oldVal) => {
 		return
 	}
 
-	const expandableSections = ['projects', 'servers', 'demos', 'archive']
+	const expandableSections = ['projects', 'servers', 'demos']
 
 	if (!selected || !expandableSections.includes(selected)) {
 		isRail.value = true
@@ -282,11 +280,6 @@ watch(navSelection, (val, oldVal) => {
 					external: true,
 				},
 			]
-			break
-		case 'archive':
-			drawerItems.value = archiveRoutes.map((route) =>
-				mapRouteToMenuItem(route)
-			)
 			break
 	}
 
