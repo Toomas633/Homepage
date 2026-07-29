@@ -82,7 +82,7 @@ export interface EmailRequest extends Request {
 }
 
 export interface HealthResponse {
-	status: 'healthy' | 'unhealthy'
+	status: 'healthy' | 'degraded' | 'unhealthy'
 	timestamp: string
 	version: string
 	email: {

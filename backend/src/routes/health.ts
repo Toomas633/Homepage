@@ -40,8 +40,8 @@ router.get(
 		} catch (error) {
 			const errorMessage =
 				error instanceof Error ? error.message : 'Unknown error'
-			res.status(503).json({
-				status: 'unhealthy',
+			res.status(200).json({
+				status: 'degraded',
 				timestamp,
 				version: APP_VERSION,
 				email: {

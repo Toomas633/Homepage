@@ -2,7 +2,7 @@ import { API_URL } from '@/constants/env'
 import axios from 'axios'
 
 interface BackendHealthResponse {
-	status: 'healthy' | 'unhealthy'
+	status: 'healthy' | 'degraded' | 'unhealthy'
 	timestamp: string
 	version: string
 	email: {

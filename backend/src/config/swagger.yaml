@@ -26,7 +26,7 @@ components:
       properties:
         status:
           type: string
-          enum: [healthy, unhealthy]
+          enum: [healthy, degraded, unhealthy]
           description: Overall health status
         timestamp:
           type: string
