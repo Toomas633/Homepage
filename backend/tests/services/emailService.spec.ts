@@ -41,6 +41,7 @@ describe('emailService', () => {
 				tls: {
 					servername: config.email.host,
 					rejectUnauthorized: config.email.tlsRejectUnauthorized,
+					session: false,
 				},
 			})
 			expect(transporter).toBe(mockTransporter)
@@ -135,6 +136,7 @@ describe('emailService', () => {
 		let mockTransporter: Transporter
 
 		beforeEach(() => {
+			vi.clearAllMocks()
 			mockTransporter = {
 				verify: vi.fn().mockResolvedValue(true),
 				sendMail: vi.fn().mockResolvedValue({
@@ -155,7 +157,6 @@ describe('emailService', () => {
 
 			const result = await sendEmail(emailParams)
 
-			expect(mockTransporter.verify).toHaveBeenCalled()
 			expect(mockTransporter.sendMail).toHaveBeenCalledWith({
 				from: config.email.user,
 				to: config.email.to,
@@ -166,36 +167,18 @@ describe('emailService', () => {
 			expect(result).toHaveProperty('messageId', 'test-message-id')
 		})
 
-		it('should verify connection before sending email', async () => {
-			const emailParams = {
+		it('should not call verify before sending email', async () => {
+			await sendEmail({
 				from: 'sender@example.com',
 				message: 'Test message',
 				project: 'Test',
-			}
+			})
 
-			await sendEmail(emailParams)
-
-			expect(mockTransporter.verify).toHaveBeenCalled()
+			expect(mockTransporter.verify).not.toHaveBeenCalled()
 			expect(mockTransporter.sendMail).toHaveBeenCalled()
 		})
 
-		it('should throw error when verification fails', async () => {
-			const error = new Error('Verification failed')
-			vi.mocked(mockTransporter.verify).mockRejectedValue(error)
-
-			const emailParams = {
-				from: 'sender@example.com',
-				message: 'Test message',
-				project: 'Test',
-			}
-
-			await expect(sendEmail(emailParams)).rejects.toThrow(
-				'Verification failed'
-			)
-			expect(mockTransporter.sendMail).not.toHaveBeenCalled()
-		})
-
-		it('should throw error when sending fails', async () => {
+		it('should throw error when sending fails on all attempts', async () => {
 			const error = new Error('Send failed')
 			vi.mocked(mockTransporter.sendMail).mockRejectedValue(error)
 
@@ -223,6 +206,57 @@ describe('emailService', () => {
 				subject: 'Important Project',
 				text: 'This is a test message with special characters: <>&"',
 				replyTo: 'user@example.com',
+			})
+		})
+
+		describe('retry behaviour', () => {
+			beforeEach(() => {
+				vi.useFakeTimers()
+			})
+
+			afterEach(() => {
+				vi.useRealTimers()
+			})
+
+			it('should succeed on a subsequent attempt after a transient failure', async () => {
+				vi.mocked(mockTransporter.sendMail)
+					.mockRejectedValueOnce(new Error('Transient TLS error'))
+					.mockResolvedValueOnce({
+						messageId: 'test-message-id',
+						accepted: ['test@example.com'],
+					})
+
+				const promise = sendEmail({
+					from: 'sender@example.com',
+					message: 'Test message',
+					project: 'Test',
+				})
+				await vi.advanceTimersByTimeAsync(1500)
+
+				const result = await promise
+
+				expect(nodemailer.createTransport).toHaveBeenCalledTimes(2)
+				expect(mockTransporter.sendMail).toHaveBeenCalledTimes(2)
+				expect(result).toHaveProperty('messageId', 'test-message-id')
+			})
+
+			it('should exhaust all retries and throw the last error', async () => {
+				const error = new Error('Persistent TLS failure')
+				vi.mocked(mockTransporter.sendMail).mockRejectedValue(error)
+
+				const promise = sendEmail({
+					from: 'sender@example.com',
+					message: 'Test message',
+					project: 'Test',
+				})
+				const assertion = expect(promise).rejects.toThrow(
+					'Persistent TLS failure'
+				)
+				await vi.advanceTimersByTimeAsync(3000)
+				await assertion
+
+				expect(nodemailer.createTransport).toHaveBeenCalledTimes(3)
+				expect(mockTransporter.sendMail).toHaveBeenCalledTimes(3)
 			})
 		})
 	})

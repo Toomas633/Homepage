@@ -31,7 +31,7 @@ describe('Health Route', () => {
 		expect(verifySpy).toHaveBeenCalledWith(mockTransporter, undefined, 0)
 	})
 
-	it('should return unhealthy status when email connection fails', async () => {
+	it('should return degraded status when email connection fails', async () => {
 		const mockTransporter = {} as Transporter
 		vi.spyOn(emailService, 'createTransporter').mockReturnValue(mockTransporter)
 		const verifySpy = vi
@@ -40,8 +40,8 @@ describe('Health Route', () => {
 
 		const response = await request(app).get('/api/health')
 
-		expect(response.status).toBe(503)
-		expect(response.body).toHaveProperty('status', 'unhealthy')
+		expect(response.status).toBe(200)
+		expect(response.body).toHaveProperty('status', 'degraded')
 		expect(response.body).toHaveProperty('timestamp')
 		expect(response.body.email).toHaveProperty('status', 'disconnected')
 		expect(response.body.email).toHaveProperty('error', 'Connection failed')
