@@ -5,6 +5,8 @@ import {
 	createTransporter,
 	verifyEmailConnection,
 	sendEmail,
+	getEmailHealth,
+	resetEmailHealthCache,
 } from '../../src/services/emailService'
 import { config } from '../../src/config/env.js'
 
@@ -28,6 +30,9 @@ describe('emailService', () => {
 			const transporter = createTransporter()
 
 			expect(nodemailer.createTransport).toHaveBeenCalledWith({
+				pool: true,
+				maxConnections: 1,
+				maxMessages: Infinity,
 				host: config.email.host,
 				port: config.email.port,
 				requireTLS: config.email.requireTLS,
@@ -41,7 +46,6 @@ describe('emailService', () => {
 				tls: {
 					servername: config.email.host,
 					rejectUnauthorized: config.email.tlsRejectUnauthorized,
-					session: false,
 				},
 			})
 			expect(transporter).toBe(mockTransporter)
@@ -137,6 +141,7 @@ describe('emailService', () => {
 
 		beforeEach(() => {
 			vi.clearAllMocks()
+			resetEmailHealthCache()
 			mockTransporter = {
 				verify: vi.fn().mockResolvedValue(true),
 				sendMail: vi.fn().mockResolvedValue({
@@ -236,7 +241,8 @@ describe('emailService', () => {
 
 				const result = await promise
 
-				expect(nodemailer.createTransport).toHaveBeenCalledTimes(2)
+				// The pooled connection is created once and reused across retries.
+				expect(nodemailer.createTransport).toHaveBeenCalledTimes(1)
 				expect(mockTransporter.sendMail).toHaveBeenCalledTimes(2)
 				expect(result).toHaveProperty('messageId', 'test-message-id')
 			})
@@ -256,9 +262,76 @@ describe('emailService', () => {
 				await vi.advanceTimersByTimeAsync(3000)
 				await assertion
 
-				expect(nodemailer.createTransport).toHaveBeenCalledTimes(3)
+				// One shared connection, retried three times.
+				expect(nodemailer.createTransport).toHaveBeenCalledTimes(1)
 				expect(mockTransporter.sendMail).toHaveBeenCalledTimes(3)
 			})
+		})
+	})
+
+	describe('getEmailHealth', () => {
+		let mockTransporter: Transporter
+
+		beforeEach(() => {
+			vi.clearAllMocks()
+			resetEmailHealthCache()
+			mockTransporter = {
+				verify: vi.fn().mockResolvedValue(true),
+				close: vi.fn(),
+			} as unknown as Transporter
+			vi.mocked(nodemailer.createTransport).mockReturnValue(mockTransporter)
+		})
+
+		it('should report connected without closing the shared connection', async () => {
+			const result = await getEmailHealth()
+
+			expect(result.status).toBe('connected')
+			expect(result.responseTime).toMatch(/\d+ms/)
+			expect(mockTransporter.verify).toHaveBeenCalledTimes(1)
+			// The connection is kept alive for the app lifetime, not closed per check.
+			expect(mockTransporter.close).not.toHaveBeenCalled()
+		})
+
+		it('should report disconnected with the error message on failure', async () => {
+			vi.mocked(mockTransporter.verify).mockRejectedValue(
+				new Error('SMTP connection timeout')
+			)
+
+			const result = await getEmailHealth()
+
+			expect(result.status).toBe('disconnected')
+			expect(result.error).toBe('SMTP connection timeout')
+			expect(mockTransporter.close).not.toHaveBeenCalled()
+		})
+
+		it('should cache the result and not open a new SMTP login within the TTL', async () => {
+			await getEmailHealth()
+			await getEmailHealth()
+			await getEmailHealth()
+
+			// Only one real verify/login despite multiple calls.
+			expect(mockTransporter.verify).toHaveBeenCalledTimes(1)
+			expect(nodemailer.createTransport).toHaveBeenCalledTimes(1)
+		})
+
+		it('should de-duplicate concurrent checks into a single login', async () => {
+			const [a, b, c] = await Promise.all([
+				getEmailHealth(),
+				getEmailHealth(),
+				getEmailHealth(),
+			])
+
+			expect(a).toEqual(b)
+			expect(b).toEqual(c)
+			expect(mockTransporter.verify).toHaveBeenCalledTimes(1)
+		})
+
+		it('should re-check after the cache is reset', async () => {
+			await getEmailHealth()
+			resetEmailHealthCache()
+			await getEmailHealth()
+
+			expect(mockTransporter.verify).toHaveBeenCalledTimes(2)
 		})
 	})
 })

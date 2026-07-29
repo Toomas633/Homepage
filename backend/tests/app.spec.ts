@@ -4,7 +4,14 @@ import app from '../src/app.js'
 
 vi.mock('../src/services/emailService.js', () => ({
 	createTransporter: vi.fn().mockReturnValue({ close: vi.fn() }),
+	getTransporter: vi.fn().mockReturnValue({ close: vi.fn() }),
+	closeTransporter: vi.fn(),
 	verifyEmailConnection: vi.fn().mockResolvedValue(50),
+	getEmailHealth: vi.fn().mockResolvedValue({
+		status: 'connected',
+		responseTime: '50ms',
+		checkedAt: Date.now(),
+	}),
 }))
 
 vi.mock('../src/utils/helpers.js', () => ({
@@ -315,8 +322,7 @@ describe('Server Lifecycle', () => {
 
 		it('should verify email connection on startup', async () => {
 			const { startServer } = await import('../src/app.js')
-			const { createTransporter } =
-				await import('../src/services/emailService.js')
+			const { getTransporter } = await import('../src/services/emailService.js')
 
 			const originalEnv = process.env.NODE_ENV
 			process.env.NODE_ENV = 'test'
@@ -325,7 +331,7 @@ describe('Server Lifecycle', () => {
 
 			await new Promise((resolve) => setTimeout(resolve, 10))
 
-			expect(createTransporter).toHaveBeenCalled()
+			expect(getTransporter).toHaveBeenCalled()
 
 			process.env.NODE_ENV = originalEnv
 		})

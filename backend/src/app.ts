@@ -10,8 +10,9 @@ import swaggerRoutes from './routes/swagger.js'
 import type { ErrorResponse } from './types/index.js'
 import { config } from './config/env.js'
 import {
-	createTransporter,
+	getTransporter,
 	verifyEmailConnection,
+	closeTransporter,
 } from './services/emailService.js'
 import { logWithTimestamp, objectToString } from './utils/helpers.js'
 
@@ -52,8 +53,10 @@ app.use(
 export const startServer = async (): Promise<void> => {
 	if (config.email.host) {
 		logWithTimestamp('info', 'Verifying email server connection...')
-		const transporter = createTransporter()
-		verifyEmailConnection(transporter)
+		// Opens the single pooled connection that is kept alive for the whole app
+		// lifetime. It is intentionally NOT closed here — sendEmail and the health
+		// check reuse this same connection so the app only ever logs in once.
+		verifyEmailConnection(getTransporter())
 			.then((duration) => {
 				logWithTimestamp('info', 'Email server connection verified', duration)
 			})
@@ -72,9 +75,6 @@ export const startServer = async (): Promise<void> => {
 						: 'Unknown error'
 				console.error(errorInfo)
 			})
-			.finally(() => {
-				transporter.close()
-			})
 	}
 
 	const server: Server = app.listen(config.server.port, () => {
@@ -83,6 +83,7 @@ export const startServer = async (): Promise<void> => {
 
 	const gracefulShutdown = (signal: string): void => {
 		logWithTimestamp('info', `${signal} received, shutting down gracefully`)
+		closeTransporter()
 		server.close(() => {
 			logWithTimestamp('info', 'Server closed')
 			process.exit(0)
@@ -94,7 +95,7 @@ export const startServer = async (): Promise<void> => {
 }
 
 if (process.env.NODE_ENV !== 'test') {
-	startServer()
+	await startServer()
 }
 
 export default app
