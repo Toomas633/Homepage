@@ -12,7 +12,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppNavbar: typeof import('./src/components/AppNavbar.vue')['default']
-    ArchiveChip: typeof import('./src/components/ArchiveChip.vue')['default']
     ButtonCard: typeof import('./src/components/ButtonCard.vue')['default']
     CodeBlock: typeof import('./src/components/CodeBlock.vue')['default']
     CookieBanner: typeof import('./src/components/cookies/CookieBanner.vue')['default']

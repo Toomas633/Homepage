@@ -1,10 +1,6 @@
 <template>
 	<div v-if="!hideChips" class="chips">
 		<LicenseChip :license="data?.license" :loading="loading" />
-		<ArchiveChip
-			v-if="newPage && newLink"
-			:new-page="newPage"
-			:new-link="newLink" />
 		<LatestReleaseChip
 			v-if="!hideVersion"
 			:release="data?.latestRelease ?? ''"
@@ -22,8 +18,6 @@ import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
 	repo: string
-	newPage?: string
-	newLink?: string
 	hideLangs?: boolean
 	hideChips?: boolean
 	hideVersion?: boolean

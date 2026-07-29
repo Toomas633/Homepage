@@ -3,7 +3,6 @@ import { useHead } from '@vueuse/head'
 import { projectRoutes } from './projects'
 import { mainRoutes } from './main'
 import { demoRoutes } from './demos'
-import { archiveRoutes } from './archive'
 import { RouteRecord } from '@/types/route'
 import { serversRoutes } from './servers'
 
@@ -11,7 +10,6 @@ const routes: Array<RouteRecord> = [
 	...mainRoutes,
 	...projectRoutes,
 	...demoRoutes,
-	...archiveRoutes,
 	...serversRoutes,
 ]
 
