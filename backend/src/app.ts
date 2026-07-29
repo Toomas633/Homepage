@@ -72,6 +72,9 @@ export const startServer = async (): Promise<void> => {
 						: 'Unknown error'
 				console.error(errorInfo)
 			})
+			.finally(() => {
+				transporter.close()
+			})
 	}
 
 	const server: Server = app.listen(config.server.port, () => {

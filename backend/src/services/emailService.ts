@@ -3,7 +3,21 @@ import nodemailer from 'nodemailer'
 import type { Transporter, SentMessageInfo } from 'nodemailer'
 import { config } from '../config/env.js'
 
-const DEFAULT_SMTP_TIMEOUT_MS = 5000
+// Timeouts are deliberately generous. A reachable mail server can still be slow
+// to complete the SMTP handshake — for example while it performs a reverse-DNS
+// (FCrDNS) lookup on the connecting client, or during the brief window after a
+// certbot certificate renewal reloads it. Previously these were 5s, which made
+// the app report "SMTP connection timeout" even though the server was reachable
+// and simply slow to send its greeting.
+const CONNECTION_TIMEOUT_MS = 10000
+const GREETING_TIMEOUT_MS = 10000
+const SOCKET_TIMEOUT_MS = 20000
+
+// Outer safety cap for verify(). Kept LARGER than the connection/greeting
+// timeouts above so nodemailer's own (socket-cleaning) timeout fires first and
+// surfaces the real error. This wrapper only guards edge cases nodemailer does
+// not time out itself, such as a hanging DNS lookup.
+const VERIFY_TIMEOUT_MS = 15000
 
 const withTimeout = async <T>(
 	promise: Promise<T>,
@@ -31,9 +45,9 @@ export const createTransporter = (): Transporter => {
 		host: config.email.host,
 		port: config.email.port,
 		requireTLS: config.email.requireTLS,
-		connectionTimeout: DEFAULT_SMTP_TIMEOUT_MS,
-		greetingTimeout: DEFAULT_SMTP_TIMEOUT_MS,
-		socketTimeout: DEFAULT_SMTP_TIMEOUT_MS * 2,
+		connectionTimeout: CONNECTION_TIMEOUT_MS,
+		greetingTimeout: GREETING_TIMEOUT_MS,
+		socketTimeout: SOCKET_TIMEOUT_MS,
 		auth: {
 			user: config.email.user,
 			pass: config.email.password,
@@ -51,7 +65,7 @@ const MAX_RETRIES = 2
 
 export const verifyEmailConnection = async (
 	transporter: Transporter,
-	timeoutMs = DEFAULT_SMTP_TIMEOUT_MS,
+	timeoutMs = VERIFY_TIMEOUT_MS,
 	maxRetries = MAX_RETRIES
 ): Promise<number> => {
 	const start = Date.now()
@@ -90,8 +104,9 @@ export const sendEmail = async ({
 	let lastError: unknown
 
 	for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+		let transporter: Transporter | undefined
 		try {
-			const transporter = createTransporter()
+			transporter = createTransporter()
 			const mailOptions = {
 				from: config.email.user,
 				to: config.email.to,
@@ -105,6 +120,8 @@ export const sendEmail = async ({
 			if (attempt < MAX_RETRIES) {
 				await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
 			}
+		} finally {
+			transporter?.close()
 		}
 	}
 

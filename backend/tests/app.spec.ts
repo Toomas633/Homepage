@@ -3,7 +3,7 @@ import request from 'supertest'
 import app from '../src/app.js'
 
 vi.mock('../src/services/emailService.js', () => ({
-	createTransporter: vi.fn().mockReturnValue({}),
+	createTransporter: vi.fn().mockReturnValue({ close: vi.fn() }),
 	verifyEmailConnection: vi.fn().mockResolvedValue(50),
 }))
 

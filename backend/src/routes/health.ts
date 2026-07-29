@@ -12,6 +12,9 @@ const APP_VERSION =
 	(globalThis as { __APP_VERSION__?: string }).__APP_VERSION__ ||
 	'unknown'
 
+const HEALTH_SMTP_TIMEOUT_MS = 12000
+const HEALTH_SMTP_RETRIES = 1
+
 const router = Router()
 
 router.get(
@@ -20,12 +23,12 @@ router.get(
 	async (_req: Request, res: Response<HealthResponse>) => {
 		const timestamp = new Date().toISOString()
 
+		const transporter = createTransporter()
 		try {
-			const transporter = createTransporter()
 			const emailCheckDuration = await verifyEmailConnection(
 				transporter,
-				undefined,
-				0
+				HEALTH_SMTP_TIMEOUT_MS,
+				HEALTH_SMTP_RETRIES
 			)
 
 			res.status(200).json({
@@ -49,6 +52,8 @@ router.get(
 					error: errorMessage,
 				},
 			})
+		} finally {
+			transporter.close()
 		}
 	}
 )

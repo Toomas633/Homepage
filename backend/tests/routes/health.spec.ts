@@ -15,7 +15,7 @@ describe('Health Route', () => {
 	})
 
 	it('should return healthy status when email connection is successful', async () => {
-		const mockTransporter = {} as Transporter
+		const mockTransporter = { close: vi.fn() } as unknown as Transporter
 		vi.spyOn(emailService, 'createTransporter').mockReturnValue(mockTransporter)
 		const verifySpy = vi
 			.spyOn(emailService, 'verifyEmailConnection')
@@ -28,11 +28,11 @@ describe('Health Route', () => {
 		expect(response.body).toHaveProperty('timestamp')
 		expect(response.body.email).toHaveProperty('status', 'connected')
 		expect(response.body.email).toHaveProperty('responseTime', '50ms')
-		expect(verifySpy).toHaveBeenCalledWith(mockTransporter, undefined, 0)
+		expect(verifySpy).toHaveBeenCalledWith(mockTransporter, 12000, 1)
 	})
 
 	it('should return degraded status when email connection fails', async () => {
-		const mockTransporter = {} as Transporter
+		const mockTransporter = { close: vi.fn() } as unknown as Transporter
 		vi.spyOn(emailService, 'createTransporter').mockReturnValue(mockTransporter)
 		const verifySpy = vi
 			.spyOn(emailService, 'verifyEmailConnection')
@@ -45,13 +45,13 @@ describe('Health Route', () => {
 		expect(response.body).toHaveProperty('timestamp')
 		expect(response.body.email).toHaveProperty('status', 'disconnected')
 		expect(response.body.email).toHaveProperty('error', 'Connection failed')
-		expect(verifySpy).toHaveBeenCalledWith(mockTransporter, undefined, 0)
+		expect(verifySpy).toHaveBeenCalledWith(mockTransporter, 12000, 1)
 	})
 
 	it('should include timestamp in ISO format', async () => {
-		vi.spyOn(emailService, 'createTransporter').mockReturnValue(
-			{} as Transporter
-		)
+		vi.spyOn(emailService, 'createTransporter').mockReturnValue({
+			close: vi.fn(),
+		} as unknown as Transporter)
 		vi.spyOn(emailService, 'verifyEmailConnection').mockResolvedValue(50)
 
 		const response = await request(app).get('/api/health')

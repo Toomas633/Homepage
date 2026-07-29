@@ -31,9 +31,9 @@ describe('emailService', () => {
 				host: config.email.host,
 				port: config.email.port,
 				requireTLS: config.email.requireTLS,
-				connectionTimeout: 5000,
-				greetingTimeout: 5000,
-				socketTimeout: 10000,
+				connectionTimeout: 10000,
+				greetingTimeout: 10000,
+				socketTimeout: 20000,
 				auth: {
 					user: config.email.user,
 					pass: config.email.password,
@@ -143,6 +143,7 @@ describe('emailService', () => {
 					messageId: 'test-message-id',
 					accepted: ['test@example.com'],
 				}),
+				close: vi.fn(),
 			} as unknown as Transporter
 
 			vi.mocked(nodemailer.createTransport).mockReturnValue(mockTransporter)
