@@ -19,7 +19,7 @@ describe('Analytics Route', () => {
 	})
 
 	const collect = (body: object, headers: Record<string, string> = {}) =>
-		request(app).post('/api/analytics/collect').set(headers).send(body)
+		request(app).post('/api/pulse/event').set(headers).send(body)
 
 	it('rejects invalid event names', async () => {
 		const res = await collect({
@@ -66,9 +66,9 @@ describe('Analytics Route', () => {
 	})
 
 	it('protects the stats endpoint', async () => {
-		expect((await request(app).get('/api/analytics/stats')).status).toBe(401)
+		expect((await request(app).get('/api/pulse/stats')).status).toBe(401)
 		config.analytics.statsToken = ''
-		expect((await request(app).get('/api/analytics/stats')).status).toBe(503)
+		expect((await request(app).get('/api/pulse/stats')).status).toBe(503)
 	})
 
 	it('returns stats as JSON and Prometheus text', async () => {
@@ -78,18 +78,18 @@ describe('Analytics Route', () => {
 			consent: { analytics: true },
 		})
 		const json = await request(app)
-			.get('/api/analytics/stats')
+			.get('/api/pulse/stats')
 			.set('Authorization', bearer)
 		expect(json.status).toBe(200)
 		expect(json.body.data.totals.pageviews).toBe(1)
 		const prom = await request(app)
-			.get('/api/analytics/stats?format=prometheus')
+			.get('/api/pulse/stats?format=prometheus')
 			.set('Authorization', bearer)
 		expect(prom.text).toContain('homepage_pageviews_total 1')
 	})
 
 	it('exposes public config', async () => {
-		const res = await request(app).get('/api/analytics/config')
+		const res = await request(app).get('/api/pulse/config')
 		expect(res.status).toBe(200)
 		expect(res.body.data).toHaveProperty('adsenseClientId')
 	})

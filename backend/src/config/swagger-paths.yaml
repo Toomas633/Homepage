@@ -176,7 +176,7 @@ paths:
                     error: 'GitHub API rate limit exceeded'
 
 
-  /api/analytics/collect:
+  /api/pulse/event:
     post:
       summary: Record an analytics event
       description: >-
@@ -221,7 +221,7 @@ paths:
         '429':
           description: Too many requests
 
-  /api/analytics/config:
+  /api/pulse/config:
     get:
       summary: Public analytics/ads configuration
       description: Returns the AdSense client id (or null) the frontend should load once ads consent is given.
@@ -231,7 +231,7 @@ paths:
         '200':
           description: Configuration
 
-  /api/analytics/stats:
+  /api/pulse/stats:
     get:
       summary: Aggregated statistics for dashboards
       description: >-

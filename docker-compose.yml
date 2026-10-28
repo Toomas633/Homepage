@@ -18,6 +18,10 @@ services:
       - EMAIL_TO=${EMAIL_TO}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GA4_MEASUREMENT_ID=${GA4_MEASUREMENT_ID:-}
+      - GA4_API_SECRET=${GA4_API_SECRET:-}
+      - ADSENSE_CLIENT_ID=${ADSENSE_CLIENT_ID:-}
+      - ANALYTICS_STATS_TOKEN=${ANALYTICS_STATS_TOKEN:-}
     volumes:
       - ./logs:/app/logs
     restart: unless-stopped

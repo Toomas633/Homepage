@@ -26,7 +26,7 @@ describe('analyticsService', () => {
 	it('sends a page view when consent is granted and then custom events', () => {
 		updateConsent(consent(true))
 		expect(axios.post).toHaveBeenCalledWith(
-			expect.stringContaining('/analytics/collect'),
+			expect.stringContaining('/pulse/event'),
 			expect.objectContaining({ name: 'page_view' })
 		)
 		trackEvent('button_click', { id: 'send' })

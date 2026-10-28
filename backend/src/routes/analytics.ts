@@ -24,7 +24,7 @@ const parseDate = (value: unknown): number | undefined => {
 }
 
 // Public: tells the frontend which third-party ad client to load (if any)
-router.get('/analytics/config', (_req: Request, res: Response) => {
+router.get('/pulse/config', (_req: Request, res: Response) => {
 	res.status(200).json({
 		success: true,
 		data: { adsenseClientId: config.analytics.adsenseClientId || null },
@@ -34,7 +34,7 @@ router.get('/analytics/config', (_req: Request, res: Response) => {
 // Collect an event. Requires explicit analytics consent (GDPR) and honours
 // Do-Not-Track / Global Privacy Control. No IP address or cookie is stored.
 router.post(
-	'/analytics/collect',
+	'/pulse/event',
 	analyticsRateLimiter,
 	(req: Request, res: Response) => {
 		const body = (req.body ?? {}) as Partial<AnalyticsEventInput>
@@ -63,7 +63,7 @@ router.post(
 )
 
 // Protected statistics for Grafana (JSON / Infinity datasource) or Prometheus
-router.get('/analytics/stats', (req: Request, res: Response) => {
+router.get('/pulse/stats', (req: Request, res: Response) => {
 	const token = config.analytics.statsToken
 	if (!token) {
 		res.status(503).json({

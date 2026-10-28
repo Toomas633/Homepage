@@ -10,7 +10,7 @@ let adsLoaded = false
 export async function loadAds(): Promise<void> {
 	if (adsLoaded || typeof document === 'undefined') return
 	try {
-		const { data } = await axios.get(`${API_URL}/analytics/config`)
+		const { data } = await axios.get(`${API_URL}/pulse/config`)
 		const client: string | null = data?.data?.adsenseClientId
 		if (!client) return
 		adsLoaded = true
@@ -35,7 +35,7 @@ export function updateConsent(consent: Consent): void {
 export function trackEvent(name: string, params?: AnalyticsParams): void {
 	if (!analyticsConsent) return
 	axios
-		.post(`${API_URL}/analytics/collect`, {
+		.post(`${API_URL}/pulse/event`, {
 			name,
 			path: globalThis.location?.pathname,
 			title: globalThis.document?.title,

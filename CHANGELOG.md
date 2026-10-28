@@ -9,6 +9,19 @@ For detailed release notes, see the `changelog/` directory.
 
 ---
 
+## [Unreleased]
+
+### Added
+- First-party analytics engine in the backend (`/api/pulse/event`, `/api/pulse/config`, `/api/pulse/stats`) with consent, DNT/GPC handling and no stored IPs/cookies
+- Server-side forwarding to Google Analytics 4 and a pluggable destination interface
+- Bearer-token protected statistics endpoint (JSON and Prometheus) for Grafana
+- Frontend `trackEvent` helper and automatic page-view tracking
+
+### Changed
+- Google Analytics / AdSense inline scripts removed from the frontend; AdSense client id now served by the backend
+
+---
+
 ## [5.3.1] - 2026-06-19
 
 ### Fixed
