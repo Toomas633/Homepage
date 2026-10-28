@@ -35,6 +35,7 @@
 <script setup lang="ts">
 import useThemeMixin from '@/helpers/themeMixin'
 import router from '@/router'
+import { trackEvent } from '@/services/analyticsService'
 import { isDesktop } from '@basitcodeenv/vue3-device-detect'
 import { ref } from 'vue'
 
@@ -48,6 +49,7 @@ const showDialog = ref(false)
 const { isDark } = useThemeMixin()
 
 function handleClick() {
+	trackEvent('archive_chip_click', { target: props.newLink })
 	if (isDesktop) {
 		router.push(props.newLink)
 	} else {

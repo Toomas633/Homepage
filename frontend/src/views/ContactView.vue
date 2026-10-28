@@ -96,6 +96,7 @@ import { computed, ref } from 'vue'
 import useAlertMixin from '@/helpers/alertMixin'
 import { EmailData } from '@/types/email'
 import { sendEmail } from '@/services/emailService'
+import { trackEvent } from '@/services/analyticsService'
 
 const valid = ref(false)
 const loading = ref(false)
@@ -155,15 +156,19 @@ const submit = async () => {
 			project: project.value,
 			message: message.value,
 		}
+		trackEvent('contact_submit', { project: project.value })
 		const response = await sendEmail(data)
 		if (response.data.success) {
+			trackEvent('contact_success')
 			loading.value = false
 			showSuccessMessage('Email sent')
 		} else {
+			trackEvent('contact_error')
 			loading.value = false
 			showErrorMessage(response.data as Error)
 		}
 	} catch (error) {
+		trackEvent('contact_error')
 		loading.value = false
 		showErrorMessage(error as Error)
 	}

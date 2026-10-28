@@ -97,6 +97,13 @@ export interface AnalyticsConfig {
 	ga4MeasurementId: string
 	ga4ApiSecret: string
 	adsenseClientId: string
+	siteUrl: string
+	plausibleUrl: string
+	plausibleDomain: string
+	matomoUrl: string
+	matomoSiteId: string
+	webhookUrl: string
+	webhookSecret: string
 	statsToken: string
 	retentionDays: number
 	maxEvents: number

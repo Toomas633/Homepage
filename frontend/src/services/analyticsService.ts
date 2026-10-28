@@ -50,4 +50,51 @@ export function trackPageView(path?: string): void {
 	trackEvent('page_view', path ? { route: path } : undefined)
 }
 
+export function trackOutboundClick(href: string, source = 'link'): void {
+	try {
+		const url = new URL(href, globalThis.location?.origin)
+		if (url.origin === globalThis.location?.origin) return
+		trackEvent('outbound_click', {
+			host: url.hostname,
+			url: url.origin + url.pathname,
+			source,
+		})
+	} catch {
+		// ignore malformed urls
+	}
+}
+
+const SCROLL_STEPS = [25, 50, 75, 100]
+
+/** Delegated listeners: outbound link clicks and scroll depth on every page. */
+export function initAutoTracking(): void {
+	if (typeof document === 'undefined') return
+	document.addEventListener('click', (event) => {
+		const anchor = (event.target as Element | null)?.closest?.('a[href]')
+		if (anchor) trackOutboundClick(anchor.getAttribute('href') || '')
+	})
+
+	const reached = new Map<string, number>()
+	document.addEventListener(
+		'scroll',
+		(event) => {
+			const target = event.target as Element | Document
+			const el =
+				target === document ? document.documentElement : (target as HTMLElement)
+			if (!el || el.scrollHeight <= el.clientHeight) return
+			const percent = ((el.scrollTop + el.clientHeight) / el.scrollHeight) * 100
+			const path = globalThis.location?.pathname ?? '/'
+			const done = reached.get(path) ?? 0
+			for (const step of SCROLL_STEPS) {
+				if (percent >= step - 1 && step > done) {
+					reached.set(path, step)
+					trackEvent('scroll_depth', { percent: step })
+				}
+			}
+		},
+		{ capture: true, passive: true }
+	)
+}
+
 globalThis.updateConsent = updateConsent
+initAutoTracking()

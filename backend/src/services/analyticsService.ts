@@ -102,15 +102,106 @@ export const createGa4Destination = (
 	},
 })
 
+const absoluteUrl = (siteUrl: string, path: string) =>
+	`${siteUrl}${path.startsWith('/') ? path : `/${path}`}`
+
+/**
+ * Plausible Events API. No IP is forwarded; a per-visitor pseudo user-agent
+ * lets Plausible tell visitors apart without receiving personal data.
+ */
+export const createPlausibleDestination = (
+	baseUrl: string,
+	domain: string,
+	siteUrl: string
+): AnalyticsDestination => ({
+	name: 'plausible',
+	send: async (event) => {
+		await axios.post(
+			`${baseUrl}/api/event`,
+			{
+				name: event.name === 'page_view' ? 'pageview' : event.name,
+				url: absoluteUrl(siteUrl, event.path),
+				domain,
+				referrer: event.referrer || undefined,
+				props: event.params,
+			},
+			{
+				headers: {
+					'User-Agent': `visitor/${event.visitorId}`,
+					'X-Forwarded-For': '127.0.0.1',
+				},
+				timeout: 5000,
+			}
+		)
+	},
+})
+
+/** Matomo HTTP Tracking API. */
+export const createMatomoDestination = (
+	baseUrl: string,
+	siteId: string,
+	siteUrl: string
+): AnalyticsDestination => ({
+	name: 'matomo',
+	send: async (event) => {
+		const isPageview = event.name === 'page_view'
+		await axios.get(`${baseUrl}/matomo.php`, {
+			params: {
+				idsite: siteId,
+				rec: 1,
+				apiv: 1,
+				send_image: 0,
+				_id: event.visitorId.slice(0, 16),
+				url: absoluteUrl(siteUrl, event.path),
+				action_name: isPageview ? event.title || event.path : undefined,
+				urlref: event.referrer || undefined,
+				e_c: isPageview ? undefined : 'event',
+				e_a: isPageview ? undefined : event.name,
+				e_n: isPageview ? undefined : JSON.stringify(event.params),
+			},
+			timeout: 5000,
+		})
+	},
+})
+
+/** Generic JSON webhook for any other platform (Segment-like, n8n, custom). */
+export const createWebhookDestination = (
+	url: string,
+	secret: string
+): AnalyticsDestination => ({
+	name: 'webhook',
+	send: async (event) => {
+		await axios.post(url, event, {
+			headers: secret ? { Authorization: ['Bearer', secret].join(' ') } : {},
+			timeout: 5000,
+		})
+	},
+})
+
 class AnalyticsService {
 	private events: AnalyticsEvent[] = []
 	private destinations: AnalyticsDestination[] = []
 
 	constructor() {
-		const { ga4MeasurementId, ga4ApiSecret } = config.analytics
-		if (ga4MeasurementId && ga4ApiSecret) {
+		const c = config.analytics
+		if (c.ga4MeasurementId && c.ga4ApiSecret) {
 			this.destinations.push(
-				createGa4Destination(ga4MeasurementId, ga4ApiSecret)
+				createGa4Destination(c.ga4MeasurementId, c.ga4ApiSecret)
+			)
+		}
+		if (c.plausibleDomain) {
+			this.destinations.push(
+				createPlausibleDestination(c.plausibleUrl, c.plausibleDomain, c.siteUrl)
+			)
+		}
+		if (c.matomoUrl && c.matomoSiteId) {
+			this.destinations.push(
+				createMatomoDestination(c.matomoUrl, c.matomoSiteId, c.siteUrl)
+			)
+		}
+		if (c.webhookUrl) {
+			this.destinations.push(
+				createWebhookDestination(c.webhookUrl, c.webhookSecret)
 			)
 		}
 	}

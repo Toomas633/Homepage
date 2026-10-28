@@ -6,7 +6,7 @@ import { demoRoutes } from './demos'
 import { archiveRoutes } from './archive'
 import { RouteRecord } from '@/types/route'
 import { serversRoutes } from './servers'
-import { trackPageView } from '@/services/analyticsService'
+import { trackEvent, trackPageView } from '@/services/analyticsService'
 
 const routes: Array<RouteRecord> = [
 	...mainRoutes,
@@ -221,9 +221,10 @@ router.beforeEach((to, _from, next) => {
 	next()
 })
 
-router.afterEach((to) => {
+router.afterEach((to, _from) => {
 	document.title = to.meta.title?.toString() ?? defaultTitle
 	trackPageView(to.path)
+	if (to.path === '/404') trackEvent('page_not_found', { from: _from.path })
 
 	requestAnimationFrame(() => {
 		const scroller = document.querySelector('.v-main')

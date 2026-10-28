@@ -43,8 +43,8 @@
 				customer support.
 			</li>
 			<li>
-				<b>Analytics Data:</b> To analyze website traffic and improve our
-				site’s functionality and user experience.
+				<b>Analytics Data:</b> To analyze website traffic and improve our site’s
+				functionality and user experience.
 			</li>
 			<li>
 				<b>Google Ads Data:</b> To measure and improve the effectiveness of our
