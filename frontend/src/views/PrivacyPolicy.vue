@@ -22,9 +22,13 @@
 				inquiries.
 			</li>
 			<li>
-				<b>Google Analytics:</b> We use Google Analytics to collect information
-				about your use of our website. This includes data such as IP addresses,
-				browser types, and pages visited.
+				<b>Analytics:</b> With your consent, our own server records anonymous
+				usage events (pages visited, referring site, device type). Your IP
+				address and cookies are not stored; a visitor is represented only by a
+				salted hash that changes daily. Events are kept for a limited time and
+				are not recorded if you decline analytics, or if your browser sends Do
+				Not Track or Global Privacy Control. Aggregated events may be forwarded
+				to Google Analytics.
 			</li>
 			<li>
 				<b>Google Ads:</b> We use Google Ads to display advertisements and track
@@ -39,8 +43,8 @@
 				customer support.
 			</li>
 			<li>
-				<b>Google Analytics Data:</b> To analyze website traffic and improve our
-				site’s functionality and user experience.
+				<b>Analytics Data:</b> To analyze website traffic and improve our site’s
+				functionality and user experience.
 			</li>
 			<li>
 				<b>Google Ads Data:</b> To measure and improve the effectiveness of our

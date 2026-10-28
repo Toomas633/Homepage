@@ -576,6 +576,18 @@ if (result.success && result.data) {
 
 ---
 
+## Analytics
+
+First-party analytics engine (replaces the in-browser Google tags so blockers cannot stop it).
+
+- `POST /api/pulse/event` - record an event `{ name, path?, title?, referrer?, params?, consent: { analytics: true } }`. Ignored (202) without consent, `DNT: 1` or `Sec-GPC: 1`. No IP/cookie is stored; query strings are stripped; visitor ids are daily-rotating salted hashes held in memory only (retention `ANALYTICS_RETENTION_DAYS`, default 30).
+- `GET /api/pulse/config` - public; returns `adsenseClientId` for the frontend to load AdSense after ads consent.
+- `GET /api/pulse/stats?from=&to=&format=json|prometheus` - requires a bearer token (the `ANALYTICS_STATS_TOKEN` value) in the `Authorization` header; for Grafana/custom dashboards.
+
+Environment: `GA4_MEASUREMENT_ID` + `GA4_API_SECRET` (forward events to Google Analytics via Measurement Protocol), `ADSENSE_CLIENT_ID`, `ANALYTICS_STATS_TOKEN`, `ANALYTICS_RETENTION_DAYS`, `ANALYTICS_MAX_EVENTS`. Every recorded event is also forwarded server-side to each configured engine: Google Analytics 4, Plausible (`PLAUSIBLE_DOMAIN`, optional `PLAUSIBLE_URL`), Matomo (`MATOMO_URL` + `MATOMO_SITE_ID`) and a generic JSON webhook (`ANALYTICS_WEBHOOK_URL`, optional `ANALYTICS_WEBHOOK_SECRET`); `ANALYTICS_SITE_URL` sets the public site URL used for page URLs.
+
+Frontend events: `page_view`, `outbound_click`, `scroll_depth` (25/50/75/100), `copy_text`, `theme_change`, `contact_submit`/`contact_success`/`contact_error`, `donate_click`, `archive_chip_click`, `page_not_found`. Use `trackEvent(name, params)` from `@/services/analyticsService` for more. Custom destinations implement `AnalyticsDestination` and register with `analyticsService.addDestination`.
+
 ## Error Codes
 
 | HTTP Status | Code | Description |

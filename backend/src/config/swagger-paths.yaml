@@ -7,7 +7,7 @@ paths:
         - Health
       responses:
         '200':
-          description: Service is healthy or degraded (API running; check email sub-status)
+          description: Service is healthy
           content:
             application/json:
               schema:
@@ -21,9 +21,16 @@ paths:
                     email:
                       status: connected
                       responseTime: '150ms'
-                degraded:
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                unhealthy:
                   value:
-                    status: degraded
+                    status: unhealthy
                     timestamp: '2025-12-06T12:00:00.000Z'
                     version: '2.1.1'
                     email:
@@ -168,3 +175,91 @@ paths:
                     message: 'Error fetching GitHub Data'
                     error: 'GitHub API rate limit exceeded'
 
+
+  /api/pulse/event:
+    post:
+      summary: Record an analytics event
+      description: >-
+        First-party analytics collection (not blockable as a third-party tracker).
+        Events are only recorded when `consent.analytics` is `true` and the request
+        does not carry `DNT: 1` / `Sec-GPC: 1`. No IP address or cookie is stored;
+        visitors are identified by a daily-rotating salted hash. Recorded events are
+        forwarded to configured destinations (Google Analytics 4 via Measurement Protocol).
+      tags:
+        - Analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  example: page_view
+                path:
+                  type: string
+                  example: /projects
+                title:
+                  type: string
+                referrer:
+                  type: string
+                params:
+                  type: object
+                  additionalProperties: true
+                consent:
+                  type: object
+                  properties:
+                    analytics:
+                      type: boolean
+      responses:
+        '202':
+          description: Event accepted (or ignored because of missing consent)
+        '400':
+          description: Invalid event name
+        '429':
+          description: Too many requests
+
+  /api/pulse/config:
+    get:
+      summary: Public analytics/ads configuration
+      description: Returns the AdSense client id (or null) the frontend should load once ads consent is given.
+      tags:
+        - Analytics
+      responses:
+        '200':
+          description: Configuration
+
+  /api/pulse/stats:
+    get:
+      summary: Aggregated statistics for dashboards
+      description: >-
+        Totals, top pages, referrers, devices, event counts and daily series. Requires
+        a bearer token (the ANALYTICS_STATS_TOKEN value) in the Authorization header. Use `format=prometheus` for
+        Prometheus text exposition, otherwise JSON (e.g. Grafana Infinity datasource).
+      tags:
+        - Analytics
+      parameters:
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [json, prometheus]
+      responses:
+        '200':
+          description: Statistics
+        '401':
+          description: Missing or invalid token
+        '503':
+          description: Statistics endpoint not configured

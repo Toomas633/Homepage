@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import useThemeMixin from '@/helpers/themeMixin'
+import { trackOutboundClick } from '@/services/analyticsService'
 
 const props = withDefaults(
 	defineProps<{
@@ -54,6 +55,7 @@ const { isDark } = useThemeMixin()
 
 function navigate() {
 	if (props.href) {
+		trackOutboundClick(props.href, 'button_card')
 		window.open(props.href, '_blank')
 	}
 }

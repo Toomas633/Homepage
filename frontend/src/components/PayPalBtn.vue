@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
+import { trackEvent } from '@/services/analyticsService'
 import paypalIcon from '@/assets/icons/donate/paypal.svg'
 import qr from '@/assets/icons/donate/paypal-qr.svg'
 
@@ -93,6 +94,7 @@ function renderPayPalButton() {
 }
 
 async function showPayPal() {
+	trackEvent('donate_click', { provider: 'paypal' })
 	await loadPayPalScript()
 	const container = document.getElementById('donate-button')
 	if (container) {
