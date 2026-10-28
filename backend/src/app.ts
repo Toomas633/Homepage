@@ -6,6 +6,7 @@ import { corsMiddleware } from './middleware/cors.js'
 import healthRoutes from './routes/health.js'
 import emailRoutes from './routes/email.js'
 import githubRoutes from './routes/github.js'
+import analyticsRoutes from './routes/analytics.js'
 import swaggerRoutes from './routes/swagger.js'
 import type { ErrorResponse } from './types/index.js'
 import { config } from './config/env.js'
@@ -26,6 +27,7 @@ app.use('/api', swaggerRoutes)
 app.use('/api', healthRoutes)
 app.use('/api', emailRoutes)
 app.use('/api', githubRoutes)
+app.use('/api', analyticsRoutes)
 
 app.use((req: Request, res: Response<ErrorResponse>) => {
 	res.status(404).json({

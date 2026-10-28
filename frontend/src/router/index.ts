@@ -3,13 +3,16 @@ import { useHead } from '@vueuse/head'
 import { projectRoutes } from './projects'
 import { mainRoutes } from './main'
 import { demoRoutes } from './demos'
+import { archiveRoutes } from './archive'
 import { RouteRecord } from '@/types/route'
 import { serversRoutes } from './servers'
+import { trackPageView } from '@/services/analyticsService'
 
 const routes: Array<RouteRecord> = [
 	...mainRoutes,
 	...projectRoutes,
 	...demoRoutes,
+	...archiveRoutes,
 	...serversRoutes,
 ]
 
@@ -220,6 +223,7 @@ router.beforeEach((to, _from, next) => {
 
 router.afterEach((to) => {
 	document.title = to.meta.title?.toString() ?? defaultTitle
+	trackPageView(to.path)
 
 	requestAnimationFrame(() => {
 		const scroller = document.querySelector('.v-main')

@@ -576,6 +576,16 @@ if (result.success && result.data) {
 
 ---
 
+## Analytics
+
+First-party analytics engine (replaces the in-browser Google tags so blockers cannot stop it).
+
+- `POST /api/analytics/collect` - record an event `{ name, path?, title?, referrer?, params?, consent: { analytics: true } }`. Ignored (202) without consent, `DNT: 1` or `Sec-GPC: 1`. No IP/cookie is stored; query strings are stripped; visitor ids are daily-rotating salted hashes held in memory only (retention `ANALYTICS_RETENTION_DAYS`, default 30).
+- `GET /api/analytics/config` - public; returns `adsenseClientId` for the frontend to load AdSense after ads consent.
+- `GET /api/analytics/stats?from=&to=&format=json|prometheus` - requires a bearer token (the `ANALYTICS_STATS_TOKEN` value) in the `Authorization` header; for Grafana/custom dashboards.
+
+Environment: `GA4_MEASUREMENT_ID` + `GA4_API_SECRET` (forward events to Google Analytics via Measurement Protocol), `ADSENSE_CLIENT_ID`, `ANALYTICS_STATS_TOKEN`, `ANALYTICS_RETENTION_DAYS`, `ANALYTICS_MAX_EVENTS`. Additional destinations (Plausible, Matomo, ...) implement `AnalyticsDestination` and register with `analyticsService.addDestination`.
+
 ## Error Codes
 
 | HTTP Status | Code | Description |

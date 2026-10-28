@@ -41,7 +41,6 @@ export const createTransporter = (): Transporter => {
 		tls: {
 			servername: config.email.host,
 			rejectUnauthorized: config.email.tlsRejectUnauthorized,
-			session: false,
 		},
 	})
 }
@@ -87,26 +86,16 @@ export const sendEmail = async ({
 	message,
 	project,
 }: SendEmailParams): Promise<SentMessageInfo> => {
-	let lastError: unknown
+	const transporter = createTransporter()
+	await verifyEmailConnection(transporter)
 
-	for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-		try {
-			const transporter = createTransporter()
-			const mailOptions = {
-				from: config.email.user,
-				to: config.email.to,
-				subject: project,
-				text: message,
-				replyTo: from,
-			}
-			return await transporter.sendMail(mailOptions)
-		} catch (error) {
-			lastError = error
-			if (attempt < MAX_RETRIES) {
-				await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
-			}
-		}
+	const mailOptions = {
+		from: config.email.user,
+		to: config.email.to,
+		subject: project,
+		text: message,
+		replyTo: from,
 	}
 
-	throw lastError
+	return await transporter.sendMail(mailOptions)
 }

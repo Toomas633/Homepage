@@ -7,7 +7,6 @@
 
 		<!-- Resource Hints for Performance -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 		<link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
 		<link rel="manifest" href="/manifest.json" />
@@ -57,67 +56,5 @@
 		</noscript>
 		<div id="app"></div>
 		<script type="module" src="/src/main.ts"></script>
-
-		<!-- Analytics and Ads loaded after app for better FCP -->
-		<script>
-			// Initialize gtag early but load script later
-			globalThis.dataLayer = globalThis.dataLayer || []
-			function gtag() {
-				dataLayer.push(arguments)
-			}
-			gtag('js', new Date())
-			gtag('config', 'G-NXQTF484K2')
-			gtag('consent', 'default', {
-				ad_storage: 'denied',
-				analytics_storage: 'denied',
-				ad_user_data: 'denied',
-				ad_personalization: 'denied',
-				functionality_storage: 'denied',
-				personalization_storage: 'denied',
-				security_storage: 'granted',
-			})
-
-			function updateConsent(consent) {
-				gtag('consent', 'update', {
-					functionality_storage: consent.necessary ? 'granted' : 'denied',
-					personalization_storage: consent.necessary ? 'granted' : 'denied',
-					ad_storage: consent.ads ? 'granted' : 'denied',
-					ad_personalization: consent.ads ? 'granted' : 'denied',
-					analytics_storage: consent.analytics ? 'granted' : 'denied',
-					ad_user_data: consent.userData ? 'granted' : 'denied',
-				})
-				if (!consent.analytics) {
-					gtag('set', 'url_passthrough', true)
-				}
-				if (!consent.ads) {
-					gtag('set', 'ads_data_redaction', true)
-				}
-			}
-			globalThis.updateConsent = updateConsent
-
-			// Load analytics after page interactive
-			if (document.readyState === 'complete') {
-				loadAnalytics()
-			} else {
-				window.addEventListener('load', loadAnalytics)
-			}
-
-			function loadAnalytics() {
-				// Load gtag script
-				const gtagScript = document.createElement('script')
-				gtagScript.src =
-					'https://www.googletagmanager.com/gtag/js?id=G-NXQTF484K2'
-				gtagScript.async = true
-				document.head.appendChild(gtagScript)
-
-				// Load AdSense script
-				const adsScript = document.createElement('script')
-				adsScript.src =
-					'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511585383372617'
-				adsScript.async = true
-				adsScript.crossOrigin = 'anonymous'
-				document.head.appendChild(adsScript)
-			}
-		</script>
 	</body>
 </html>

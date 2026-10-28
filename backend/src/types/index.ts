@@ -23,6 +23,7 @@ export interface AppConfig {
 	server: ServerConfig
 	allowedOrigins: AllowedOriginsConfig
 	github: GithubConfig
+	analytics: AnalyticsConfig
 }
 
 export interface ContactFormData {
@@ -82,7 +83,7 @@ export interface EmailRequest extends Request {
 }
 
 export interface HealthResponse {
-	status: 'healthy' | 'degraded' | 'unhealthy'
+	status: 'healthy' | 'unhealthy'
 	timestamp: string
 	version: string
 	email: {
@@ -90,4 +91,40 @@ export interface HealthResponse {
 		responseTime?: string
 		error?: string
 	}
+}
+
+export interface AnalyticsConfig {
+	ga4MeasurementId: string
+	ga4ApiSecret: string
+	adsenseClientId: string
+	statsToken: string
+	retentionDays: number
+	maxEvents: number
+}
+
+export type AnalyticsParamValue = string | number | boolean
+
+export interface AnalyticsEventInput {
+	name: string
+	path?: string
+	title?: string
+	referrer?: string
+	params?: Record<string, AnalyticsParamValue>
+	consent?: { analytics?: boolean }
+}
+
+export interface AnalyticsEvent {
+	name: string
+	timestamp: number
+	visitorId: string
+	path: string
+	title: string
+	referrer: string
+	device: string
+	params: Record<string, AnalyticsParamValue>
+}
+
+export interface AnalyticsDestination {
+	name: string
+	send: (event: AnalyticsEvent) => Promise<void>
 }
