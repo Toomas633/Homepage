@@ -21,10 +21,10 @@
 		<!-- switch body -->
 		<Box3D
 			:w="SW_W"
-			:h="U - 6"
+			:h="U - 4"
 			:d="140"
 			face-class="usw-switch-face"
-			:style="pos(FACE_W - SW_W - EAR_W, 3, 1)">
+			:style="pos(FACE_W - SW_W - EAR_W, 2, 1)">
 			<template #front>
 				<div class="switch-front">
 					<div class="brand">

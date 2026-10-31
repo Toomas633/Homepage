@@ -100,10 +100,30 @@ const bottomStyle = computed(() => ({
 		content: '';
 		pointer-events: none;
 	}
+
+	/* fine surface grain so materials don't read as flat vector fills */
+	&::after {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		content: '';
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+		opacity: 0.045;
+		pointer-events: none;
+	}
 }
 
 .face-front::before {
-	background: rgb(255 255 255 / 3%);
+	background:
+		linear-gradient(180deg, rgb(0 0 0 / 30%) 0, transparent 3px),
+		linear-gradient(0deg, rgb(0 0 0 / 24%) 0, transparent 3px),
+		linear-gradient(
+			180deg,
+			rgb(255 255 255 / 7%) 0%,
+			rgb(255 255 255 / 3%) 30%,
+			transparent 55%,
+			rgb(0 0 0 / 8%) 100%
+		);
 }
 
 .face-back::before {

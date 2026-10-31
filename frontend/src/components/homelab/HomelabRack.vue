@@ -11,6 +11,7 @@
 		<div class="world" :style="worldStyle">
 			<div class="rack-origin">
 				<div class="floor" />
+				<div class="interior" />
 				<RackFrame :selected="selectedId === 'rack'" @select="select('rack')" />
 				<div class="slot" :style="slotStyle(1, 2)">
 					<ServerR730
@@ -93,9 +94,9 @@ import { FACE_W, FRAME_H, slotTop } from './rack3d'
 defineProps<{ selectedId: string | null }>()
 const emit = defineEmits<{ (e: 'select', id: string | null): void }>()
 
-const DEFAULT_YAW = -28
-const DEFAULT_PITCH = -9
-const DEFAULT_ZOOM = 0.58
+const DEFAULT_YAW = -12
+const DEFAULT_PITCH = -7
+const DEFAULT_ZOOM = 0.56
 
 const sceneEl = ref<HTMLElement>()
 const yaw = ref(DEFAULT_YAW)
@@ -117,7 +118,7 @@ const printerStyle = computed(() => ({
 }))
 
 const acProStyle = computed(() => ({
-	transform: `translate3d(${FACE_W + 2}px, 140px, -120px) rotateY(90deg)`,
+	transform: `translate3d(${FACE_W + 2}px, 140px, -120px) rotateY(74deg)`,
 }))
 
 function slotStyle(slot: number, units = 1) {
@@ -197,16 +198,18 @@ function clamp(value: number, min: number, max: number) {
 	touch-action: none;
 	cursor: grab;
 	user-select: none;
-	background: radial-gradient(
-		ellipse at 50% 42%,
-		#46464d 0%,
-		#323237 55%,
-		#222226 100%
-	);
+	background:
+		radial-gradient(
+			ellipse 120% 70% at 50% 108%,
+			rgb(0 0 0 / 55%) 0%,
+			transparent 60%
+		),
+		radial-gradient(ellipse 60% 45% at 50% 35%, #55555e 0%, transparent 70%),
+		radial-gradient(ellipse at 50% 30%, #44444c 0%, #343439 52%, #232327 100%);
 	border: 1px solid rgb(255 255 255 / 8%);
 	border-radius: 8px;
-	perspective: 1900px;
-	perspective-origin: 50% 42%;
+	perspective: 1100px;
+	perspective-origin: 50% 12%;
 
 	&.dragging {
 		cursor: grabbing;
@@ -226,7 +229,7 @@ function clamp(value: number, min: number, max: number) {
 	position: absolute;
 	width: 0;
 	height: 0;
-	transform: translate3d(-165px, -40px, 200px);
+	transform: translate3d(-165px, -75px, 200px);
 	transform-style: preserve-3d;
 }
 
@@ -243,15 +246,43 @@ function clamp(value: number, min: number, max: number) {
 	left: 0;
 	width: 1300px;
 	height: 1100px;
-	background: radial-gradient(
-		ellipse 460px 360px at 50% 45%,
-		rgb(0 0 0 / 50%) 0 32%,
-		rgb(0 0 0 / 18%) 58%,
-		transparent 74%
-	);
+	background:
+		radial-gradient(
+			ellipse 150px 70px at 32% 42%,
+			rgb(0 0 0 / 70%) 0 40%,
+			transparent 75%
+		),
+		radial-gradient(
+			ellipse 150px 70px at 68% 42%,
+			rgb(0 0 0 / 70%) 0 40%,
+			transparent 75%
+		),
+		radial-gradient(
+			ellipse 460px 320px at 50% 45%,
+			rgb(0 0 0 / 45%) 0 32%,
+			rgb(0 0 0 / 16%) 58%,
+			transparent 74%
+		);
 	transform: translate3d(-485px, 505px, 320px) rotateX(90deg)
 		translateY(-1100px);
 	transform-origin: 0 0;
+}
+
+/* dark interior behind the open frame so empty slots don't show the backdrop */
+.interior {
+	position: absolute;
+	top: -20px;
+	left: 4px;
+	width: 322px;
+	height: 490px;
+	background:
+		radial-gradient(
+			ellipse 70% 55% at 50% 42%,
+			rgb(40 40 46 / 55%) 0%,
+			transparent 75%
+		),
+		linear-gradient(180deg, #141418 0%, #0e0e11 60%, #09090b 100%);
+	transform: translateZ(-382px);
 }
 
 .controls {

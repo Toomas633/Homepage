@@ -110,10 +110,16 @@ const pos = { transform: 'translate3d(0px, 3px, 1px)' }
 	justify-content: center;
 	width: 21px;
 	height: 21px;
-	background: #111113;
+	background: radial-gradient(
+		circle at 38% 30%,
+		#232327 0%,
+		#161619 48%,
+		#0d0d10 100%
+	);
 	border-radius: 50%;
 	box-shadow:
 		inset 0 1px 2px rgb(0 0 0 / 80%),
+		inset 0 -0.5px 1px rgb(255 255 255 / 12%),
 		0 0.5px 0 rgb(255 255 255 / 25%);
 }
 
@@ -121,9 +127,16 @@ const pos = { transform: 'translate3d(0px, 3px, 1px)' }
 	position: relative;
 	width: 15px;
 	height: 15px;
-	background: radial-gradient(circle, #060607 0 58%, #1d1d21 64% 100%);
+	background: radial-gradient(
+		circle at 42% 34%,
+		#0a0a0c 0 50%,
+		#060607 58%,
+		#232328 72% 100%
+	);
 	border-radius: 50%;
-	box-shadow: inset 0 1.5px 3px rgb(0 0 0 / 90%);
+	box-shadow:
+		inset 0 2px 4px rgb(0 0 0 / 95%),
+		inset 0 -1px 1.5px rgb(255 255 255 / 10%);
 }
 
 .socket-pin {

@@ -40,8 +40,9 @@ const emit = defineEmits<{ (e: 'select'): void }>()
 	left: 9px;
 	width: 132px;
 	height: 132px;
-	background: #c9cbce;
+	background: radial-gradient(circle, #d4d6d9 0 88%, #aeb0b4 95% 100%);
 	border-radius: 50%;
+	box-shadow: 0 0 2px rgb(0 0 0 / 25%);
 }
 
 .disc {
@@ -65,7 +66,9 @@ const emit = defineEmits<{ (e: 'select'): void }>()
 		),
 		radial-gradient(circle, #fdfdfd 0 64%, #e3e4e6 70% 100%);
 	border-radius: 50%;
-	box-shadow: inset 0 -4px 10px rgb(0 0 0 / 15%);
+	box-shadow:
+		inset 0 -4px 10px rgb(0 0 0 / 15%),
+		0 0 16px rgb(6 167 226 / 30%);
 	transform: translateZ(14px);
 }
 

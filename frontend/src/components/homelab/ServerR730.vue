@@ -26,7 +26,11 @@
 				<template #front>
 					<div class="front-panel">
 						<div class="bays">
-							<div v-for="bay in 16" :key="bay" class="tray">
+							<div
+								v-for="bay in 16"
+								:key="bay"
+								class="tray"
+								:class="`tray-s${bay % 5}`">
 								<div class="tray-leds">
 									<div class="tray-led tray-led-act" />
 									<div class="tray-led tray-led-status" />
@@ -216,9 +220,26 @@ function pos(x: number, y: number, z: number) {
 .tray {
 	position: relative;
 	overflow: hidden;
-	background: linear-gradient(180deg, #2b2b30, #1e1e22);
-	border: 1px solid #121215;
+	background: linear-gradient(180deg, #34343a 0%, #28282d 55%, #1f1f24 100%);
+	border: 1px solid #0c0c0e;
 	border-radius: 1px;
+	box-shadow: inset 0 1px 0 rgb(255 255 255 / 18%);
+
+	/* varied LED states so the bays don't read as wallpaper */
+	&.tray-s1 .tray-led-act {
+		background: #ffb300;
+		box-shadow: 0 0 1.5px #ffb300;
+	}
+
+	&.tray-s2 .tray-led-act {
+		background: #173a1b;
+		box-shadow: none;
+	}
+
+	&.tray-s3 .tray-led-status {
+		background: #2fae35;
+		box-shadow: 0 0 1.5px #2fae35;
+	}
 }
 
 /* Dell 13G carrier: release handle across the top with a latch button */
@@ -228,7 +249,7 @@ function pos(x: number, y: number, z: number) {
 	right: 2px;
 	left: 7px;
 	height: 4px;
-	background: linear-gradient(180deg, #4e4e55, #35353b);
+	background: linear-gradient(180deg, #70757d 0%, #5c6168 55%, #484c53 100%);
 	border: 0.5px solid #1b1b1f;
 	border-radius: 1px;
 }
@@ -276,13 +297,14 @@ function pos(x: number, y: number, z: number) {
 .tray-vents {
 	position: absolute;
 	inset: 7px 2px 2px 7px;
-	background-color: #1b1b1f;
+	background-color: #232329;
 	background-image: radial-gradient(
 		circle,
 		rgb(0 0 0 / 95%) 0 0.8px,
 		transparent 1px
 	);
 	background-size: 3px 3px;
+	box-shadow: inset 0 0.5px 1px rgb(0 0 0 / 60%);
 }
 
 .badge-strip {
@@ -302,21 +324,22 @@ function pos(x: number, y: number, z: number) {
 	height: 13px;
 	font-size: 4px;
 	font-weight: 700;
-	color: #cfd2d6;
-	background: radial-gradient(circle, #3c3c42 0 60%, #26262b 100%);
-	border: 1px solid #55555c;
+	color: #e3e6ea;
+	background: radial-gradient(circle at 38% 32%, #4a4a52 0 55%, #2c2c32 100%);
+	border: 1px solid #7a7d84;
 	border-radius: 50%;
+	box-shadow: 0 1px 2px rgb(0 0 0 / 50%);
 }
 
 .model-tag {
 	font-size: 4px;
 	line-height: 1.1;
-	color: #8d9094;
+	color: #9aa0a6;
 }
 
 .model-num {
 	font-weight: 700;
-	color: #b7bac0;
+	color: #ced2d8;
 }
 
 .rear-panel {
@@ -363,7 +386,7 @@ function pos(x: number, y: number, z: number) {
 	justify-content: center;
 	width: 14px;
 	height: 56px;
-	background: linear-gradient(180deg, #2c2c31, #1b1b1f);
+	background: linear-gradient(180deg, #3a3a41 0%, #2b2b31 55%, #202024 100%);
 	border: 1px solid #101013;
 	border-radius: 0 0 2px 2px;
 }

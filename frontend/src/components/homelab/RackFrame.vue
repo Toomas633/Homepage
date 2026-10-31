@@ -220,6 +220,18 @@ function pos(x: number, y: number, z: number) {
 @use './device' as *;
 
 .frame-steel-face {
-	@include steel(#323236, #1c1c1f);
+	@include steel(#3e3e44, #242428);
+}
+
+/* edge bevel so the posts separate from the backdrop */
+.frame-steel-face.face-front {
+	box-shadow:
+		inset 1.5px 0 0 rgb(255 255 255 / 22%),
+		inset -1.5px 0 0 rgb(0 0 0 / 45%);
+}
+
+.frame-steel-face.face-left,
+.frame-steel-face.face-right {
+	box-shadow: inset 0 0 0 1px rgb(0 0 0 / 35%);
 }
 </style>

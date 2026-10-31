@@ -117,7 +117,7 @@ function pos(x: number, y: number, z: number) {
 .printer-front {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(180deg, #37373c, #222226);
+	background: linear-gradient(180deg, #45454c 0%, #35353b 50%, #28282d 100%);
 }
 
 .printer-brand {
@@ -142,56 +142,90 @@ function pos(x: number, y: number, z: number) {
 
 .door {
 	position: absolute;
-	inset: 24px 20px 40px;
-	background: #1a1a1e;
-	border: 2px solid #121215;
-	border-radius: 6px;
+	inset: 24px 18px 38px;
+	background: linear-gradient(180deg, #232327, #1a1a1e);
+	border: 1px solid #0e0e11;
+	border-radius: 8px;
+	box-shadow:
+		inset 0 1px 0 rgb(255 255 255 / 7%),
+		0 2px 6px rgb(0 0 0 / 35%);
 }
 
 .door-glass {
 	position: absolute;
-	inset: 3px;
+	inset: 5px;
 	overflow: hidden;
 	background:
 		linear-gradient(
-			115deg,
-			transparent 0 30%,
-			rgb(255 255 255 / 7%) 30% 42%,
-			transparent 42% 70%,
-			rgb(255 255 255 / 4%) 70% 78%,
-			transparent 78%
+			105deg,
+			transparent 30%,
+			rgb(220 230 245 / 11%) 38% 46%,
+			transparent 52%
 		),
-		linear-gradient(180deg, #16161a, #0c0c0f);
-	border-radius: 4px;
+		radial-gradient(
+			ellipse 90% 70% at 50% 62%,
+			rgb(255 178 92 / 8%) 0%,
+			transparent 62%
+		),
+		linear-gradient(180deg, #202026 0%, #17171c 55%, #101013 100%);
+	border-radius: 5px;
+	box-shadow: inset 0 0 18px rgb(0 0 0 / 45%);
 }
 
 .plate-silhouette {
 	position: absolute;
-	bottom: 14%;
-	left: 12%;
-	width: 76%;
-	height: 7px;
-	background: linear-gradient(180deg, #3b3b40, #26262a);
+	bottom: 13%;
+	left: 10%;
+	width: 80%;
+	height: 9px;
+	background: linear-gradient(180deg, #6b6050 0%, #4e463a 55%, #322e2d 100%);
 	border-radius: 1px;
+	box-shadow: 0 3px 5px rgb(0 0 0 / 55%);
+
+	&::after {
+		position: absolute;
+		inset: 0 0 55%;
+		content: '';
+		background: repeating-linear-gradient(
+			90deg,
+			rgb(255 255 255 / 7%) 0 2px,
+			transparent 2px 4px
+		);
+	}
 }
 
 .gantry-silhouette {
 	position: absolute;
-	top: 16%;
-	left: 8%;
-	width: 84%;
-	height: 5px;
-	background: linear-gradient(180deg, #313136, #202024);
+	top: 15%;
+	left: 6%;
+	width: 88%;
+	height: 7px;
+	background: linear-gradient(180deg, #585860 0%, #3e3e45 70%, #2b2b30 100%);
+	border-radius: 1px;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 45%);
 }
 
 .toolhead-silhouette {
 	position: absolute;
-	top: 16%;
-	left: 44%;
-	width: 16px;
-	height: 16px;
-	background: linear-gradient(180deg, #45454b, #2c2c31);
-	border-radius: 0 0 3px 3px;
+	top: 17%;
+	left: 43%;
+	width: 18px;
+	height: 20px;
+	background: linear-gradient(180deg, #55555e 0%, #3c3c44 60%, #2a2a30 100%);
+	border-radius: 2px 2px 4px 4px;
+	box-shadow: 0 3px 5px rgb(0 0 0 / 50%);
+
+	&::after {
+		position: absolute;
+		bottom: -3px;
+		left: 50%;
+		width: 4px;
+		height: 4px;
+		content: '';
+		background: #55555c;
+		transform: translateX(-50%);
+		clip-path: polygon(0 0, 100% 0, 50% 100%);
+	}
 }
 
 .door-handle {
@@ -248,7 +282,7 @@ function pos(x: number, y: number, z: number) {
 .printer-side {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(180deg, #333338, #202024);
+	background: linear-gradient(180deg, #3e3e45, #2a2a2f);
 
 	&::after {
 		position: absolute;
@@ -277,7 +311,7 @@ function pos(x: number, y: number, z: number) {
 .printer-top {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(180deg, #2e2e33, #1e1e22);
+	background: linear-gradient(180deg, #3a3a40, #2a2a2f);
 }
 
 .top-glass {
@@ -285,14 +319,15 @@ function pos(x: number, y: number, z: number) {
 	inset: 14px;
 	background:
 		linear-gradient(
-			115deg,
-			transparent 0 28%,
-			rgb(255 255 255 / 10%) 28% 40%,
-			transparent 40%
+			105deg,
+			transparent 28%,
+			rgb(220 230 245 / 12%) 36% 44%,
+			transparent 50%
 		),
-		linear-gradient(180deg, rgb(16 16 20 / 92%), rgb(10 10 13 / 95%));
+		linear-gradient(180deg, rgb(24 24 30 / 92%), rgb(14 14 18 / 95%));
 	border: 3px solid #121215;
-	border-radius: 5px;
+	border-radius: 7px;
+	box-shadow: inset 0 0 14px rgb(0 0 0 / 50%);
 }
 
 .ams-front {
@@ -318,17 +353,16 @@ function pos(x: number, y: number, z: number) {
 		inset: 0;
 		content: '';
 		background:
-			linear-gradient(
-				115deg,
-				transparent 0 22%,
-				rgb(255 255 255 / 30%) 22% 38%,
-				transparent 38% 68%,
-				rgb(255 255 255 / 12%) 68% 76%,
-				transparent 76%
+			radial-gradient(
+				ellipse 60% 55% at 22% 0%,
+				rgb(255 255 255 / 26%) 0%,
+				rgb(255 255 255 / 8%) 45%,
+				transparent 70%
 			),
-			linear-gradient(180deg, rgb(70 70 82 / 34%), rgb(35 35 44 / 44%));
-		border: 2px solid rgb(200 202 206 / 55%);
-		border-radius: 4px 4px 0 0;
+			linear-gradient(180deg, rgb(70 70 82 / 12%), rgb(35 35 44 / 14%));
+		border: 1px solid rgb(220 222 226 / 70%);
+		border-radius: 6px 6px 0 0;
+		box-shadow: inset 0 1px 0 rgb(255 255 255 / 30%);
 	}
 }
 
@@ -415,21 +449,23 @@ function pos(x: number, y: number, z: number) {
 	position: absolute;
 	inset: 0;
 	background:
-		linear-gradient(
-			115deg,
-			transparent 0 30%,
-			rgb(255 255 255 / 12%) 30% 40%,
-			transparent 40%
+		radial-gradient(
+			ellipse 140% 90% at 25% 0%,
+			rgb(255 255 255 / 14%) 0%,
+			rgb(255 255 255 / 4%) 40%,
+			transparent 66%
 		),
 		linear-gradient(180deg, rgb(62 62 70 / 90%), rgb(45 45 52 / 92%));
 }
 </style>
 <style lang="scss">
 .printer-face {
-	background: linear-gradient(180deg, #3a3a3f, #242428);
+	background: linear-gradient(180deg, #46464d 0%, #36363c 45%, #2a2a2f 100%);
+	border-radius: 7px;
 }
 
 .ams-face {
-	background: linear-gradient(180deg, #e8e9eb, #c6c8cc);
+	background: linear-gradient(180deg, #f4f5f7 0%, #e4e6e9 55%, #dcdee2 100%);
+	border-radius: 7px;
 }
 </style>

@@ -214,22 +214,53 @@ function pos(x: number, y: number, z: number) {
 	align-items: center;
 	justify-content: center;
 	padding: 0 20px;
-	background: linear-gradient(180deg, #2a2a2f, #1a1a1e);
+	background:
+		repeating-linear-gradient(
+			90deg,
+			rgb(255 255 255 / 2%) 0 1px,
+			transparent 1px 3px
+		),
+		linear-gradient(180deg, #2d2d32 0%, #222227 55%, #19191d 100%);
 }
 
 .handle {
+	position: relative;
 	flex: 0 0 120px;
-	height: 7px;
-	background: linear-gradient(180deg, #6a6c71, #44464b);
-	border-radius: 3px;
-	box-shadow: 0 2px 3px rgb(0 0 0 / 55%);
+	height: 8px;
+	background: linear-gradient(180deg, #75777c 0%, #5a5c61 45%, #404247 100%);
+	border-radius: 4px;
+	box-shadow:
+		0 3px 4px rgb(0 0 0 / 60%),
+		inset 0 1px 0 rgb(255 255 255 / 30%);
+
+	&::before,
+	&::after {
+		position: absolute;
+		top: 6px;
+		width: 6px;
+		height: 6px;
+		content: '';
+		background: linear-gradient(180deg, #4a4c51, #2e3034);
+		border-radius: 0 0 2px 2px;
+	}
+
+	&::before {
+		left: 6px;
+	}
+
+	&::after {
+		right: 6px;
+	}
 }
 
 .thumb-screw {
 	width: 8px;
 	height: 8px;
-	background: radial-gradient(circle, #77797e 0 40%, #46484d 100%);
+	background: radial-gradient(circle at 38% 32%, #8d8f94 0 35%, #46484d 100%);
 	border-radius: 50%;
+	box-shadow:
+		0 1px 2px rgb(0 0 0 / 55%),
+		inset 0 -1px 1px rgb(0 0 0 / 40%);
 }
 </style>
 <style lang="scss">
