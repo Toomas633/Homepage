@@ -216,8 +216,8 @@ function pos(x: number, y: number, z: number) {
 .tray {
 	position: relative;
 	overflow: hidden;
-	background: linear-gradient(180deg, #333338, #242429);
-	border: 1px solid #141417;
+	background: linear-gradient(180deg, #2b2b30, #1e1e22);
+	border: 1px solid #121215;
 	border-radius: 1px;
 }
 
@@ -259,13 +259,13 @@ function pos(x: number, y: number, z: number) {
 }
 
 .tray-led {
-	width: 2.5px;
-	height: 2.5px;
+	width: 2px;
+	height: 2px;
 	border-radius: 50%;
 
 	&.tray-led-act {
-		background: #35d13c;
-		box-shadow: 0 0 2px #35d13c;
+		background: #2fae35;
+		box-shadow: 0 0 1px #2fae35;
 	}
 
 	&.tray-led-status {

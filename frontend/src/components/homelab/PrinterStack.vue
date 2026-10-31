@@ -348,6 +348,18 @@ function pos(x: number, y: number, z: number) {
 	position: absolute;
 	inset: 4px;
 	border-radius: 50%;
+
+	&::after {
+		position: absolute;
+		inset: 0;
+		content: '';
+		background: repeating-radial-gradient(
+			circle,
+			transparent 0 2.5px,
+			rgb(0 0 0 / 18%) 2.5px 3.5px
+		);
+		border-radius: 50%;
+	}
 }
 
 .spool-hub {

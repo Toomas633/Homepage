@@ -292,7 +292,7 @@ function clamp(value: number, min: number, max: number) {
 	&.selected .face {
 		box-shadow:
 			inset 0 0 0 1.5px rgb(244 67 54 / 95%),
-			0 0 18px rgb(244 67 54 / 60%);
+			0 0 10px rgb(244 67 54 / 45%);
 		filter: brightness(1.12);
 	}
 }

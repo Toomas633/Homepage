@@ -26,10 +26,10 @@ const emit = defineEmits<{ (e: 'select'): void }>()
 <style scoped lang="scss">
 .mount-plate {
 	position: absolute;
-	top: 0;
-	left: 0;
-	width: 150px;
-	height: 150px;
+	top: 35px;
+	left: 55px;
+	width: 40px;
+	height: 80px;
 	background: linear-gradient(180deg, #2c2c30, #1d1d20);
 	border-radius: 4px;
 }

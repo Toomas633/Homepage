@@ -194,8 +194,10 @@ function pos(x: number, y: number, z: number) {
 .sfp {
 	width: 11px;
 	height: 6px;
-	background: linear-gradient(180deg, #17171a, #050506);
-	border: 1px solid #9ea0a4;
+	background:
+		linear-gradient(90deg, rgb(255 255 255 / 14%) 0 1px, transparent 1px 10px),
+		linear-gradient(180deg, #2e2f33, #101013);
+	border: 1px solid #b4b6ba;
 	border-radius: 1px;
 }
 

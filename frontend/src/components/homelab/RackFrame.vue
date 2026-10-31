@@ -118,9 +118,9 @@ function pos(x: number, y: number, z: number) {
 	inset: 0;
 	background-image: radial-gradient(
 		circle at 50% 5px,
-		rgb(0 0 0 / 90%) 0 2px,
-		rgb(140 140 148 / 70%) 2.6px,
-		transparent 3.2px
+		rgb(0 0 0 / 95%) 0 2.4px,
+		rgb(150 150 158 / 80%) 3px,
+		transparent 3.6px
 	);
 	background-size: 10px 10px;
 	background-position: 0 20px;
