@@ -35,6 +35,11 @@
 				value="demos" />
 			<v-list-item prepend-icon="mdi-archive" title="Archive" value="archive" />
 			<v-list-item
+				prepend-icon="mdi-server"
+				title="Homelab"
+				value="homelab"
+				to="/homelab" />
+			<v-list-item
 				prepend-icon="mdi-card-account-mail"
 				title="Contact"
 				value="contact"
