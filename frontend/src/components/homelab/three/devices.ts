@@ -130,7 +130,7 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 			if ([0, 2, 5, 9, 12].includes(index)) ledColor = '#ffaa00'
 			if (index % 5 === 3) ledColor = '#1c221d'
 			const led = new Mesh(
-				new CylinderGeometry(0.0016, 0.0016, 0.002, 8),
+				new CylinderGeometry(0.004, 0.004, 0.002, 8),
 				ledMaterial(ledColor)
 			)
 			led.rotation.x = Math.PI / 2
@@ -299,7 +299,7 @@ function buildSwitch(): Group {
 	group.add(body)
 
 	// dark recessed port strip across the lower front, as on the real unit
-	const portStrip = box(SW_W - 0.06, 0.021, 0.002, plastic('#141518', 0.55))
+	const portStrip = box(SW_W - 0.06, 0.021, 0.002, plastic('#3a3c42', 0.55))
 	portStrip.position.set(bodyX, -0.004, 0.0085)
 	group.add(portStrip)
 
@@ -636,7 +636,7 @@ function buildAms(): Group {
 	group.add(lid)
 
 	// 4 filament spools inside
-	const spoolColors = ['#b31500', '#f2f3f5', '#2c2d31', '#e85d00']
+	const spoolColors = ['#b31500', '#f2f3f5', '#2c2d31', '#c94a00']
 	for (let i = 0; i < 4; i++) {
 		const spool = new Group()
 		const filamentMaterial = plastic(spoolColors[i], 0.55)
@@ -669,7 +669,7 @@ function buildAms(): Group {
 	brand.position.set(W / 2 - 0.06, H * 0.2, D / 2 + 0.0015)
 	group.add(brand)
 	const statusLed = new Mesh(
-		new CylinderGeometry(0.0025, 0.0025, 0.002, 12),
+		new CylinderGeometry(0.005, 0.005, 0.002, 12),
 		ledMaterial('#2fae38')
 	)
 	statusLed.rotation.x = Math.PI / 2
@@ -692,7 +692,7 @@ function buildAcPro(): Group {
 	// wall-style bracket clamped to the outside of the front right post
 	const plate = box(0.008, 0.11, 0.05, paintedSteel('#232428', 0.55))
 	group.add(plate)
-	const arm = box(0.045, 0.026, 0.045, paintedSteel('#4a4b52', 0.45))
+	const arm = box(0.045, 0.026, 0.045, paintedSteel('#6a6c75', 0.45))
 	arm.position.x = 0.02
 	group.add(arm)
 
@@ -703,11 +703,11 @@ function buildAcPro(): Group {
 	)
 	disc.add(body)
 	const ring = new Mesh(
-		new TorusGeometry(0.032, 0.0028, 10, 48),
+		new TorusGeometry(0.032, 0.004, 10, 48),
 		ledMaterial('#1fc2ff')
 	)
 	ring.rotation.x = Math.PI / 2
-	ring.position.y = 0.0178
+	ring.position.y = 0.021
 	disc.add(ring)
 	const logo = new Mesh(
 		new CylinderGeometry(0.012, 0.012, 0.002, 24),

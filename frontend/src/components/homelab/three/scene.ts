@@ -95,8 +95,8 @@ export function createHomelabScene(
 	scene.environmentIntensity = 0.45
 
 	const camera = new PerspectiveCamera(42, 1, 0.05, 30)
-	const HOME_POS = { x: 0.32, y: 1.05, z: 1.9 }
-	const HOME_TARGET = { x: 0, y: 0.7, z: 0 }
+	const HOME_POS = { x: 0.32, y: 1.05, z: 1.98 }
+	const HOME_TARGET = { x: 0, y: 0.72, z: 0 }
 	camera.position.set(HOME_POS.x, HOME_POS.y, HOME_POS.z)
 
 	const controls = new OrbitControls(camera, renderer.domElement)
