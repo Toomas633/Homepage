@@ -235,11 +235,14 @@ function pos(x: number, y: number, z: number) {
 		background:
 			linear-gradient(
 				115deg,
-				transparent 0 25%,
-				rgb(255 255 255 / 16%) 25% 38%,
-				transparent 38%
+				transparent 0 22%,
+				rgb(255 255 255 / 26%) 22% 38%,
+				transparent 38% 68%,
+				rgb(255 255 255 / 10%) 68% 76%,
+				transparent 76%
 			),
-			linear-gradient(180deg, rgb(55 55 64 / 55%), rgb(30 30 36 / 65%));
+			linear-gradient(180deg, rgb(70 70 82 / 62%), rgb(35 35 44 / 72%));
+		border: 2px solid rgb(200 202 206 / 55%);
 		border-radius: 4px 4px 0 0;
 	}
 }

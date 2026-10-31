@@ -199,9 +199,9 @@ function clamp(value: number, min: number, max: number) {
 	user-select: none;
 	background: radial-gradient(
 		ellipse at 50% 42%,
-		#3d3d42 0%,
-		#2b2b2f 55%,
-		#1d1d20 100%
+		#46464d 0%,
+		#323237 55%,
+		#222226 100%
 	);
 	border: 1px solid rgb(255 255 255 / 8%);
 	border-radius: 8px;

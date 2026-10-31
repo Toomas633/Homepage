@@ -8,6 +8,11 @@
 		@click.stop="emit('select')"
 		@keyup.enter="emit('select')">
 		<div class="mount-plate face" />
+		<div
+			v-for="layer in 4"
+			:key="layer"
+			class="disc-shell"
+			:style="{ transform: `translateZ(${layer * 3}px)` }" />
 		<div class="disc face">
 			<div class="led-ring" />
 			<div class="logo-dot" />
@@ -27,6 +32,16 @@ const emit = defineEmits<{ (e: 'select'): void }>()
 	height: 150px;
 	background: linear-gradient(180deg, #2c2c30, #1d1d20);
 	border-radius: 4px;
+}
+
+.disc-shell {
+	position: absolute;
+	top: 9px;
+	left: 9px;
+	width: 132px;
+	height: 132px;
+	background: #c9cbce;
+	border-radius: 50%;
 }
 
 .disc {

@@ -91,5 +91,42 @@ const bottomStyle = computed(() => ({
 	backface-visibility: hidden;
 	overflow: hidden;
 	pointer-events: auto;
+
+	/* simulated directional light (from the front-top-right) */
+	&::before {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		content: '';
+		pointer-events: none;
+	}
+}
+
+.face-front::before {
+	background: rgb(255 255 255 / 3%);
+}
+
+.face-back::before {
+	background: rgb(0 0 0 / 35%);
+}
+
+.face-left::before {
+	background: linear-gradient(180deg, rgb(0 0 0 / 16%), rgb(0 0 0 / 26%));
+}
+
+.face-right::before {
+	background: linear-gradient(
+		180deg,
+		rgb(255 255 255 / 10%),
+		rgb(255 255 255 / 4%)
+	);
+}
+
+.face-top::before {
+	background: rgb(255 255 255 / 9%);
+}
+
+.face-bottom::before {
+	background: rgb(0 0 0 / 30%);
 }
 </style>

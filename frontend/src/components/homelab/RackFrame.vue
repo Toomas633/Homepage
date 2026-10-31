@@ -165,7 +165,8 @@ function pos(x: number, y: number, z: number) {
 	position: absolute;
 	width: 28px;
 	height: 28px;
-	background: radial-gradient(circle at 50% 50%, #3c3c40 0 32%, #131316 70%);
+	background: radial-gradient(circle at 50% 50%, #5a5a60 0 32%, #232327 70%);
+	border: 1px solid #4a4a50;
 	border-radius: 50%;
 	transform-origin: 0 0;
 	backface-visibility: hidden;
