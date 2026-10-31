@@ -132,20 +132,19 @@ export function buildRack(): Group {
 	}
 
 	// VEVOR badge on the top front bar
-	const badge = new Mesh(
-		new PlaneGeometry(0.07, 0.018),
-		new MeshStandardMaterial({
-			map: labelTexture('VEVOR', {
-				bg: '#ff6a00',
-				fg: '#ffffff',
-				font: 'bold 30px Arial',
-				width: 160,
-				height: 40,
-			}),
-			roughness: 0.5,
-			metalness: 0.1,
-		})
-	)
+	const badgeMaterial = new MeshStandardMaterial({
+		map: labelTexture('VEVOR', {
+			bg: '#ff6a00',
+			fg: '#ffffff',
+			font: 'bold 30px Arial',
+			width: 160,
+			height: 40,
+		}),
+		roughness: 0.5,
+		metalness: 0.1,
+	})
+	badgeMaterial.envMapIntensity = 0.2
+	const badge = new Mesh(new PlaneGeometry(0.07, 0.018), badgeMaterial)
 	badge.position.set(0, BASE_Y + RAILS_H + 0.0225, POST_T / 2 + 0.001)
 	rack.add(badge)
 

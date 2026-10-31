@@ -94,9 +94,9 @@ export function createHomelabScene(
 	scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
 	scene.environmentIntensity = 0.45
 
-	const camera = new PerspectiveCamera(40, 1, 0.05, 30)
+	const camera = new PerspectiveCamera(42, 1, 0.05, 30)
 	const HOME_POS = { x: 0.32, y: 1.05, z: 1.9 }
-	const HOME_TARGET = { x: 0, y: 0.74, z: 0 }
+	const HOME_TARGET = { x: 0, y: 0.7, z: 0 }
 	camera.position.set(HOME_POS.x, HOME_POS.y, HOME_POS.z)
 
 	const controls = new OrbitControls(camera, renderer.domElement)
@@ -132,7 +132,7 @@ export function createHomelabScene(
 	const floor = new Mesh(
 		new CircleGeometry(4, 48),
 		new MeshStandardMaterial({
-			color: '#1b1b1f',
+			color: '#151518',
 			roughness: 0.92,
 			metalness: 0.05,
 		})

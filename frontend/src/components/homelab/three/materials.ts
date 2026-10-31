@@ -1,6 +1,7 @@
 import {
 	CanvasTexture,
 	Color,
+	MeshBasicMaterial,
 	MeshPhysicalMaterial,
 	MeshStandardMaterial,
 	RepeatWrapping,
@@ -189,4 +190,11 @@ export function emissive(color: string, intensity = 1.6): MeshStandardMaterial {
 		roughness: 0.4,
 		metalness: 0,
 	})
+}
+
+/** Unlit, tone-mapping-exempt material for LED dots and light rings. */
+export function led(color: string): MeshBasicMaterial {
+	const material = new MeshBasicMaterial({ color: new Color(color) })
+	material.toneMapped = false
+	return material
 }

@@ -2,6 +2,7 @@ import {
 	BoxGeometry,
 	CylinderGeometry,
 	Group,
+	Material,
 	Mesh,
 	MeshStandardMaterial,
 	PlaneGeometry,
@@ -11,6 +12,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import {
 	brushedTexture,
 	emissive,
+	led as ledMaterial,
 	glass,
 	labelTexture,
 	paintedSteel,
@@ -46,12 +48,7 @@ function shadows(group: Group) {
 	})
 }
 
-function box(
-	w: number,
-	h: number,
-	d: number,
-	material: MeshStandardMaterial
-): Mesh {
+function box(w: number, h: number, d: number, material: Material): Mesh {
 	return new Mesh(new BoxGeometry(w, h, d), material)
 }
 
@@ -128,12 +125,13 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 			const latch = box(0.008, 0.0035, 0.005, plastic('#b8bdc4', 0.4))
 			latch.position.set(-trayW / 2 + 0.007, trayH / 2 - 0.005, 0.0042)
 			tray.add(latch)
-			const ledColor = [0, 2, 5, 9, 12].includes(row * 8 + col)
-				? '#ffb300'
-				: '#35d13c'
+			const index = row * 8 + col
+			let ledColor = '#00e84a'
+			if ([0, 2, 5, 9, 12].includes(index)) ledColor = '#ffaa00'
+			if (index % 5 === 3) ledColor = '#1c221d'
 			const led = new Mesh(
-				new CylinderGeometry(0.0012, 0.0012, 0.002, 8),
-				emissive(ledColor, (row * 8 + col) % 3 === 1 ? 0.15 : 3)
+				new CylinderGeometry(0.0016, 0.0016, 0.002, 8),
+				ledMaterial(ledColor)
 			)
 			led.rotation.x = Math.PI / 2
 			led.position.set(-trayW / 2 + 0.004, 0.008, 0.0045)
@@ -156,7 +154,7 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	}
 	const powerBtn = new Mesh(
 		new CylinderGeometry(0.004, 0.004, 0.003, 16),
-		emissive('#35d13c', 0.9)
+		ledMaterial('#2fae38')
 	)
 	powerBtn.rotation.x = Math.PI / 2
 	powerBtn.position.set(-(PANEL_W / 2 - 0.008), H / 4, 0.0095)
@@ -301,19 +299,19 @@ function buildSwitch(): Group {
 	group.add(body)
 
 	// dark recessed port strip across the lower front, as on the real unit
-	const portStrip = box(SW_W - 0.08, 0.018, 0.002, plastic('#17181b', 0.55))
+	const portStrip = box(SW_W - 0.06, 0.021, 0.002, plastic('#141518', 0.55))
 	portStrip.position.set(bodyX, -0.004, 0.0085)
 	group.add(portStrip)
 
 	// port block: 8 RJ45 + 2 SFP
 	const portMat = plastic('#0c0c0f', 0.45)
 	for (let i = 0; i < 8; i++) {
-		const port = box(0.0135, 0.0115, 0.004, portMat)
+		const port = box(0.0145, 0.0125, 0.005, portMat)
 		port.position.set(bodyX - SW_W / 2 + 0.05 + i * 0.0185, -0.004, 0.009)
 		group.add(port)
 		const led = new Mesh(
-			new PlaneGeometry(0.0028, 0.0028),
-			emissive(i < 5 ? '#35d13c' : '#0c2d12', i < 5 ? 3 : 0.2)
+			new PlaneGeometry(0.0034, 0.0034),
+			ledMaterial(i < 5 ? '#00e84a' : '#13301a')
 		)
 		led.position.set(bodyX - SW_W / 2 + 0.05 + i * 0.0185, 0.0075, 0.0105)
 		group.add(led)
@@ -331,6 +329,14 @@ function buildSwitch(): Group {
 	})
 	brand.position.set(bodyX - SW_W / 2 + 0.055, 0.015, 0.0105)
 	group.add(brand)
+
+	// UniFi logo mark on the right of the faceplate
+	const logoRing = new Mesh(
+		new TorusGeometry(0.006, 0.0012, 8, 24),
+		plastic('#9aa0a8', 0.4)
+	)
+	logoRing.position.set(bodyX + SW_W / 2 - 0.02, 0.008, 0.0105)
+	group.add(logoRing)
 
 	// metal rack ear on the far right
 	const ear = box(0.018, U - 0.006, 0.01, paintedSteel('#2a2b2f', 0.5))
@@ -474,7 +480,7 @@ function buildPowerBar(): Group {
 	}
 
 	// red illuminated rocker on the left
-	const rocker = box(0.016, 0.012, 0.006, emissive('#e53935', 1.4))
+	const rocker = box(0.016, 0.012, 0.006, ledMaterial('#ff2e24'))
 	rocker.position.set(-PANEL_W / 2 + 0.024, 0, 0.004)
 	group.add(rocker)
 
@@ -511,12 +517,28 @@ function buildPrinter(): Group {
 	group.add(shell)
 
 	// front glass door
-	const door = new Mesh(new PlaneGeometry(W * 0.74, H * 0.62), glass())
+	const door = new Mesh(
+		new PlaneGeometry(W * 0.74, H * 0.62),
+		glass('#232730', 0.5)
+	)
 	door.position.set(-0.02, H * 0.5, D / 2 + 0.0015)
 	group.add(door)
-	const doorFrame = box(W * 0.78, H * 0.66, 0.003, plastic('#232428', 0.4))
+	const doorFrame = box(W * 0.78, H * 0.66, 0.003, plastic('#4a4b52', 0.4))
 	doorFrame.position.set(-0.02, H * 0.5, D / 2 - 0.0008)
 	group.add(doorFrame)
+	const outlineMat = plastic('#5e5f66', 0.4)
+	for (const side of [-1, 1]) {
+		const vertical = box(0.004, H * 0.62, 0.002, outlineMat)
+		vertical.position.set(-0.02 + (side * W * 0.74) / 2, H * 0.5, D / 2 + 0.002)
+		group.add(vertical)
+		const horizontal = box(W * 0.74, 0.004, 0.002, outlineMat)
+		horizontal.position.set(
+			-0.02,
+			H * 0.5 + (side * H * 0.62) / 2,
+			D / 2 + 0.002
+		)
+		group.add(horizontal)
+	}
 	const doorHandle = box(0.008, 0.07, 0.008, plastic('#4a4c52', 0.4))
 	doorHandle.position.set(
 		-0.02 + (W * 0.74) / 2 - 0.006,
@@ -614,12 +636,14 @@ function buildAms(): Group {
 	group.add(lid)
 
 	// 4 filament spools inside
-	const spoolColors = ['#cc1a10', '#f2f3f5', '#2c2d31', '#ff7a00']
+	const spoolColors = ['#b31500', '#f2f3f5', '#2c2d31', '#e85d00']
 	for (let i = 0; i < 4; i++) {
 		const spool = new Group()
+		const filamentMaterial = plastic(spoolColors[i], 0.55)
+		filamentMaterial.envMapIntensity = 0.2
 		const filament = new Mesh(
 			new CylinderGeometry(0.036, 0.036, 0.05, 24),
-			plastic(spoolColors[i], 0.55)
+			filamentMaterial
 		)
 		filament.rotation.z = Math.PI / 2
 		spool.add(filament)
@@ -646,7 +670,7 @@ function buildAms(): Group {
 	group.add(brand)
 	const statusLed = new Mesh(
 		new CylinderGeometry(0.0025, 0.0025, 0.002, 12),
-		emissive('#35d13c', 1.4)
+		ledMaterial('#2fae38')
 	)
 	statusLed.rotation.x = Math.PI / 2
 	statusLed.position.set(-W / 2 + 0.03, H * 0.2, D / 2 + 0.0015)
@@ -668,8 +692,8 @@ function buildAcPro(): Group {
 	// wall-style bracket clamped to the outside of the front right post
 	const plate = box(0.008, 0.11, 0.05, paintedSteel('#232428', 0.55))
 	group.add(plate)
-	const arm = box(0.03, 0.02, 0.04, paintedSteel('#2a2b30', 0.5))
-	arm.position.x = 0.018
+	const arm = box(0.045, 0.026, 0.045, paintedSteel('#4a4b52', 0.45))
+	arm.position.x = 0.02
 	group.add(arm)
 
 	const disc = new Group()
@@ -679,8 +703,8 @@ function buildAcPro(): Group {
 	)
 	disc.add(body)
 	const ring = new Mesh(
-		new TorusGeometry(0.032, 0.0024, 10, 48),
-		emissive('#06a7e2', 3.5)
+		new TorusGeometry(0.032, 0.0028, 10, 48),
+		ledMaterial('#1fc2ff')
 	)
 	ring.rotation.x = Math.PI / 2
 	ring.position.y = 0.0178
@@ -693,7 +717,7 @@ function buildAcPro(): Group {
 	disc.add(logo)
 	disc.rotation.z = -Math.PI / 2
 	disc.rotation.y = 0.28
-	disc.position.x = 0.052
+	disc.position.x = 0.045
 	group.add(disc)
 
 	group.position.set(OPENING_W / 2 + POST_T + 0.004, 0.56, -POST_T / 2)
