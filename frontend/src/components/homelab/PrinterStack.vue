@@ -18,19 +18,30 @@
 				<template #front>
 					<div class="printer-front">
 						<div class="printer-brand">BAMBU LAB</div>
+						<div class="model-label">P2S</div>
 						<div class="door">
 							<div class="door-glass">
-								<div class="plate-silhouette" />
 								<div class="gantry-silhouette" />
+								<div class="toolhead-silhouette" />
+								<div class="plate-silhouette" />
 							</div>
 							<div class="door-handle" />
 						</div>
-						<div class="screen" />
+						<div class="screen">
+							<div class="screen-ui" />
+						</div>
+						<div class="intake-grille" />
 					</div>
 				</template>
 				<template #left><div class="printer-side" /></template>
-				<template #right><div class="printer-side" /></template>
-				<template #top><div class="printer-top" /></template>
+				<template #right>
+					<div class="printer-side printer-side-vent" />
+				</template>
+				<template #top>
+					<div class="printer-top">
+						<div class="top-glass" />
+					</div>
+				</template>
 			</Box3D>
 		</div>
 		<!-- AMS 2 Pro -->
@@ -51,13 +62,16 @@
 				<template #front>
 					<div class="ams-front">
 						<div class="ams-lid">
-							<div
-								v-for="(spool, i) in spools"
-								:key="i"
-								class="spool"
-								:style="{ background: spool }" />
+							<div v-for="(spool, i) in spools" :key="i" class="spool">
+								<div class="spool-filament" :style="{ background: spool }" />
+								<div class="spool-hub" />
+							</div>
 						</div>
 						<div class="ams-base">
+							<div class="slot-leds">
+								<div v-for="slot in 4" :key="slot" class="slot-led" />
+							</div>
+							<div class="ams-label">AMS 2 PRO</div>
 							<div class="ams-led" />
 						</div>
 					</div>
@@ -116,6 +130,16 @@ function pos(x: number, y: number, z: number) {
 	color: #b9bcc2;
 }
 
+.model-label {
+	position: absolute;
+	top: 8px;
+	right: 14px;
+	font-size: 7px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	color: #7d8086;
+}
+
 .door {
 	position: absolute;
 	inset: 24px 20px 40px;
@@ -160,6 +184,16 @@ function pos(x: number, y: number, z: number) {
 	background: linear-gradient(180deg, #313136, #202024);
 }
 
+.toolhead-silhouette {
+	position: absolute;
+	top: 16%;
+	left: 44%;
+	width: 16px;
+	height: 16px;
+	background: linear-gradient(180deg, #45454b, #2c2c31);
+	border-radius: 0 0 3px 3px;
+}
+
 .door-handle {
 	position: absolute;
 	top: 46%;
@@ -176,10 +210,39 @@ function pos(x: number, y: number, z: number) {
 	bottom: 12px;
 	width: 46px;
 	height: 22px;
+	overflow: hidden;
 	background: linear-gradient(135deg, #1f2d3d, #0d1521);
 	border: 2px solid #0a0a0c;
 	border-radius: 3px;
 	box-shadow: 0 0 6px rgb(30 136 229 / 30%);
+}
+
+.screen-ui {
+	position: absolute;
+	inset: 3px 4px;
+	background: linear-gradient(
+		180deg,
+		rgb(66 165 245 / 45%) 0 4px,
+		transparent 4px 7px,
+		rgb(255 255 255 / 18%) 7px 9px,
+		transparent 9px 11px,
+		rgb(255 255 255 / 12%) 11px 13px,
+		transparent 13px
+	);
+}
+
+.intake-grille {
+	position: absolute;
+	bottom: 10px;
+	left: 20px;
+	width: 60px;
+	height: 16px;
+	background: repeating-linear-gradient(
+		90deg,
+		rgb(0 0 0 / 65%) 0 3px,
+		transparent 3px 6px
+	);
+	border-radius: 2px;
 }
 
 .printer-side {
@@ -189,25 +252,47 @@ function pos(x: number, y: number, z: number) {
 
 	&::after {
 		position: absolute;
-		inset: 26px 24px 44px;
+		inset: 20px 20px 30px;
 		content: '';
-		background:
-			linear-gradient(
-				115deg,
-				transparent 0 35%,
-				rgb(255 255 255 / 5%) 35% 45%,
-				transparent 45%
-			),
-			linear-gradient(180deg, #141418, #0b0b0e);
-		border: 2px solid #111114;
+		border: 1px solid rgb(255 255 255 / 5%);
 		border-radius: 6px;
 	}
+}
+
+.printer-side-vent::before {
+	position: absolute;
+	right: 24px;
+	bottom: 18px;
+	width: 56px;
+	height: 34px;
+	content: '';
+	background: repeating-linear-gradient(
+		0deg,
+		rgb(0 0 0 / 60%) 0 3px,
+		transparent 3px 6px
+	);
+	border-radius: 3px;
 }
 
 .printer-top {
 	position: absolute;
 	inset: 0;
 	background: linear-gradient(180deg, #2e2e33, #1e1e22);
+}
+
+.top-glass {
+	position: absolute;
+	inset: 14px;
+	background:
+		linear-gradient(
+			115deg,
+			transparent 0 28%,
+			rgb(255 255 255 / 10%) 28% 40%,
+			transparent 40%
+		),
+		linear-gradient(180deg, rgb(16 16 20 / 92%), rgb(10 10 13 / 95%));
+	border: 3px solid #121215;
+	border-radius: 5px;
 }
 
 .ams-front {
@@ -227,7 +312,7 @@ function pos(x: number, y: number, z: number) {
 	background: linear-gradient(180deg, #1c1c21, #121216);
 	border-radius: 4px 4px 0 0;
 
-	/* smoked glass sits in front of the spools */
+	/* clear lid sits in front of the spools */
 	&::after {
 		position: absolute;
 		inset: 0;
@@ -236,42 +321,82 @@ function pos(x: number, y: number, z: number) {
 			linear-gradient(
 				115deg,
 				transparent 0 22%,
-				rgb(255 255 255 / 26%) 22% 38%,
+				rgb(255 255 255 / 30%) 22% 38%,
 				transparent 38% 68%,
-				rgb(255 255 255 / 10%) 68% 76%,
+				rgb(255 255 255 / 12%) 68% 76%,
 				transparent 76%
 			),
-			linear-gradient(180deg, rgb(70 70 82 / 62%), rgb(35 35 44 / 72%));
+			linear-gradient(180deg, rgb(70 70 82 / 34%), rgb(35 35 44 / 44%));
 		border: 2px solid rgb(200 202 206 / 55%);
 		border-radius: 4px 4px 0 0;
 	}
 }
 
 .spool {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 40px;
 	height: 40px;
-	border: 5px solid rgb(240 240 240 / 85%);
+	background: rgb(240 240 240 / 85%);
 	border-radius: 50%;
 	box-shadow: inset 0 0 4px rgb(0 0 0 / 40%);
 }
 
+.spool-filament {
+	position: absolute;
+	inset: 4px;
+	border-radius: 50%;
+}
+
+.spool-hub {
+	position: relative;
+	width: 12px;
+	height: 12px;
+	background: radial-gradient(circle, #121214 0 45%, #e9e9ea 52% 100%);
+	border-radius: 50%;
+}
+
 .ams-base {
 	position: relative;
+	display: flex;
+	gap: 8px;
+	align-items: center;
 	height: 24%;
+	padding: 0 14px;
 	background: linear-gradient(180deg, #ececee, #cfd1d4);
 	border-radius: 0 0 3px 3px;
 }
 
+.slot-leds {
+	display: flex;
+	gap: 48px;
+	margin-left: 10px;
+}
+
+.slot-led {
+	width: 4px;
+	height: 4px;
+	background: #42a5f5;
+	border-radius: 50%;
+	box-shadow: 0 0 3px #42a5f5;
+}
+
+.ams-label {
+	margin-left: auto;
+	font-size: 5px;
+	font-weight: 700;
+	letter-spacing: 0.6px;
+	color: #8a8c91;
+}
+
 .ams-led {
-	position: absolute;
-	top: 50%;
-	right: 14px;
 	width: 5px;
 	height: 5px;
 	background: #35d13c;
 	border-radius: 50%;
 	box-shadow: 0 0 4px #35d13c;
-	transform: translateY(-50%);
 }
 
 .ams-top {

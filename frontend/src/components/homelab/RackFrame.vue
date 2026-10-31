@@ -18,12 +18,15 @@
 			:style="post.style">
 			<template v-if="post.key === 'front-left'" #front>
 				<div class="rail-holes" />
+				<div class="u-marks" />
 				<div class="unit-numbers">
 					<span v-for="n in RACK_UNITS" :key="n">{{ RACK_UNITS - n + 1 }}</span>
 				</div>
+				<div class="vevor-label">VEVOR</div>
 			</template>
 			<template v-else-if="post.key === 'front-right'" #front>
 				<div class="rail-holes" />
+				<div class="u-marks" />
 			</template>
 		</Box3D>
 		<!-- top and bottom side beams -->
@@ -116,11 +119,34 @@ function pos(x: number, y: number, z: number) {
 	background-image: radial-gradient(
 		circle at 50% 5px,
 		rgb(0 0 0 / 90%) 0 2px,
-		rgb(90 90 95 / 60%) 2.6px,
+		rgb(140 140 148 / 70%) 2.6px,
 		transparent 3.2px
 	);
 	background-size: 10px 10px;
 	background-position: 0 20px;
+}
+
+.u-marks {
+	position: absolute;
+	inset: 0;
+	background-image: linear-gradient(
+		180deg,
+		rgb(255 255 255 / 14%) 0 1px,
+		transparent 1px
+	);
+	background-size: 100% 30px;
+	background-position: 0 20px;
+}
+
+.vevor-label {
+	position: absolute;
+	top: 4px;
+	left: 50%;
+	font-size: 4.5px;
+	font-weight: 800;
+	letter-spacing: 0.3px;
+	color: #f5a623;
+	transform: translateX(-50%);
 }
 
 .unit-numbers {

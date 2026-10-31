@@ -182,6 +182,7 @@ function pos(x: number, y: number, z: number) {
 }
 
 .lipo-leads {
+	position: relative;
 	width: 60%;
 	height: 3px;
 	background: linear-gradient(
@@ -191,6 +192,18 @@ function pos(x: number, y: number, z: number) {
 		#111 70%
 	);
 	border-radius: 2px;
+
+	&::after {
+		position: absolute;
+		top: -1px;
+		left: 50%;
+		width: 6px;
+		height: 5px;
+		content: '';
+		background: #f9c825;
+		border-radius: 1px;
+		transform: translateX(-50%);
+	}
 }
 
 .drawer-front {

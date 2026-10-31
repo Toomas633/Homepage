@@ -56,6 +56,13 @@ const emit = defineEmits<{ (e: 'select'): void }>()
 			rgb(255 255 255 / 85%) 0 8%,
 			transparent 42%
 		),
+		radial-gradient(
+			circle,
+			#fdfdfd 0 48%,
+			#e9eaec 49% 51%,
+			#fdfdfd 52% 64%,
+			#e3e4e6 70% 100%
+		),
 		radial-gradient(circle, #fdfdfd 0 64%, #e3e4e6 70% 100%);
 	border-radius: 50%;
 	box-shadow: inset 0 -4px 10px rgb(0 0 0 / 15%);
@@ -68,11 +75,11 @@ const emit = defineEmits<{ (e: 'select'): void }>()
 	left: 50%;
 	width: 58px;
 	height: 58px;
-	border: 3px solid #06a7e2;
+	border: 2px solid #06a7e2;
 	border-radius: 50%;
 	box-shadow:
-		0 0 8px rgb(6 167 226 / 80%),
-		inset 0 0 6px rgb(6 167 226 / 60%);
+		0 0 7px rgb(6 167 226 / 70%),
+		inset 0 0 5px rgb(6 167 226 / 50%);
 	transform: translate(-50%, -50%);
 }
 

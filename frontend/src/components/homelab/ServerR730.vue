@@ -25,21 +25,22 @@
 				:style="pos(EAR_W, 2, 0)">
 				<template #front>
 					<div class="front-panel">
-						<div class="control-strip">
-							<div class="power-btn" />
-							<div class="led led-health" />
-							<div class="led led-id" />
-						</div>
 						<div class="bays">
 							<div v-for="bay in 16" :key="bay" class="tray">
+								<div class="tray-leds">
+									<div class="tray-led tray-led-act" />
+									<div class="tray-led tray-led-status" />
+								</div>
+								<div class="tray-handle">
+									<div class="tray-latch" />
+								</div>
 								<div class="tray-vents" />
-								<div class="tray-led" />
-								<div class="tray-handle" />
 							</div>
 						</div>
 						<div class="badge-strip">
 							<div class="dell-badge">DELL</div>
-							<span class="model-tag">R730</span>
+							<span class="model-tag">PowerEdge</span>
+							<span class="model-tag model-num">R730</span>
 						</div>
 					</div>
 				</template>
@@ -53,11 +54,17 @@
 				<template #left><div class="side-panel" /></template>
 				<template #right><div class="side-panel" /></template>
 			</Box3D>
-			<!-- rack ears -->
+			<!-- rack ears with control panels -->
 			<div class="ear ear-left" :style="pos(0, 2, 1)">
+				<div class="power-btn" />
+				<div class="led led-health" />
+				<div class="led led-id" />
 				<div class="ear-screw" />
 			</div>
 			<div class="ear ear-right" :style="pos(FACE_W - EAR_W, 2, 1)">
+				<div class="usb-port" />
+				<div class="usb-port" />
+				<div class="vga-port" />
 				<div class="ear-screw" />
 			</div>
 			<!-- internals, exposed when the lid is removed -->
@@ -84,7 +91,10 @@
 			</div>
 			<!-- removable lid -->
 			<div class="lid" :style="lidStyle">
-				<div class="lid-latch" />
+				<div class="lid-latch">
+					<div class="latch-release" />
+				</div>
+				<div class="lid-label" />
 			</div>
 		</div>
 	</div>
@@ -152,15 +162,6 @@ function pos(x: number, y: number, z: number) {
 	background: linear-gradient(180deg, #2f2f34, #1d1d21);
 }
 
-.control-strip {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	align-items: center;
-	justify-content: center;
-	width: 16px;
-}
-
 .power-btn {
 	width: 7px;
 	height: 7px;
@@ -185,13 +186,31 @@ function pos(x: number, y: number, z: number) {
 	}
 }
 
+.usb-port {
+	width: 8px;
+	height: 3.5px;
+	background: #0a0a0c;
+	border: 1px solid #4a4a50;
+	border-radius: 0.5px;
+}
+
+.vga-port {
+	width: 9px;
+	height: 4.5px;
+	background:
+		radial-gradient(circle, #3a6ea5 0 0.6px, transparent 0.8px) 0 0 / 2px 2px,
+		#10335c;
+	border: 1px solid #4a4a50;
+	border-radius: 2px;
+}
+
 .bays {
 	display: grid;
 	flex: 1;
 	grid-template-columns: repeat(8, 1fr);
 	grid-template-rows: repeat(2, 1fr);
 	gap: 2px;
-	padding: 2px 1px;
+	padding: 2px 2px 2px 4px;
 }
 
 .tray {
@@ -202,9 +221,61 @@ function pos(x: number, y: number, z: number) {
 	border-radius: 1px;
 }
 
+/* Dell 13G carrier: release handle across the top with a latch button */
+.tray-handle {
+	position: absolute;
+	top: 1.5px;
+	right: 2px;
+	left: 7px;
+	height: 4px;
+	background: linear-gradient(180deg, #4e4e55, #35353b);
+	border: 0.5px solid #1b1b1f;
+	border-radius: 1px;
+}
+
+.tray-latch {
+	position: absolute;
+	top: 0.5px;
+	left: 1px;
+	width: 4px;
+	height: 2.5px;
+	background: linear-gradient(180deg, #6a6c71, #4a4c51);
+	border-radius: 0.5px;
+}
+
+/* stacked activity + status LEDs on the left edge */
+.tray-leds {
+	position: absolute;
+	top: 2px;
+	bottom: 2px;
+	left: 1.5px;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	align-items: center;
+	justify-content: flex-start;
+	width: 4px;
+	padding-top: 1px;
+}
+
+.tray-led {
+	width: 2.5px;
+	height: 2.5px;
+	border-radius: 50%;
+
+	&.tray-led-act {
+		background: #35d13c;
+		box-shadow: 0 0 2px #35d13c;
+	}
+
+	&.tray-led-status {
+		background: #1c3a20;
+	}
+}
+
 .tray-vents {
 	position: absolute;
-	inset: 2px 3px 7px;
+	inset: 7px 2px 2px 7px;
 	background-color: #1b1b1f;
 	background-image: radial-gradient(
 		circle,
@@ -214,34 +285,13 @@ function pos(x: number, y: number, z: number) {
 	background-size: 3px 3px;
 }
 
-.tray-led {
-	position: absolute;
-	top: 3px;
-	right: 2px;
-	width: 2.5px;
-	height: 2.5px;
-	background: #35d13c;
-	border-radius: 50%;
-	box-shadow: 0 0 2px #35d13c;
-}
-
-.tray-handle {
-	position: absolute;
-	right: 2px;
-	bottom: 2px;
-	left: 2px;
-	height: 3.5px;
-	background: linear-gradient(180deg, #4a4a50, #333338);
-	border-radius: 1px;
-}
-
 .badge-strip {
 	display: flex;
 	flex-direction: column;
-	gap: 3px;
+	gap: 2px;
 	align-items: center;
 	justify-content: center;
-	width: 20px;
+	width: 22px;
 }
 
 .dell-badge {
@@ -260,7 +310,13 @@ function pos(x: number, y: number, z: number) {
 
 .model-tag {
 	font-size: 4px;
+	line-height: 1.1;
 	color: #8d9094;
+}
+
+.model-num {
+	font-weight: 700;
+	color: #b7bac0;
 }
 
 .rear-panel {
@@ -300,6 +356,11 @@ function pos(x: number, y: number, z: number) {
 
 .ear {
 	position: absolute;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: center;
+	justify-content: center;
 	width: 14px;
 	height: 56px;
 	background: linear-gradient(180deg, #2c2c31, #1b1b1f);
@@ -308,14 +369,11 @@ function pos(x: number, y: number, z: number) {
 }
 
 .ear-screw {
-	position: absolute;
-	top: 50%;
-	left: 50%;
 	width: 6px;
 	height: 6px;
+	margin-top: 3px;
 	background: radial-gradient(circle, #6a6a70 0 40%, #3a3a3f 100%);
 	border-radius: 50%;
-	transform: translate(-50%, -50%);
 }
 
 .internals {
@@ -458,6 +516,46 @@ function pos(x: number, y: number, z: number) {
 	border: 1px solid #27272c;
 	border-radius: 3px;
 	transform: translateX(-50%);
+}
+
+.latch-release {
+	position: absolute;
+	top: 6px;
+	left: 50%;
+	width: 14px;
+	height: 10px;
+	background: linear-gradient(180deg, #2f6fb2, #1d4e85);
+	border-radius: 2px;
+	transform: translateX(-50%);
+}
+
+/* Dell service information label */
+.lid-label {
+	position: absolute;
+	top: 42%;
+	left: 14%;
+	width: 30%;
+	height: 26%;
+	background:
+		repeating-linear-gradient(
+			0deg,
+			transparent 0 6px,
+			rgb(0 0 0 / 14%) 6px 7px
+		),
+		linear-gradient(180deg, #e9eaec, #cfd1d5);
+	border: 1px solid #9a9ca1;
+	border-radius: 2px;
+
+	&::before {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		height: 9px;
+		content: '';
+		background: linear-gradient(180deg, #1d6fb8, #15589a);
+		border-radius: 1px 1px 0 0;
+	}
 }
 </style>
 <style lang="scss">
