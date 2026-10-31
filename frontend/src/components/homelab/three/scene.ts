@@ -3,6 +3,7 @@ import {
 	CircleGeometry,
 	Color,
 	DirectionalLight,
+	Fog,
 	HemisphereLight,
 	Mesh,
 	MeshStandardMaterial,
@@ -86,15 +87,16 @@ export function createHomelabScene(
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 	const scene = new Scene()
-	scene.background = new Color('#141418')
+	scene.background = new Color('#17171c')
+	scene.fog = new Fog('#17171c', 3.2, 8)
 
 	const pmrem = new PMREMGenerator(renderer)
 	scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
-	scene.environmentIntensity = 0.55
+	scene.environmentIntensity = 0.45
 
-	const camera = new PerspectiveCamera(42, 1, 0.05, 30)
-	const HOME_POS = { x: 0.4, y: 1.25, z: 2.5 }
-	const HOME_TARGET = { x: 0, y: 0.72, z: 0 }
+	const camera = new PerspectiveCamera(40, 1, 0.05, 30)
+	const HOME_POS = { x: 0.32, y: 1.05, z: 1.9 }
+	const HOME_TARGET = { x: 0, y: 0.74, z: 0 }
 	camera.position.set(HOME_POS.x, HOME_POS.y, HOME_POS.z)
 
 	const controls = new OrbitControls(camera, renderer.domElement)
@@ -110,15 +112,16 @@ export function createHomelabScene(
 	const hemi = new HemisphereLight('#cfd3dc', '#1a1a1e', 0.45)
 	scene.add(hemi)
 	const key = new DirectionalLight('#fff3e2', 2.4)
-	key.position.set(1.6, 2.6, 2.2)
+	key.position.set(1.2, 3, 2.8)
 	key.castShadow = true
 	key.shadow.mapSize.set(2048, 2048)
 	key.shadow.camera.near = 0.5
-	key.shadow.camera.far = 8
-	key.shadow.camera.left = -1.4
-	key.shadow.camera.right = 1.4
-	key.shadow.camera.top = 2
-	key.shadow.camera.bottom = -0.5
+	key.shadow.camera.far = 12
+	key.shadow.camera.left = -2.5
+	key.shadow.camera.right = 2.5
+	key.shadow.camera.top = 3
+	key.shadow.camera.bottom = -1
+	key.shadow.radius = 5
 	key.shadow.bias = -0.0004
 	scene.add(key)
 	const fill = new DirectionalLight('#aebadc', 0.6)

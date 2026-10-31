@@ -127,6 +127,21 @@ export function labelTexture(
 	return texture
 }
 
+/** Radial black blob with transparent falloff for contact shadows. */
+export function contactShadowTexture(): CanvasTexture {
+	const canvas = makeCanvas(128, 128)
+	const ctx = canvas.getContext('2d')
+	if (ctx) {
+		const gradient = ctx.createRadialGradient(64, 64, 4, 64, 64, 62)
+		gradient.addColorStop(0, 'rgba(0,0,0,0.85)')
+		gradient.addColorStop(0.55, 'rgba(0,0,0,0.4)')
+		gradient.addColorStop(1, 'rgba(0,0,0,0)')
+		ctx.fillStyle = gradient
+		ctx.fillRect(0, 0, 128, 128)
+	}
+	return new CanvasTexture(canvas)
+}
+
 export function steel(color: string, roughness = 0.55): MeshStandardMaterial {
 	return new MeshStandardMaterial({
 		color: new Color(color),

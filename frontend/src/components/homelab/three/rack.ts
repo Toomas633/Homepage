@@ -3,10 +3,17 @@ import {
 	CylinderGeometry,
 	Group,
 	Mesh,
+	MeshBasicMaterial,
 	MeshStandardMaterial,
 	PlaneGeometry,
 } from 'three'
-import { labelTexture, paintedSteel, railHoleTexture, steel } from './materials'
+import {
+	contactShadowTexture,
+	labelTexture,
+	paintedSteel,
+	railHoleTexture,
+	steel,
+} from './materials'
 
 /** Rack geometry constants (metres). */
 export const U = 0.04445
@@ -129,7 +136,7 @@ export function buildRack(): Group {
 		new PlaneGeometry(0.07, 0.018),
 		new MeshStandardMaterial({
 			map: labelTexture('VEVOR', {
-				bg: '#e65c00',
+				bg: '#ff6a00',
 				fg: '#ffffff',
 				font: 'bold 30px Arial',
 				width: 160,
@@ -144,10 +151,22 @@ export function buildRack(): Group {
 
 	// casters under the four corners
 	const wheel = steel('#17171a', 0.35)
+	const shadowTexture = contactShadowTexture()
 	for (const [x, z] of positions) {
 		const c = caster(wheel)
-		c.position.set(x, BASE_Y - 0.045, z)
+		c.position.set(x, BASE_Y - 0.04, z)
 		rack.add(c)
+		const contact = new Mesh(
+			new PlaneGeometry(0.16, 0.16),
+			new MeshBasicMaterial({
+				map: shadowTexture,
+				transparent: true,
+				depthWrite: false,
+			})
+		)
+		contact.rotation.x = -Math.PI / 2
+		contact.position.set(x, 0.0015, z)
+		rack.add(contact)
 	}
 
 	rack.traverse((child) => {

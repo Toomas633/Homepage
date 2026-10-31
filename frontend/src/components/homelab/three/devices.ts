@@ -133,7 +133,7 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 				: '#35d13c'
 			const led = new Mesh(
 				new CylinderGeometry(0.0012, 0.0012, 0.002, 8),
-				emissive(ledColor, (row * 8 + col) % 3 === 1 ? 0.15 : 1.8)
+				emissive(ledColor, (row * 8 + col) % 3 === 1 ? 0.15 : 3)
 			)
 			led.rotation.x = Math.PI / 2
 			led.position.set(-trayW / 2 + 0.004, 0.008, 0.0045)
@@ -242,8 +242,8 @@ function buildPatchPanel(): Group {
 	const group = new Group()
 	const panel = box(PANEL_W, U - 0.004, 0.012, paintedSteel('#1d1d21', 0.55))
 	group.add(panel)
-	const portMat = plastic('#0a0a0c', 0.5)
-	const frameMat = plastic('#2e2f33', 0.55)
+	const portMat = plastic('#060608', 0.5)
+	const frameMat = plastic('#45474e', 0.5)
 	for (let i = 0; i < 24; i++) {
 		const groupIdx = Math.floor(i / 6)
 		const x =
@@ -252,12 +252,27 @@ function buildPatchPanel(): Group {
 			groupIdx * 0.014 +
 			i * ((PANEL_W - 0.11) / 24) +
 			0.008
-		const frame = box(0.0145, 0.0165, 0.004, frameMat)
+		const frame = box(0.0145, 0.0185, 0.005, frameMat)
 		frame.position.set(x, 0, 0.007)
 		group.add(frame)
-		const jack = box(0.011, 0.012, 0.004, portMat)
-		jack.position.set(x, -0.0008, 0.0085)
+		const jack = box(0.011, 0.013, 0.004, portMat)
+		jack.position.set(x, -0.0008, 0.0095)
 		group.add(jack)
+	}
+	// numbered label strips above each keystone group
+	for (let groupIdx = 0; groupIdx < 4; groupIdx++) {
+		const start = -PANEL_W / 2 + 0.035 + groupIdx * 0.014
+		const span = 6 * ((PANEL_W - 0.11) / 24)
+		const strip = new Mesh(
+			new PlaneGeometry(span, 0.004),
+			new MeshStandardMaterial({ color: '#c4c7cc', roughness: 0.7 })
+		)
+		strip.position.set(
+			start + groupIdx * 6 * ((PANEL_W - 0.11) / 24) + span / 2 + 0.008,
+			0.0145,
+			0.0066
+		)
+		group.add(strip)
 	}
 	group.position.set(0, slotY(10) + U / 2, 0.006)
 	tag(group, 'patch-panel')
@@ -285,6 +300,11 @@ function buildSwitch(): Group {
 	body.position.set(bodyX, 0, -SW_D / 2 + 0.008)
 	group.add(body)
 
+	// dark recessed port strip across the lower front, as on the real unit
+	const portStrip = box(SW_W - 0.08, 0.018, 0.002, plastic('#17181b', 0.55))
+	portStrip.position.set(bodyX, -0.004, 0.0085)
+	group.add(portStrip)
+
 	// port block: 8 RJ45 + 2 SFP
 	const portMat = plastic('#0c0c0f', 0.45)
 	for (let i = 0; i < 8; i++) {
@@ -293,7 +313,7 @@ function buildSwitch(): Group {
 		group.add(port)
 		const led = new Mesh(
 			new PlaneGeometry(0.0028, 0.0028),
-			emissive(i < 5 ? '#35d13c' : '#0c2d12', i < 5 ? 1.6 : 0.2)
+			emissive(i < 5 ? '#35d13c' : '#0c2d12', i < 5 ? 3 : 0.2)
 		)
 		led.position.set(bodyX - SW_W / 2 + 0.05 + i * 0.0185, 0.0075, 0.0105)
 		group.add(led)
@@ -417,11 +437,11 @@ function buildShelf(): Group {
 
 function buildPowerBar(): Group {
 	const group = new Group()
-	const alu = brushedTexture('#c7c9cc', '#9a9ca1')
+	const alu = brushedTexture('#d4d6d9', '#aaacb1')
 	alu.repeat.set(3, 1)
 	const body = new Mesh(
 		new BoxGeometry(PANEL_W, U - 0.008, 0.044),
-		new MeshStandardMaterial({ map: alu, metalness: 0.8, roughness: 0.35 })
+		new MeshStandardMaterial({ map: alu, metalness: 0.6, roughness: 0.5 })
 	)
 	body.position.set(0, 0, -0.018)
 	group.add(body)
@@ -485,7 +505,7 @@ function buildPrinter(): Group {
 
 	const shell = new Mesh(
 		new RoundedBoxGeometry(W, H, D, 4, 0.012),
-		plastic('#35363b', 0.45)
+		plastic('#3b3c42', 0.45)
 	)
 	shell.position.y = H / 2
 	group.add(shell)
@@ -524,8 +544,8 @@ function buildPrinter(): Group {
 
 	// touch screen bottom right
 	const screen = new Mesh(
-		new PlaneGeometry(0.075, 0.045),
-		emissive('#1d3350', 0.9)
+		new PlaneGeometry(0.085, 0.052),
+		emissive('#28527f', 1.6)
 	)
 	screen.position.set(W / 2 - 0.065, H * 0.12, D / 2 + 0.0015)
 	group.add(screen)
@@ -566,7 +586,7 @@ function buildPrinter(): Group {
 		group.add(sideVent)
 	}
 
-	group.position.set(0, TOP_Y + 0.002, -RACK_D / 2 + 0.06)
+	group.position.set(0, TOP_Y + 0.002, -RACK_D / 2 + 0.02)
 	tag(group, 'bambu-p2s')
 	shadows(group)
 	return group
@@ -594,7 +614,7 @@ function buildAms(): Group {
 	group.add(lid)
 
 	// 4 filament spools inside
-	const spoolColors = ['#d23434', '#f2f3f5', '#2c2d31', '#f58b1e']
+	const spoolColors = ['#cc1a10', '#f2f3f5', '#2c2d31', '#ff7a00']
 	for (let i = 0; i < 4; i++) {
 		const spool = new Group()
 		const filament = new Mesh(
@@ -632,7 +652,7 @@ function buildAms(): Group {
 	statusLed.position.set(-W / 2 + 0.03, H * 0.2, D / 2 + 0.0015)
 	group.add(statusLed)
 
-	group.position.set(0, TOP_Y + 0.458 + 0.004, -RACK_D / 2 + 0.06 - 0.02)
+	group.position.set(0, TOP_Y + 0.458 + 0.004, -RACK_D / 2)
 	tag(group, 'ams-2-pro')
 	shadows(group)
 	return group
@@ -645,33 +665,38 @@ function buildAms(): Group {
 function buildAcPro(): Group {
 	const group = new Group()
 
-	const plate = box(0.012, 0.09, 0.05, paintedSteel('#232428', 0.55))
+	// wall-style bracket clamped to the outside of the front right post
+	const plate = box(0.008, 0.11, 0.05, paintedSteel('#232428', 0.55))
 	group.add(plate)
+	const arm = box(0.03, 0.02, 0.04, paintedSteel('#2a2b30', 0.5))
+	arm.position.x = 0.018
+	group.add(arm)
 
 	const disc = new Group()
 	const body = new Mesh(
 		new CylinderGeometry(0.0983, 0.092, 0.035, 48),
-		plastic('#f2f3f5', 0.3)
+		plastic('#e9ebee', 0.38)
 	)
 	disc.add(body)
 	const ring = new Mesh(
-		new TorusGeometry(0.032, 0.0022, 10, 48),
-		emissive('#06a7e2', 2)
+		new TorusGeometry(0.032, 0.0024, 10, 48),
+		emissive('#06a7e2', 3.5)
 	)
 	ring.rotation.x = Math.PI / 2
 	ring.position.y = 0.0178
 	disc.add(ring)
 	const logo = new Mesh(
 		new CylinderGeometry(0.012, 0.012, 0.002, 24),
-		plastic('#e4e6e9', 0.35)
+		plastic('#dcdfe3', 0.35)
 	)
 	logo.position.y = 0.0178
 	disc.add(logo)
 	disc.rotation.z = -Math.PI / 2
-	disc.position.x = 0.028
+	disc.rotation.y = 0.28
+	disc.position.x = 0.052
 	group.add(disc)
 
-	group.position.set(OPENING_W / 2 + POST_T + 0.006, 0.45, -0.12)
+	group.position.set(OPENING_W / 2 + POST_T + 0.004, 0.56, -POST_T / 2)
 	tag(group, 'ac-pro')
 	shadows(group)
 	return group
