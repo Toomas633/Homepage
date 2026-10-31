@@ -11,10 +11,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AcPro: typeof import('./src/components/homelab/AcPro.vue')['default']
     AppNavbar: typeof import('./src/components/AppNavbar.vue')['default']
     ArchiveChip: typeof import('./src/components/ArchiveChip.vue')['default']
-    Box3D: typeof import('./src/components/homelab/Box3D.vue')['default']
     ButtonCard: typeof import('./src/components/ButtonCard.vue')['default']
     CodeBlock: typeof import('./src/components/CodeBlock.vue')['default']
     CookieBanner: typeof import('./src/components/cookies/CookieBanner.vue')['default']
@@ -32,21 +30,13 @@ declare module 'vue' {
     LicenseChip: typeof import('./src/components/LicenseChip.vue')['default']
     LinkableTitle: typeof import('./src/components/LinkableTitle.vue')['default']
     LinkComponent: typeof import('./src/components/LinkComponent.vue')['default']
-    LipoDrawer: typeof import('./src/components/homelab/LipoDrawer.vue')['default']
     MapComponent: typeof import('./src/components/MapComponent.vue')['default']
     MessagePopup: typeof import('./src/components/MessagePopup.vue')['default']
-    PatchPanel: typeof import('./src/components/homelab/PatchPanel.vue')['default']
     PayPalBtn: typeof import('./src/components/PayPalBtn.vue')['default']
-    PowerBar: typeof import('./src/components/homelab/PowerBar.vue')['default']
-    PrinterStack: typeof import('./src/components/homelab/PrinterStack.vue')['default']
-    RackFrame: typeof import('./src/components/homelab/RackFrame.vue')['default']
-    RackShelf: typeof import('./src/components/homelab/RackShelf.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ServerR730: typeof import('./src/components/homelab/ServerR730.vue')['default']
     StatsAndChips: typeof import('./src/components/StatsAndChips.vue')['default']
     TableOfContents: typeof import('./src/components/TableOfContents.vue')['default']
     TreeviewComponent: typeof import('./src/components/TreeviewComponent.vue')['default']
-    UnifiSwitch: typeof import('./src/components/homelab/UnifiSwitch.vue')['default']
   }
 }

@@ -1,57 +1,19 @@
 <template>
-	<div
-		ref="sceneEl"
-		class="scene"
-		:class="{ dragging }"
-		@pointerdown="onPointerDown"
-		@pointermove="onPointerMove"
-		@pointerup="onPointerUp"
-		@pointercancel="onPointerUp"
-		@click="onBackgroundClick">
-		<div class="world" :style="worldStyle">
-			<div class="rack-origin">
-				<div class="floor" />
-				<div class="interior" />
-				<RackFrame :selected="selectedId === 'rack'" @select="select('rack')" />
-				<div class="slot" :style="slotStyle(1, 2)">
-					<ServerR730
-						:selected="selectedId === 'r730'"
-						@select="select('r730')" />
-				</div>
-				<div class="slot" :style="slotStyle(10)">
-					<PatchPanel
-						:selected="selectedId === 'patch-panel'"
-						@select="select('patch-panel')" />
-				</div>
-				<div class="slot" :style="slotStyle(11)">
-					<UnifiSwitch
-						:selected="selectedId === 'unifi-switch'"
-						@select="select('unifi-switch')" />
-				</div>
-				<div class="slot" :style="slotStyle(13)">
-					<LipoDrawer
-						:selected="selectedId === 'lipo-drawer'"
-						@select="select('lipo-drawer')" />
-				</div>
-				<div class="slot" :style="slotStyle(14)">
-					<RackShelf
-						:selected="selectedId === 'shelf'"
-						@select="select('shelf')" />
-				</div>
-				<div class="slot" :style="slotStyle(15)">
-					<PowerBar
-						:selected="selectedId === 'power-bar'"
-						@select="select('power-bar')" />
-				</div>
-				<PrinterStack
-					:selected-id="selectedId"
-					:style="printerStyle"
-					@select="select" />
-				<AcPro
-					:selected="selectedId === 'ac-pro'"
-					:style="acProStyle"
-					@select="select('ac-pro')" />
-			</div>
+	<div ref="containerEl" class="scene">
+		<canvas v-show="webglOk" ref="canvasEl" class="scene-canvas" />
+		<div v-if="!webglOk" class="webgl-fallback">
+			<p>3D preview requires WebGL, which is unavailable in this browser.</p>
+		</div>
+		<div class="device-buttons">
+			<button
+				v-for="device in homelabComponents"
+				:key="device.id"
+				type="button"
+				:aria-label="`Select ${device.name}`"
+				:aria-pressed="selectedId === device.id"
+				@click="emit('select', device.id)">
+				{{ device.name }}
+			</button>
 		</div>
 		<div class="controls">
 			<v-btn
@@ -59,135 +21,73 @@
 				size="x-small"
 				variant="tonal"
 				aria-label="Zoom in"
-				@click.stop="zoomBy(0.1)" />
+				@click.stop="sceneApi?.zoomBy(0.85)" />
 			<v-btn
 				icon="mdi-magnify-minus-outline"
 				size="x-small"
 				variant="tonal"
 				aria-label="Zoom out"
-				@click.stop="zoomBy(-0.1)" />
+				@click.stop="sceneApi?.zoomBy(1.18)" />
 			<v-btn
 				icon="mdi-restore"
 				size="x-small"
 				variant="tonal"
 				aria-label="Reset view"
-				@click.stop="resetView" />
+				@click.stop="sceneApi?.resetView()" />
 		</div>
-		<div class="hint">
-			Drag to rotate &bull; Click a component to inspect it
-		</div>
+		<div class="hint">Drag to orbit &bull; Click a component to inspect it</div>
 	</div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import RackFrame from './RackFrame.vue'
-import ServerR730 from './ServerR730.vue'
-import PatchPanel from './PatchPanel.vue'
-import UnifiSwitch from './UnifiSwitch.vue'
-import LipoDrawer from './LipoDrawer.vue'
-import RackShelf from './RackShelf.vue'
-import PowerBar from './PowerBar.vue'
-import PrinterStack from './PrinterStack.vue'
-import AcPro from './AcPro.vue'
-import { FACE_W, FRAME_H, slotTop } from './rack3d'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { homelabComponents } from '@/constants/homelab'
+import { createHomelabScene, type HomelabScene } from './three/scene'
 
-defineProps<{ selectedId: string | null }>()
+const props = defineProps<{ selectedId: string | null }>()
 const emit = defineEmits<{ (e: 'select', id: string | null): void }>()
 
-const DEFAULT_YAW = -12
-const DEFAULT_PITCH = -7
-const DEFAULT_ZOOM = 0.56
+const containerEl = ref<HTMLElement>()
+const canvasEl = ref<HTMLCanvasElement>()
+const webglOk = ref(true)
 
-const sceneEl = ref<HTMLElement>()
-const yaw = ref(DEFAULT_YAW)
-const pitch = ref(DEFAULT_PITCH)
-const zoom = ref(DEFAULT_ZOOM)
-const dragging = ref(false)
-const dragMoved = ref(0)
+let sceneApi: HomelabScene | undefined
+let resizeObserver: ResizeObserver | undefined
 
-let lastX = 0
-let lastY = 0
-let capturedPointer: number | null = null
-
-const worldStyle = computed(() => ({
-	transform: `scale3d(${zoom.value}, ${zoom.value}, ${zoom.value}) rotateX(${pitch.value}deg) rotateY(${yaw.value}deg)`,
-}))
-
-const printerStyle = computed(() => ({
-	transform: `translate3d(0px, ${-FRAME_H}px, 0px)`,
-}))
-
-const acProStyle = computed(() => ({
-	transform: `translate3d(${FACE_W + 2}px, 140px, -120px) rotateY(74deg)`,
-}))
-
-function slotStyle(slot: number, units = 1) {
-	return {
-		transform: `translate3d(0px, ${slotTop(slot, units)}px, 0px)`,
+onMounted(() => {
+	if (!canvasEl.value) {
+		webglOk.value = false
+		return
 	}
-}
-
-function select(id: string) {
-	emit('select', id)
-}
-
-function onPointerDown(event: PointerEvent) {
-	dragging.value = true
-	dragMoved.value = 0
-	lastX = event.clientX
-	lastY = event.clientY
-	capturedPointer = null
-}
-
-function onPointerMove(event: PointerEvent) {
-	if (!dragging.value) return
-	const dx = event.clientX - lastX
-	const dy = event.clientY - lastY
-	lastX = event.clientX
-	lastY = event.clientY
-	dragMoved.value += Math.abs(dx) + Math.abs(dy)
-	if (dragMoved.value > 4 && capturedPointer === null) {
-		capturedPointer = event.pointerId
-		try {
-			sceneEl.value?.setPointerCapture(event.pointerId)
-		} catch {
-			// pointer capture is unsupported for this pointer, dragging still works
-		}
+	try {
+		sceneApi = createHomelabScene(canvasEl.value, (id) => {
+			emit('select', id ?? null)
+		})
+	} catch {
+		sceneApi = undefined
 	}
-	yaw.value = clamp(yaw.value + dx * 0.35, -85, 85)
-	pitch.value = clamp(pitch.value - dy * 0.25, -35, 6)
-}
-
-function onPointerUp(event: PointerEvent) {
-	dragging.value = false
-	if (capturedPointer === event.pointerId) {
-		try {
-			sceneEl.value?.releasePointerCapture(event.pointerId)
-		} catch {
-			// pointer was never captured
-		}
-		capturedPointer = null
+	if (!sceneApi) {
+		webglOk.value = false
+		return
 	}
-}
+	sceneApi.setSelected(props.selectedId ?? undefined)
+	if (typeof ResizeObserver !== 'undefined' && containerEl.value) {
+		resizeObserver = new ResizeObserver(() => sceneApi?.resize())
+		resizeObserver.observe(containerEl.value)
+	}
+})
 
-function onBackgroundClick() {
-	if (dragMoved.value > 6) return
-	emit('select', null)
-}
+watch(
+	() => props.selectedId,
+	(id) => {
+		sceneApi?.setSelected(id ?? undefined)
+	}
+)
 
-function zoomBy(delta: number) {
-	zoom.value = clamp(zoom.value + delta, 0.3, 1.4)
-}
-
-function resetView() {
-	yaw.value = DEFAULT_YAW
-	pitch.value = DEFAULT_PITCH
-	zoom.value = DEFAULT_ZOOM
-}
-
-function clamp(value: number, min: number, max: number) {
-	return Math.min(max, Math.max(min, value))
-}
+onBeforeUnmount(() => {
+	resizeObserver?.disconnect()
+	sceneApi?.dispose()
+	sceneApi = undefined
+})
 </script>
 <style scoped lang="scss">
 .scene {
@@ -196,136 +96,54 @@ function clamp(value: number, min: number, max: number) {
 	height: 640px;
 	overflow: hidden;
 	touch-action: none;
-	cursor: grab;
 	user-select: none;
-	background:
-		radial-gradient(
-			ellipse 120% 70% at 50% 108%,
-			rgb(0 0 0 / 55%) 0%,
-			transparent 60%
-		),
-		radial-gradient(ellipse 60% 45% at 50% 35%, #5e5e68 0%, transparent 70%),
-		radial-gradient(ellipse at 50% 30%, #44444c 0%, #343439 52%, #232327 100%);
-	border: 1px solid rgb(255 255 255 / 8%);
 	border-radius: 8px;
-	perspective: 1100px;
-	perspective-origin: 50% 12%;
-
-	&.dragging {
-		cursor: grabbing;
-	}
+	background: #141418;
 }
 
-.world {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 0;
-	height: 0;
-	transform-style: preserve-3d;
+.scene-canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
 }
 
-.rack-origin {
-	position: absolute;
-	width: 0;
-	height: 0;
-	transform: translate3d(-165px, -75px, 200px);
-	transform-style: preserve-3d;
+.webgl-fallback {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	color: #9a9ca3;
 }
 
-.slot {
+.device-buttons {
 	position: absolute;
-	width: 0;
-	height: 0;
-	transform-style: preserve-3d;
-}
-
-.floor {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 1300px;
-	height: 1100px;
-	background:
-		radial-gradient(
-			ellipse 90px 45px at 32% 43%,
-			rgb(0 0 0 / 88%) 0 30%,
-			transparent 70%
-		),
-		radial-gradient(
-			ellipse 90px 45px at 68% 43%,
-			rgb(0 0 0 / 88%) 0 30%,
-			transparent 70%
-		),
-		radial-gradient(
-			ellipse 460px 320px at 50% 45%,
-			rgb(0 0 0 / 50%) 0 30%,
-			rgb(0 0 0 / 22%) 55%,
-			rgb(0 0 0 / 7%) 72%,
-			transparent 88%
-		);
-	transform: translate3d(-485px, 505px, 320px) rotateX(90deg)
-		translateY(-1100px);
-	transform-origin: 0 0;
-}
-
-/* dark interior behind the open frame so empty slots don't show the backdrop */
-.interior {
-	position: absolute;
-	top: -20px;
-	left: 4px;
-	width: 322px;
-	height: 490px;
-	background:
-		radial-gradient(
-			ellipse 70% 55% at 50% 42%,
-			rgb(40 40 46 / 55%) 0%,
-			transparent 75%
-		),
-		linear-gradient(180deg, #141418 0%, #0e0e11 60%, #09090b 100%);
-	transform: translateZ(-382px);
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
 }
 
 .controls {
 	position: absolute;
-	right: 10px;
-	bottom: 10px;
+	top: 12px;
+	right: 12px;
 	display: flex;
-	gap: 6px;
+	flex-direction: column;
+	gap: 8px;
 }
 
 .hint {
 	position: absolute;
-	bottom: 12px;
-	left: 14px;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 4px 12px;
+	border-radius: 999px;
 	font-size: 0.75rem;
-	color: rgb(255 255 255 / 55%);
+	color: #b7bac1;
+	background: rgb(10 10 12 / 55%);
 	pointer-events: none;
-}
-</style>
-<style lang="scss">
-.rack-device {
-	position: absolute;
-	width: 0;
-	height: 0;
-	cursor: pointer;
-	transform-style: preserve-3d;
-
-	.face {
-		transition:
-			box-shadow 0.25s ease,
-			filter 0.25s ease;
-	}
-
-	&:hover .face {
-		filter: brightness(1.15);
-	}
-
-	&.selected .face {
-		box-shadow:
-			inset 0 0 0 1.5px rgb(244 67 54 / 95%),
-			0 0 10px rgb(244 67 54 / 45%);
-		filter: brightness(1.12);
-	}
+	white-space: nowrap;
 }
 </style>
