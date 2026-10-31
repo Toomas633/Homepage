@@ -204,7 +204,7 @@ function clamp(value: number, min: number, max: number) {
 			rgb(0 0 0 / 55%) 0%,
 			transparent 60%
 		),
-		radial-gradient(ellipse 60% 45% at 50% 35%, #55555e 0%, transparent 70%),
+		radial-gradient(ellipse 60% 45% at 50% 35%, #5e5e68 0%, transparent 70%),
 		radial-gradient(ellipse at 50% 30%, #44444c 0%, #343439 52%, #232327 100%);
 	border: 1px solid rgb(255 255 255 / 8%);
 	border-radius: 8px;
@@ -248,20 +248,21 @@ function clamp(value: number, min: number, max: number) {
 	height: 1100px;
 	background:
 		radial-gradient(
-			ellipse 150px 70px at 32% 42%,
-			rgb(0 0 0 / 70%) 0 40%,
-			transparent 75%
+			ellipse 90px 45px at 32% 43%,
+			rgb(0 0 0 / 88%) 0 30%,
+			transparent 70%
 		),
 		radial-gradient(
-			ellipse 150px 70px at 68% 42%,
-			rgb(0 0 0 / 70%) 0 40%,
-			transparent 75%
+			ellipse 90px 45px at 68% 43%,
+			rgb(0 0 0 / 88%) 0 30%,
+			transparent 70%
 		),
 		radial-gradient(
 			ellipse 460px 320px at 50% 45%,
-			rgb(0 0 0 / 45%) 0 32%,
-			rgb(0 0 0 / 16%) 58%,
-			transparent 74%
+			rgb(0 0 0 / 50%) 0 30%,
+			rgb(0 0 0 / 22%) 55%,
+			rgb(0 0 0 / 7%) 72%,
+			transparent 88%
 		);
 	transform: translate3d(-485px, 505px, 320px) rotateX(90deg)
 		translateY(-1100px);

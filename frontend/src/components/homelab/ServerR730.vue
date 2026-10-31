@@ -249,7 +249,7 @@ function pos(x: number, y: number, z: number) {
 	right: 2px;
 	left: 7px;
 	height: 4px;
-	background: linear-gradient(180deg, #70757d 0%, #5c6168 55%, #484c53 100%);
+	background: linear-gradient(180deg, #9aa0a8 0%, #7f858d 55%, #62676e 100%);
 	border: 0.5px solid #1b1b1f;
 	border-radius: 1px;
 }
@@ -565,8 +565,8 @@ function pos(x: number, y: number, z: number) {
 			transparent 0 6px,
 			rgb(0 0 0 / 14%) 6px 7px
 		),
-		linear-gradient(180deg, #e9eaec, #cfd1d5);
-	border: 1px solid #9a9ca1;
+		linear-gradient(180deg, #b9bbbf, #a2a4a9);
+	border: 1px solid #7f8186;
 	border-radius: 2px;
 
 	&::before {
