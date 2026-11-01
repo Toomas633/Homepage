@@ -730,7 +730,7 @@ function buildR730(): {
 	const grilleTex = hexMeshTexture('#34353c', '#0a0b0e')
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
-	grilleTex.repeat.set(6, 1.2)
+	grilleTex.repeat.set(3, 0.7)
 	const grille = new Mesh(
 		new PlaneGeometry(bezW - 0.068, bezH - 0.017),
 		new MeshStandardMaterial({
@@ -771,29 +771,34 @@ function buildR730(): {
 	badgeFace.position.set(-bezW / 2 + 0.017, -0.006, 0.0074)
 	bezel.add(badgeFace)
 	// blue status LCD visible through a window left of centre
-	const lcdWin = box(0.034, 0.0155, 0.004, plastic('#101114', 0.45))
+	const lcdWin = box(0.042, 0.018, 0.004, plastic('#101114', 0.45))
 	lcdWin.position.set(-bezW / 4, 0.0015, 0.0048)
 	bezel.add(lcdWin)
 	const bezLcdMat = new MeshBasicMaterial({
 		map: labelTexture('R730', {
 			bg: '#1266e3',
 			fg: '#eaf3ff',
-			font: 'bold 34px Arial',
+			font: 'bold 40px Arial',
 			width: 160,
 			height: 56,
 		}),
 	})
 	bezLcdMat.toneMapped = false
-	const bezLcd = new Mesh(new PlaneGeometry(0.029, 0.0112), bezLcdMat)
+	const bezLcd = new Mesh(new PlaneGeometry(0.036, 0.0138), bezLcdMat)
 	bezLcd.position.set(-bezW / 4, 0.0015, 0.0072)
 	bezel.add(bezLcd)
-	const modelTag = label('PowerEdge R730', 0.038, 0.005, {
-		fg: '#2a2b2f',
-		font: 'bold 28px Arial',
+	const modelTag = label('PowerEdge R730', 0.062, 0.0066, {
+		fg: '#e2e6ea',
+		font: 'bold 52px Arial',
 		width: 512,
-		height: 72,
+		height: 56,
 	})
-	modelTag.position.set(bezW / 2 - 0.062, bezH / 2 - 0.00475, 0.0062)
+	const modelTagMap = (modelTag.material as MeshStandardMaterial).map
+	if (modelTagMap) {
+		modelTagMap.minFilter = LinearFilter
+		modelTagMap.generateMipmaps = false
+	}
+	modelTag.position.set(bezW / 2 - 0.066, bezH / 2 - 0.0055, 0.0062)
 	bezel.add(modelTag)
 	bezel.traverse((child) => {
 		if (child instanceof Mesh) {
