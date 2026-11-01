@@ -61,8 +61,8 @@
 					</v-card-item>
 					<v-card-text>
 						Click a component in the rack to see an overview of it. The Dell
-						R730 slides out on its rails with the lid off and the LiPo drawer
-						pulls open when selected.
+						R730 slides out on its rails, lifts its lid, drops the front bezel
+						and unlatches its drives; the LiPo drawer pulls open when selected.
 					</v-card-text>
 				</v-card>
 			</v-col>

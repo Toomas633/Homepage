@@ -28,8 +28,12 @@ export interface DeviceHandles {
 	group: Group
 	/** Group that slides forward when the R730 is selected */
 	r730Slide: Group
-	/** R730 lid, hidden/slid back when selected */
+	/** R730 lid, lifted off smoothly after the slide-out */
 	r730Lid: Group
+	/** R730 front bezel, removed after the lid opens */
+	r730Bezel: Group
+	/** Drive caddies; each has userData.handle (Group) and userData.baseZ */
+	r730Caddies: Group[]
 	/** Group that slides forward when the drawer is selected */
 	drawerSlide: Group
 }
@@ -204,9 +208,15 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 		const fan = box(0.054, H - 0.016, 0.04, plastic('#141518', 0.68))
 		fan.position.set(fx, -0.002, -0.14)
 		interior.add(fan)
+		const bore = new Mesh(
+			new CylinderGeometry(0.0225, 0.0225, 0.0015, 24),
+			plastic('#09090b', 0.7)
+		)
+		bore.position.set(fx, H / 2 - 0.0085, -0.14)
+		interior.add(bore)
 		const hub = new Mesh(
-			new CylinderGeometry(0.016, 0.016, 0.004, 20),
-			plastic('#26272c', 0.5)
+			new CylinderGeometry(0.007, 0.007, 0.0025, 16),
+			plastic('#2c2d31', 0.5)
 		)
 		hub.position.set(fx, H / 2 - 0.008, -0.14)
 		interior.add(hub)
@@ -283,7 +293,13 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 	return interior
 }
 
-function buildR730(): { group: Group; slide: Group; lid: Group } {
+function buildR730(): {
+	group: Group
+	slide: Group
+	lid: Group
+	bezel: Group
+	caddies: Group[]
+} {
 	const group = new Group()
 	const slide = new Group()
 	group.add(slide)
@@ -312,39 +328,48 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	// left control module: optical, power, LCD, VGA/USB, info tag
 	slide.add(buildR730ControlPanel(H, bodyW))
 
-	// single row of 16 vertical 2.5" SFF trays
+	// single row of 16 vertical 2.5" SFF hot-swap caddies
 	const bayX0 = -bodyW / 2 + 0.118
 	const bayAreaW = bodyW - 0.118 - 0.01
 	const pitch = bayAreaW / 16
 	const trayW = pitch - 0.0014
 	const trayH = 0.068
 	const trayY = -H / 2 + 0.0035 + trayH / 2
-	const trayFace = paintedSteel('#35363a', 0.5)
-	const latchMat = paintedSteel('#3c3e44', 0.45)
-	const vent = perforatedTexture('#3a3b40', '#121316', 80)
+	const trayFace = paintedSteel('#222327', 0.55)
+	const handleMat = paintedSteel('#292a2f', 0.5)
+	const vent = perforatedTexture('#28292d', '#0b0c0f', 80)
 	vent.minFilter = LinearFilter
 	vent.generateMipmaps = false
 	const ventMat = new MeshStandardMaterial({
 		map: vent,
-		metalness: 0.4,
-		roughness: 0.6,
+		metalness: 0.35,
+		roughness: 0.62,
 	})
+	const caddies: Group[] = []
 	for (let i = 0; i < 16; i++) {
 		const tray = new Group()
 		const faceplate = box(trayW, trayH, 0.006, trayFace)
 		tray.add(faceplate)
+		const body = box(trayW - 0.002, trayH - 0.004, 0.09, trayFace)
+		body.position.set(0, 0, -0.048)
+		tray.add(body)
 		const ventPlate = new Mesh(
 			new PlaneGeometry(trayW - 0.004, trayH - 0.02),
 			ventMat
 		)
 		ventPlate.position.set(0, -0.0045, 0.0034)
 		tray.add(ventPlate)
-		const latchBlock = box(trayW, 0.011, 0.0068, latchMat)
-		latchBlock.position.set(0, trayH / 2 - 0.0055, 0.0004)
-		tray.add(latchBlock)
-		const release = box(trayW - 0.008, 0.0038, 0.0015, plastic('#9aa0a8', 0.4))
-		release.position.set(0, trayH / 2 - 0.0045, 0.0042)
-		tray.add(release)
+		// latch handle hinged at its lower edge, swings open on selection
+		const handle = new Group()
+		const latchBlock = box(trayW, 0.011, 0.0068, handleMat)
+		latchBlock.position.set(0, 0.0075, 0.0004)
+		handle.add(latchBlock)
+		const release = box(trayW - 0.008, 0.0038, 0.0015, plastic('#b6bbc2', 0.4))
+		release.position.set(0, 0.0085, 0.0042)
+		handle.add(release)
+		handle.position.set(0, trayH / 2 - 0.013, 0)
+		tray.add(handle)
+		tray.userData.handle = handle
 		let ledColor = '#00e84a'
 		if (i === 6 || i === 11) ledColor = '#ffaa00'
 		if (i >= 14) ledColor = '#1c221d'
@@ -363,6 +388,8 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 		status.position.set(-trayW / 2 + 0.003, trayH / 2 - 0.0205, 0.0035)
 		tray.add(status)
 		tray.position.set(bayX0 + pitch / 2 + i * pitch, trayY, 0.001)
+		tray.userData.baseZ = 0.001
+		caddies.push(tray)
 		slide.add(tray)
 	}
 	// perforated vent strip above the bay row
@@ -423,22 +450,6 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	const lidPlate = box(bodyW, 0.0035, DEPTH - 0.12, lidMat)
 	lidPlate.position.set(0, H / 2 - 0.002, -(DEPTH - 0.12) / 2 - 0.12)
 	lid.add(lidPlate)
-	const infoLabel = new Mesh(
-		new PlaneGeometry(0.15, 0.1),
-		new MeshStandardMaterial({
-			map: labelTexture('SERVICE INFORMATION', {
-				bg: '#e4e8ec',
-				fg: '#000000',
-				font: 'bold 64px Arial',
-				width: 512,
-				height: 320,
-			}),
-			roughness: 0.8,
-		})
-	)
-	infoLabel.rotation.x = -Math.PI / 2
-	infoLabel.position.set(-0.1, H / 2, -DEPTH * 0.55)
-	lid.add(infoLabel)
 	const latchBody = box(0.055, 0.005, 0.075, plastic('#232428', 0.5))
 	latchBody.position.set(0.06, H / 2 + 0.0005, -0.2)
 	lid.add(latchBody)
@@ -450,10 +461,81 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	lid.add(latchDial)
 	slide.add(lid)
 
+	// Dell locking front bezel: black frame, perforated grille, keylock, badge
+	const bezel = new Group()
+	const bezW = PANEL_W - 0.004
+	const bezH = H - 0.002
+	const bezFrame = plastic('#101114', 0.55)
+	for (const sy of [1, -1]) {
+		const rail = box(bezW, 0.0085, 0.012, bezFrame)
+		rail.position.set(0, sy * (bezH / 2 - 0.00425), 0)
+		bezel.add(rail)
+	}
+	const leftCap = box(0.062, bezH, 0.012, bezFrame)
+	leftCap.position.set(-bezW / 2 + 0.031, 0, 0)
+	bezel.add(leftCap)
+	const rightCap = box(0.02, bezH, 0.012, bezFrame)
+	rightCap.position.set(bezW / 2 - 0.01, 0, 0)
+	bezel.add(rightCap)
+	const grilleTex = perforatedTexture('#1a1b1f', '#050607', 44)
+	grilleTex.minFilter = LinearFilter
+	grilleTex.generateMipmaps = false
+	const grille = new Mesh(
+		new PlaneGeometry(bezW - 0.088, bezH - 0.016),
+		new MeshStandardMaterial({
+			map: grilleTex,
+			metalness: 0.15,
+			roughness: 0.68,
+		})
+	)
+	grille.position.set(0.003, 0, 0.0052)
+	bezel.add(grille)
+	const keylock = new Mesh(
+		new CylinderGeometry(0.0045, 0.0045, 0.003, 16),
+		steel('#9aa0a8', 0.35)
+	)
+	keylock.rotation.x = Math.PI / 2
+	keylock.position.set(-bezW / 2 + 0.031, -0.014, 0.0062)
+	bezel.add(keylock)
+	const keySlot = box(0.0012, 0.005, 0.0015, plastic('#0a0a0c', 0.7))
+	keySlot.position.set(-bezW / 2 + 0.031, -0.014, 0.0078)
+	bezel.add(keySlot)
+	const badge = new Mesh(
+		new CylinderGeometry(0.0095, 0.0095, 0.002, 24),
+		steel('#b4b9c0', 0.3)
+	)
+	badge.rotation.x = Math.PI / 2
+	badge.position.set(-bezW / 2 + 0.031, 0.012, 0.0062)
+	bezel.add(badge)
+	const badgeText = label('DELL', 0.015, 0.006, {
+		fg: '#15161a',
+		font: 'bold 30px Arial',
+		width: 128,
+		height: 48,
+	})
+	badgeText.position.set(-bezW / 2 + 0.031, 0.012, 0.0074)
+	bezel.add(badgeText)
+	const modelTag = label('PowerEdge R730', 0.052, 0.006, {
+		fg: '#8d9299',
+		font: '24px Arial',
+		width: 512,
+		height: 56,
+	})
+	modelTag.position.set(bezW / 2 - 0.058, -bezH / 2 + 0.0085, 0.0064)
+	bezel.add(modelTag)
+	bezel.traverse((child) => {
+		if (child instanceof Mesh) {
+			const material = child.material as MeshStandardMaterial
+			material.transparent = true
+		}
+	})
+	bezel.position.set(0, 0, 0.0205)
+	slide.add(bezel)
+
 	group.position.set(0, slotY(1) + U, 0.004)
 	tag(group, 'r730')
 	shadows(group)
-	return { group, slide, lid }
+	return { group, slide, lid, bezel, caddies }
 }
 
 /* ------------------------------------------------------------------ */
@@ -971,6 +1053,8 @@ export function buildDevices(): DeviceHandles {
 		group,
 		r730Slide: r730.slide,
 		r730Lid: r730.lid,
+		r730Bezel: r730.bezel,
+		r730Caddies: r730.caddies,
 		drawerSlide: drawer.slide,
 	}
 }

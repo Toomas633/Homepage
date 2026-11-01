@@ -1,9 +1,11 @@
 import {
 	ACESFilmicToneMapping,
 	CircleGeometry,
+	Clock,
 	Color,
 	DirectionalLight,
 	Fog,
+	Group,
 	HemisphereLight,
 	Mesh,
 	MeshStandardMaterial,
@@ -29,9 +31,23 @@ export interface HomelabScene {
 }
 
 interface AnimState {
-	r730Out: number
-	lidOff: number
+	r730Open: boolean
 	drawerOut: number
+}
+
+/** Smoothstep-eased sub-phase of a 0..1 master timeline. */
+function phase(t: number, from: number, to: number): number {
+	const x = Math.min(1, Math.max(0, (t - from) / (to - from)))
+	return x * x * (3 - 2 * x)
+}
+
+function setOpacity(root: Group, opacity: number) {
+	root.traverse((child) => {
+		if (child instanceof Mesh) {
+			const material = child.material as MeshStandardMaterial
+			material.opacity = opacity
+		}
+	})
 }
 
 const HIGHLIGHT = new Color('#c4503c')
@@ -147,8 +163,9 @@ export function createHomelabScene(
 	scene.add(devices.group)
 
 	// selection animation state
-	const anim: AnimState = { r730Out: 0, lidOff: 0, drawerOut: 0 }
-	const target: AnimState = { r730Out: 0, lidOff: 0, drawerOut: 0 }
+	const anim: AnimState = { r730Open: false, drawerOut: 0 }
+	let r730T = 0
+	const clock = new Clock()
 	let selectedId: string | undefined
 	let focusY = HOME_TARGET.y
 
@@ -183,22 +200,51 @@ export function createHomelabScene(
 
 	let disposed = false
 	let frame = 0
+	let drawerPos = 0
 
 	function lerp(from: number, to: number): number {
 		return from + (to - from) * 0.12
 	}
 
+	// R730 opening sequence: slide fully out, lift the lid, remove the
+	// bezel, then pop the drive caddies. Runs in reverse on deselect.
+	const R730_SEQUENCE_SECONDS = 3.4
+
+	function animateR730() {
+		const slideP = phase(r730T, 0, 0.36)
+		const lidP = phase(r730T, 0.34, 0.6)
+		const bezelP = phase(r730T, 0.56, 0.78)
+		devices.r730Slide.position.z = slideP * 0.44
+		devices.r730Lid.position.z = lidP * -0.24
+		devices.r730Lid.position.y = lidP * 0.06
+		devices.r730Lid.rotation.x = Math.sin(lidP * Math.PI) * 0.16
+		devices.r730Lid.visible = lidP < 0.98
+		devices.r730Bezel.position.z = bezelP * 0.1
+		devices.r730Bezel.position.y = bezelP * -0.12
+		devices.r730Bezel.rotation.x = bezelP * 0.35
+		const bezelFade = phase(r730T, 0.68, 0.8)
+		setOpacity(devices.r730Bezel, 1 - bezelFade)
+		devices.r730Bezel.visible = bezelFade < 0.98
+		devices.r730Caddies.forEach((tray, i) => {
+			const caddyP = phase(r730T, 0.76 + i * 0.0035, 0.93 + i * 0.0035)
+			tray.position.z = (tray.userData.baseZ as number) + caddyP * 0.026
+			const handle = tray.userData.handle as Group
+			handle.rotation.x = caddyP * 1.25
+		})
+	}
+
 	function render() {
 		if (disposed) return
 		frame = requestAnimationFrame(render)
-		anim.r730Out = lerp(anim.r730Out, target.r730Out)
-		anim.lidOff = lerp(anim.lidOff, target.lidOff)
-		anim.drawerOut = lerp(anim.drawerOut, target.drawerOut)
-		devices.r730Slide.position.z = anim.r730Out * 0.34
-		devices.r730Lid.position.z = anim.lidOff * -0.22
-		devices.r730Lid.position.y = anim.lidOff * 0.05
-		devices.r730Lid.visible = anim.lidOff < 0.98
-		devices.drawerSlide.position.z = anim.drawerOut * 0.26
+		const dt = Math.min(clock.getDelta(), 0.05)
+		const direction = anim.r730Open ? 1 : -1
+		r730T = Math.min(
+			1,
+			Math.max(0, r730T + (direction * dt) / R730_SEQUENCE_SECONDS)
+		)
+		animateR730()
+		drawerPos = lerp(drawerPos, anim.drawerOut)
+		devices.drawerSlide.position.z = drawerPos * 0.26
 		controls.target.y += (focusY - controls.target.y) * 0.08
 		controls.update()
 		renderer.render(scene, camera)
@@ -218,9 +264,8 @@ export function createHomelabScene(
 	return {
 		setSelected(id: string | undefined) {
 			selectedId = id
-			target.r730Out = id === 'r730' ? 1 : 0
-			target.lidOff = id === 'r730' ? 1 : 0
-			target.drawerOut = id === 'lipo-drawer' ? 1 : 0
+			anim.r730Open = id === 'r730'
+			anim.drawerOut = id === 'lipo-drawer' ? 1 : 0
 			focusY = id === 'r730' ? 0.42 : HOME_TARGET.y
 			applyHighlight(devices, null, selectedId)
 		},
