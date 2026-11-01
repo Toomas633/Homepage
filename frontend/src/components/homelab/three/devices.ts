@@ -184,7 +184,7 @@ function buildR730ControlPanel(H: number, bodyW: number): Group {
 
 function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 	const interior = new Group()
-	const zinc = steel('#9299a1', 0.48)
+	const zinc = steel('#7d838b', 0.58)
 	const pcbMat = plastic('#113318', 0.75)
 
 	// drive block + backplane directly behind the bays
@@ -242,11 +242,20 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 		}
 	}
 
-	// 24 DIMM slots in four banks flanking the CPUs, 4x16GB populated
+	// 24 DIMM slots in four banks flanking the CPUs, 8x8GB populated
 	const slotMat = plastic('#0d0d10', 0.6)
 	const dimmMat = plastic('#15471f', 0.55)
 	const banks = [-0.17, -0.048, 0.012, 0.13]
-	const populated = new Set(['0:2', '1:3', '2:1', '3:2'])
+	const populated = new Set([
+		'0:1',
+		'0:3',
+		'1:0',
+		'1:3',
+		'2:1',
+		'2:4',
+		'3:2',
+		'3:4',
+	])
 	banks.forEach((bx, bankIndex) => {
 		for (let i = 0; i < 6; i++) {
 			const filled = populated.has(`${bankIndex}:${i}`)
@@ -461,7 +470,7 @@ function buildR730(): {
 	const H = 2 * U - 0.004
 	const DEPTH = 0.6
 	const bodyW = OPENING_W - 0.006
-	const zinc = steel('#9299a1', 0.48)
+	const zinc = steel('#7d838b', 0.58)
 
 	// chassis shell: galvanized zinc steel, open top (lid separate)
 	const floor = box(bodyW, 0.003, DEPTH, steel('#787e86', 0.62))
@@ -588,10 +597,10 @@ function buildR730(): {
 	const earMat = paintedSteel('#26272b', 0.5)
 	for (const side of [-1, 1]) {
 		const ear = box(0.02, H, 0.014, earMat)
-		ear.position.set(side * (PANEL_W / 2 - 0.008), 0, 0.006)
+		ear.position.set(side * (PANEL_W / 2 - 0.008), 0, 0.0075)
 		slide.add(ear)
 		const cap = new Mesh(new CylinderGeometry(0.0072, 0.0072, H, 14), earMat)
-		cap.position.set(side * (PANEL_W / 2 - 0.002), 0, 0.0105)
+		cap.position.set(side * (PANEL_W / 2 - 0.002), 0, 0.012)
 		slide.add(cap)
 		for (const sy of [H / 4, -H / 4]) {
 			const screw = new Mesh(
@@ -599,7 +608,7 @@ function buildR730(): {
 				steel('#8d939c', 0.35)
 			)
 			screw.rotation.x = Math.PI / 2
-			screw.position.set(side * (PANEL_W / 2 - 0.008), sy, 0.0135)
+			screw.position.set(side * (PANEL_W / 2 - 0.008), sy, 0.015)
 			slide.add(screw)
 		}
 	}
@@ -626,9 +635,9 @@ function buildR730(): {
 	// removable galvanized lid with info label and release latch
 	const lid = new Group()
 	const lidMat = new MeshStandardMaterial({
-		map: brushedTexture('#9aa0a7', '#7d828a'),
-		metalness: 0.6,
-		roughness: 0.5,
+		map: brushedTexture('#6e737a', '#565b62'),
+		metalness: 0.45,
+		roughness: 0.65,
 	})
 	const lidPlate = box(bodyW, 0.0035, DEPTH - 0.12, lidMat)
 	lidPlate.position.set(0, H / 2 - 0.002, -(DEPTH - 0.12) / 2 - 0.12)
