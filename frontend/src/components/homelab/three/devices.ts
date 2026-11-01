@@ -2,6 +2,7 @@ import {
 	BoxGeometry,
 	CylinderGeometry,
 	Group,
+	LinearFilter,
 	Material,
 	Mesh,
 	MeshBasicMaterial,
@@ -197,21 +198,20 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 	backplane.position.set(0.012, 0, -0.108)
 	interior.add(backplane)
 
-	// bank of six hot-swap fan modules
+	// bank of six hot-swap fan modules with blue handles on top
 	for (let i = 0; i < 6; i++) {
 		const fx = -0.17 + i * 0.068
-		const fan = box(0.054, H - 0.012, 0.04, plastic('#141518', 0.68))
-		fan.position.set(fx, 0, -0.14)
+		const fan = box(0.054, H - 0.016, 0.04, plastic('#141518', 0.68))
+		fan.position.set(fx, -0.002, -0.14)
 		interior.add(fan)
 		const hub = new Mesh(
-			new CylinderGeometry(0.016, 0.016, 0.006, 20),
+			new CylinderGeometry(0.016, 0.016, 0.004, 20),
 			plastic('#26272c', 0.5)
 		)
-		hub.rotation.x = Math.PI / 2
-		hub.position.set(fx, 0.004, -0.118)
+		hub.position.set(fx, H / 2 - 0.008, -0.14)
 		interior.add(hub)
-		const handle = box(0.03, 0.0025, 0.008, plastic('#2f6fd6', 0.45))
-		handle.position.set(fx, H / 2 - 0.009, -0.14)
+		const handle = box(0.03, 0.003, 0.009, plastic('#2f6fd6', 0.45))
+		handle.position.set(fx, H / 2 - 0.0085, -0.158)
 		interior.add(handle)
 	}
 
@@ -257,7 +257,7 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 		}
 	})
 
-	// rear PCIe riser assemblies with blue release latches
+	// rear PCIe riser assemblies with blue release latches and card edges
 	for (const rx of [-0.1, 0.035]) {
 		const riser = box(0.115, H - 0.02, 0.055, plastic('#17181b', 0.6))
 		riser.position.set(rx, 0, -DEPTH + 0.05)
@@ -265,6 +265,9 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 		const latch = box(0.028, 0.004, 0.04, plastic('#2f6fd6', 0.45))
 		latch.position.set(rx, H / 2 - 0.012, -DEPTH + 0.05)
 		interior.add(latch)
+		const cardEdge = box(0.095, 0.005, 0.004, plastic('#c9a84c', 0.4))
+		cardEdge.position.set(rx, H / 2 - 0.008, -DEPTH + 0.03)
+		interior.add(cardEdge)
 	}
 
 	// dual PSU cage at the rear right
@@ -274,6 +277,9 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 	const psuSplit = box(0.112, 0.0015, 0.1, plastic('#3a3c40', 0.6))
 	psuSplit.position.set(0.158, 0, -DEPTH + 0.07)
 	interior.add(psuSplit)
+	const psuHandle = box(0.07, 0.006, 0.018, plastic('#1c1c1e', 0.55))
+	psuHandle.position.set(0.158, H / 2 - 0.006, -DEPTH + 0.03)
+	interior.add(psuHandle)
 	return interior
 }
 
@@ -313,9 +319,11 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	const trayW = pitch - 0.0014
 	const trayH = 0.068
 	const trayY = -H / 2 + 0.0035 + trayH / 2
-	const trayFace = paintedSteel('#2c2d31', 0.5)
-	const latchMat = paintedSteel('#36383d', 0.45)
-	const vent = perforatedTexture('#27282c', '#09090b', 7)
+	const trayFace = paintedSteel('#35363a', 0.5)
+	const latchMat = paintedSteel('#3c3e44', 0.45)
+	const vent = perforatedTexture('#3a3b40', '#121316', 80)
+	vent.minFilter = LinearFilter
+	vent.generateMipmaps = false
 	const ventMat = new MeshStandardMaterial({
 		map: vent,
 		metalness: 0.4,
@@ -329,7 +337,7 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 			new PlaneGeometry(trayW - 0.004, trayH - 0.02),
 			ventMat
 		)
-		ventPlate.position.set(0, -0.0045, 0.0032)
+		ventPlate.position.set(0, -0.0045, 0.0034)
 		tray.add(ventPlate)
 		const latchBlock = box(trayW, 0.011, 0.0068, latchMat)
 		latchBlock.position.set(0, trayH / 2 - 0.0055, 0.0004)
@@ -372,18 +380,29 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	// rack ears with torx screw detail
 	const earMat = paintedSteel('#26272b', 0.5)
 	for (const side of [-1, 1]) {
-		const ear = box(0.016, H, 0.012, earMat)
-		ear.position.set(side * (PANEL_W / 2 - 0.008), 0, 0.002)
+		const ear = box(0.02, H, 0.014, earMat)
+		ear.position.set(side * (PANEL_W / 2 - 0.008), 0, 0.006)
 		slide.add(ear)
 		for (const sy of [H / 4, -H / 4]) {
 			const screw = new Mesh(
-				new CylinderGeometry(0.003, 0.003, 0.0015, 12),
-				steel('#6a6e75', 0.4)
+				new CylinderGeometry(0.0035, 0.0035, 0.0015, 12),
+				steel('#8d939c', 0.35)
 			)
 			screw.rotation.x = Math.PI / 2
-			screw.position.set(side * (PANEL_W / 2 - 0.008), sy, 0.0085)
+			screw.position.set(side * (PANEL_W / 2 - 0.008), sy, 0.0135)
 			slide.add(screw)
 		}
+	}
+
+	// ball-bearing slide rails: outer member fixed, inner member rides out
+	const railZinc = steel('#b8bcc0', 0.38)
+	for (const side of [-1, 1]) {
+		const outer = box(0.006, 0.016, DEPTH - 0.04, railZinc)
+		outer.position.set(side * (bodyW / 2 + 0.007), -0.006, -DEPTH / 2)
+		group.add(outer)
+		const inner = box(0.0045, 0.011, DEPTH - 0.06, steel('#cdd2d8', 0.32))
+		inner.position.set(side * (bodyW / 2 + 0.003), -0.006, -DEPTH / 2 + 0.01)
+		slide.add(inner)
 	}
 
 	// interior, visible when the lid is off
@@ -406,7 +425,16 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	lid.add(lidPlate)
 	const infoLabel = new Mesh(
 		new PlaneGeometry(0.15, 0.1),
-		new MeshStandardMaterial({ color: '#dce0e5', roughness: 0.8 })
+		new MeshStandardMaterial({
+			map: labelTexture('SERVICE INFORMATION', {
+				bg: '#dce0e5',
+				fg: '#1f2328',
+				font: 'bold 56px Arial',
+				width: 512,
+				height: 320,
+			}),
+			roughness: 0.8,
+		})
 	)
 	infoLabel.rotation.x = -Math.PI / 2
 	infoLabel.position.set(-0.1, H / 2, -DEPTH * 0.55)

@@ -34,7 +34,7 @@ interface AnimState {
 	drawerOut: number
 }
 
-const HIGHLIGHT = new Color('#7a1f1f')
+const HIGHLIGHT = new Color('#c4503c')
 
 function applyHighlight(
 	handles: DeviceHandles,
@@ -56,7 +56,7 @@ function applyHighlight(
 				child.userData.sharedMaterial = material
 				const clone = material.clone()
 				clone.emissive = HIGHLIGHT.clone()
-				clone.emissiveIntensity = Math.max(0.45, clone.emissiveIntensity ?? 0)
+				clone.emissiveIntensity = 0.12
 				child.userData.highlightMaterial = clone
 			}
 			if (selected) {
@@ -96,7 +96,7 @@ export function createHomelabScene(
 
 	const camera = new PerspectiveCamera(42, 1, 0.05, 30)
 	const HOME_POS = { x: 0.32, y: 1.05, z: 1.98 }
-	const HOME_TARGET = { x: 0, y: 0.72, z: 0 }
+	const HOME_TARGET = { x: 0, y: 0.68, z: 0 }
 	camera.position.set(HOME_POS.x, HOME_POS.y, HOME_POS.z)
 
 	const controls = new OrbitControls(camera, renderer.domElement)
@@ -150,6 +150,7 @@ export function createHomelabScene(
 	const anim: AnimState = { r730Out: 0, lidOff: 0, drawerOut: 0 }
 	const target: AnimState = { r730Out: 0, lidOff: 0, drawerOut: 0 }
 	let selectedId: string | undefined
+	let focusY = HOME_TARGET.y
 
 	const raycaster = new Raycaster()
 	const pointer = new Vector2()
@@ -198,6 +199,7 @@ export function createHomelabScene(
 		devices.r730Lid.position.y = anim.lidOff * 0.05
 		devices.r730Lid.visible = anim.lidOff < 0.98
 		devices.drawerSlide.position.z = anim.drawerOut * 0.26
+		controls.target.y += (focusY - controls.target.y) * 0.08
 		controls.update()
 		renderer.render(scene, camera)
 	}
@@ -219,6 +221,7 @@ export function createHomelabScene(
 			target.r730Out = id === 'r730' ? 1 : 0
 			target.lidOff = id === 'r730' ? 1 : 0
 			target.drawerOut = id === 'lipo-drawer' ? 1 : 0
+			focusY = id === 'r730' ? 0.42 : HOME_TARGET.y
 			applyHighlight(devices, null, selectedId)
 		},
 		resetView() {
