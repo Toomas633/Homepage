@@ -135,10 +135,10 @@ export function caddyFaceTexture(): CanvasTexture {
 	const canvas = makeCanvas(w, h)
 	const ctx = canvas.getContext('2d')
 	if (ctx) {
-		ctx.fillStyle = '#313238'
+		ctx.fillStyle = '#44454c'
 		ctx.fillRect(0, 0, w, h)
 		// recessed inner panel
-		ctx.fillStyle = '#2a2b30'
+		ctx.fillStyle = '#3a3b42'
 		ctx.fillRect(14, 14, w - 28, h - 28)
 		// grid of square vent holes with a lower highlight edge for depth
 		const cols = 4
@@ -151,9 +151,9 @@ export function caddyFaceTexture(): CanvasTexture {
 				const y = 22 + r * cellH + cellH * 0.14
 				const hw = cellW * 0.72
 				const hh = cellH * 0.62
-				ctx.fillStyle = '#08090b'
+				ctx.fillStyle = '#0c0d10'
 				ctx.fillRect(x, y, hw, hh)
-				ctx.fillStyle = 'rgba(255,255,255,0.14)'
+				ctx.fillStyle = 'rgba(255,255,255,0.22)'
 				ctx.fillRect(x, y + hh, hw, 2.5)
 			}
 		}

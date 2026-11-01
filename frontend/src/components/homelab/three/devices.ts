@@ -222,7 +222,7 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 		)
 		hub.position.set(fx, H / 2 - 0.008, -0.14)
 		interior.add(hub)
-		const handle = box(0.03, 0.003, 0.009, plastic('#2f6fd6', 0.45))
+		const handle = box(0.03, 0.003, 0.009, plastic('#2456b0', 0.45))
 		handle.position.set(fx, H / 2 - 0.0085, -0.158)
 		interior.add(handle)
 	}
@@ -274,7 +274,7 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 		const riser = box(0.115, H - 0.02, 0.055, plastic('#17181b', 0.6))
 		riser.position.set(rx, 0, -DEPTH + 0.05)
 		interior.add(riser)
-		const latch = box(0.028, 0.004, 0.04, plastic('#2f6fd6', 0.45))
+		const latch = box(0.028, 0.004, 0.04, plastic('#2456b0', 0.45))
 		latch.position.set(rx, H / 2 - 0.012, -DEPTH + 0.05)
 		interior.add(latch)
 		const cardEdge = box(0.095, 0.005, 0.004, plastic('#c9a84c', 0.4))
@@ -312,7 +312,7 @@ function buildR730(): {
 	const zinc = steel('#9299a1', 0.48)
 
 	// chassis shell: galvanized zinc steel, open top (lid separate)
-	const floor = box(bodyW, 0.003, DEPTH, zinc)
+	const floor = box(bodyW, 0.003, DEPTH, steel('#787e86', 0.62))
 	floor.position.set(0, -H / 2, -DEPTH / 2)
 	slide.add(floor)
 	for (const side of [-1, 1]) {
@@ -337,8 +337,8 @@ function buildR730(): {
 	const trayW = pitch - 0.003
 	const trayH = 0.068
 	const trayY = -H / 2 + 0.0035 + trayH / 2
-	const trayFace = paintedSteel('#2b2c31', 0.52)
-	const handleMat = paintedSteel('#35373d', 0.48)
+	const trayFace = paintedSteel('#3c3d44', 0.52)
+	const handleMat = paintedSteel('#42444b', 0.48)
 	const caddyTex = caddyFaceTexture()
 	caddyTex.minFilter = LinearFilter
 	caddyTex.generateMipmaps = false
@@ -374,7 +374,7 @@ function buildR730(): {
 		const latchBlock = box(trayW, 0.0135, 0.0075, handleMat)
 		latchBlock.position.set(0, 0.0075, 0.0004)
 		handle.add(latchBlock)
-		const release = box(trayW - 0.006, 0.0048, 0.002, plastic('#c3c8cf', 0.38))
+		const release = box(trayW - 0.006, 0.0048, 0.002, plastic('#aab2ba', 0.42))
 		release.position.set(0, 0.009, 0.0048)
 		handle.add(release)
 		handle.position.set(0, trayH / 2 - 0.013, 0)
@@ -413,6 +413,14 @@ function buildR730(): {
 		0.004
 	)
 	slide.add(bayVent)
+	// bare-metal chassis lip between the caddy row and the vent strip
+	const bayLip = box(bayAreaW, 0.0025, 0.0045, zinc)
+	bayLip.position.set(
+		bayX0 + bayAreaW / 2,
+		trayY + trayH / 2 + 0.00125,
+		0.00225
+	)
+	slide.add(bayLip)
 
 	// rack ears: cast metal with rounded caps, Dell badge on the left ear
 	const earMat = paintedSteel('#26272b', 0.5)
@@ -468,9 +476,9 @@ function buildR730(): {
 	// removable galvanized lid with info label and release latch
 	const lid = new Group()
 	const lidMat = new MeshStandardMaterial({
-		map: brushedTexture('#aab0b6', '#878d94'),
-		metalness: 0.7,
-		roughness: 0.42,
+		map: brushedTexture('#8d939a', '#71767d'),
+		metalness: 0.62,
+		roughness: 0.55,
 	})
 	const lidPlate = box(bodyW, 0.0035, DEPTH - 0.12, lidMat)
 	lidPlate.position.set(0, H / 2 - 0.002, -(DEPTH - 0.12) / 2 - 0.12)
@@ -490,7 +498,7 @@ function buildR730(): {
 	const bezel = new Group()
 	const bezW = PANEL_W - 0.004
 	const bezH = H - 0.002
-	const bezFrame = plastic('#101114', 0.55)
+	const bezFrame = plastic('#16171b', 0.55)
 	for (const sy of [1, -1]) {
 		const rail = box(bezW, 0.0085, 0.012, bezFrame)
 		rail.position.set(0, sy * (bezH / 2 - 0.00425), 0)
@@ -502,7 +510,7 @@ function buildR730(): {
 	const rightCap = box(0.02, bezH, 0.012, bezFrame)
 	rightCap.position.set(bezW / 2 - 0.01, 0, 0)
 	bezel.add(rightCap)
-	const grilleTex = perforatedTexture('#2c2d33', '#08090c', 26)
+	const grilleTex = perforatedTexture('#34353c', '#0b0c10', 26)
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
 	const grille = new Mesh(
@@ -526,14 +534,14 @@ function buildR730(): {
 	keySlot.position.set(-bezW / 2 + 0.031, -0.014, 0.0078)
 	bezel.add(keySlot)
 	const badge = new Mesh(
-		new CylinderGeometry(0.0095, 0.0095, 0.002, 24),
+		new CylinderGeometry(0.011, 0.011, 0.002, 24),
 		steel('#b4b9c0', 0.3)
 	)
 	badge.rotation.x = Math.PI / 2
 	badge.position.set(-bezW / 2 + 0.031, 0.012, 0.0062)
 	bezel.add(badge)
 	const badgeFace = new Mesh(
-		new PlaneGeometry(0.017, 0.017),
+		new PlaneGeometry(0.02, 0.02),
 		new MeshStandardMaterial({
 			map: dellBadgeTexture(),
 			transparent: true,
