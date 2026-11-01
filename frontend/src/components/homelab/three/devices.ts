@@ -8,6 +8,7 @@ import {
 	MeshBasicMaterial,
 	MeshStandardMaterial,
 	PlaneGeometry,
+	RepeatWrapping,
 	TorusGeometry,
 } from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -338,7 +339,7 @@ function buildR730(): {
 	const trayH = 0.068
 	const trayY = -H / 2 + 0.0035 + trayH / 2
 	const trayFace = paintedSteel('#3c3d44', 0.52)
-	const handleMat = paintedSteel('#42444b', 0.48)
+	const handleMat = paintedSteel('#42444b', 0.62)
 	const caddyTex = caddyFaceTexture()
 	caddyTex.minFilter = LinearFilter
 	caddyTex.generateMipmaps = false
@@ -374,7 +375,7 @@ function buildR730(): {
 		const latchBlock = box(trayW, 0.0135, 0.0075, handleMat)
 		latchBlock.position.set(0, 0.0075, 0.0004)
 		handle.add(latchBlock)
-		const release = box(trayW - 0.006, 0.0048, 0.002, plastic('#aab2ba', 0.42))
+		const release = box(trayW - 0.006, 0.0048, 0.002, plastic('#aab2ba', 0.58))
 		release.position.set(0, 0.009, 0.0048)
 		handle.add(release)
 		handle.position.set(0, trayH / 2 - 0.013, 0)
@@ -476,9 +477,9 @@ function buildR730(): {
 	// removable galvanized lid with info label and release latch
 	const lid = new Group()
 	const lidMat = new MeshStandardMaterial({
-		map: brushedTexture('#8d939a', '#71767d'),
-		metalness: 0.62,
-		roughness: 0.55,
+		map: brushedTexture('#9aa0a7', '#7d828a'),
+		metalness: 0.6,
+		roughness: 0.5,
 	})
 	const lidPlate = box(bodyW, 0.0035, DEPTH - 0.12, lidMat)
 	lidPlate.position.set(0, H / 2 - 0.002, -(DEPTH - 0.12) / 2 - 0.12)
@@ -513,6 +514,9 @@ function buildR730(): {
 	const grilleTex = perforatedTexture('#34353c', '#0b0c10', 26)
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
+	grilleTex.wrapS = RepeatWrapping
+	grilleTex.wrapT = RepeatWrapping
+	grilleTex.repeat.set(5, 2)
 	const grille = new Mesh(
 		new PlaneGeometry(bezW - 0.088, bezH - 0.016),
 		new MeshStandardMaterial({
