@@ -114,11 +114,11 @@ function buildR730ControlPanel(H: number, bodyW: number): Group {
 	lcdBezel.position.set(x0 + 0.0335, H / 2 - 0.012, 0.0045)
 	panel.add(lcdBezel)
 	const lcdMaterial = new MeshBasicMaterial({
-		map: labelTexture('R730', {
+		map: labelTexture('ST 7Y2K3B2', {
 			bg: '#1266e3',
 			fg: '#eaf3ff',
-			font: 'bold 34px Arial',
-			width: 160,
+			font: 'bold 26px Arial',
+			width: 192,
 			height: 56,
 		}),
 	})
@@ -226,7 +226,10 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 	backplane.position.set(0.012, 0, -0.108)
 	interior.add(backplane)
 
-	// bank of six hot-swap fan modules with blue handles on top
+	// fan cage wall, then six hot-swap fan carriers with orange grab rings
+	const cageWall = box(bodyW - 0.03, H - 0.014, 0.0025, zinc)
+	cageWall.position.set(0.012, 0, -0.163)
+	interior.add(cageWall)
 	for (let i = 0; i < 6; i++) {
 		const fx = -0.17 + i * 0.068
 		const fan = box(0.054, H - 0.016, 0.04, plastic('#141518', 0.68))
@@ -244,9 +247,25 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 		)
 		hub.position.set(fx, H / 2 - 0.008, -0.14)
 		interior.add(hub)
-		const handle = box(0.03, 0.003, 0.009, plastic('#2456b0', 0.45))
-		handle.position.set(fx, H / 2 - 0.0085, -0.158)
-		interior.add(handle)
+		// orange grab ring on top of each carrier (R730 service touch point)
+		const ring = new Mesh(
+			new CylinderGeometry(0.0115, 0.0115, 0.0035, 20),
+			plastic('#d4652a', 0.5)
+		)
+		ring.position.set(fx, H / 2 - 0.0065, -0.14)
+		interior.add(ring)
+		const ringHole = new Mesh(
+			new CylinderGeometry(0.0075, 0.0075, 0.0037, 18),
+			plastic('#0a0a0c', 0.7)
+		)
+		ringHole.position.set(fx, H / 2 - 0.0065, -0.14)
+		interior.add(ringHole)
+	}
+	// blue fan-cage release latches at either end of the bank
+	for (const lx of [-0.205, 0.213]) {
+		const cageLatch = box(0.012, 0.004, 0.03, plastic('#2456b0', 0.45))
+		cageLatch.position.set(lx, H / 2 - 0.008, -0.145)
+		interior.add(cageLatch)
 	}
 
 	// motherboard
@@ -255,22 +274,29 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 	mobo.position.set(-0.02, -H / 2 + 0.005, -0.34)
 	interior.add(mobo)
 
-	// twin CPU heatsinks with airflow-aligned fins
+	// twin CPU heatsinks: side fins capped by the flat embossed top plate
 	const finMat = steel('#aeb3ba', 0.32)
 	for (const cx of [-0.095, 0.075]) {
 		const base = box(0.062, 0.004, 0.092, steel('#8f949b', 0.4))
 		base.position.set(cx, -H / 2 + 0.008, -0.3)
 		interior.add(base)
 		for (let fin = 0; fin < 10; fin++) {
-			const plate = box(0.0022, 0.03, 0.092, finMat)
-			plate.position.set(cx - 0.0275 + fin * 0.0061, -H / 2 + 0.025, -0.3)
+			const plate = box(0.0022, 0.028, 0.092, finMat)
+			plate.position.set(cx - 0.0275 + fin * 0.0061, -H / 2 + 0.024, -0.3)
 			interior.add(plate)
 		}
+		const topPlate = box(0.062, 0.0022, 0.092, steel('#c2c7cd', 0.3))
+		topPlate.position.set(cx, -H / 2 + 0.0391, -0.3)
+		interior.add(topPlate)
+		const topRidge = box(0.05, 0.0015, 0.012, steel('#9aa0a7', 0.4))
+		topRidge.position.set(cx, -H / 2 + 0.041, -0.3)
+		interior.add(topRidge)
 	}
 
 	// 24 DIMM slots in four banks flanking the CPUs, 8x8GB populated
 	const slotMat = plastic('#0d0d10', 0.6)
-	const dimmMat = plastic('#15471f', 0.55)
+	const dimmMat = plastic('#101114', 0.5)
+	const latchMat = plastic('#d8dce1', 0.55)
 	const banks = [-0.17, -0.048, 0.012, 0.13]
 	const populated = new Set([
 		'0:1',
@@ -297,14 +323,27 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 				-0.3
 			)
 			interior.add(stick)
+			if (filled) {
+				for (const lz of [-0.357, -0.243]) {
+					const latch = box(0.0045, 0.009, 0.004, latchMat)
+					latch.position.set(bx + i * 0.0068, -H / 2 + 0.012, lz)
+					interior.add(latch)
+				}
+			}
 		}
 	})
 
-	// rear PCIe riser assemblies with blue release latches and card edges
+	// rear PCIe risers: black bracket with vertical green PCB, blue latch
 	for (const rx of [0.02, 0.14]) {
 		const riser = box(0.115, H - 0.02, 0.055, plastic('#17181b', 0.6))
 		riser.position.set(rx, 0, -DEPTH + 0.05)
 		interior.add(riser)
+		const riserPcb = box(0.105, H - 0.03, 0.0022, pcbMat)
+		riserPcb.position.set(rx, 0, -DEPTH + 0.079)
+		interior.add(riserPcb)
+		const pcieSlot = box(0.075, 0.006, 0.004, plastic('#0d0d10', 0.6))
+		pcieSlot.position.set(rx, H / 2 - 0.022, -DEPTH + 0.082)
+		interior.add(pcieSlot)
 		const latch = box(0.028, 0.004, 0.04, plastic('#2456b0', 0.45))
 		latch.position.set(rx, H / 2 - 0.012, -DEPTH + 0.05)
 		interior.add(latch)
@@ -481,6 +520,40 @@ function buildR730Rear(H: number, DEPTH: number, bodyW: number): Group {
 	idRear.rotation.x = Math.PI / 2
 	idRear.position.set(bodyW / 2 - 0.03, portY, z - 0.006)
 	rear.add(idRear)
+
+	// regulatory / service-tag label stickers, lower centre of the rear face
+	const whiteLabel = new Mesh(
+		new PlaneGeometry(0.052, 0.016),
+		new MeshStandardMaterial({
+			map: labelTexture('SVC TAG: 7Y2K3B2', {
+				bg: '#e8eaec',
+				fg: '#232426',
+				font: 'bold 22px Arial',
+				width: 320,
+				height: 96,
+			}),
+			roughness: 0.65,
+		})
+	)
+	whiteLabel.rotation.y = Math.PI
+	whiteLabel.position.set(-0.025, -H / 2 + 0.016, z - 0.0052)
+	rear.add(whiteLabel)
+	const blackLabel = new Mesh(
+		new PlaneGeometry(0.052, 0.016),
+		new MeshStandardMaterial({
+			map: labelTexture('⚠ CAUTION  CE FCC', {
+				bg: '#141518',
+				fg: '#c6c9ce',
+				font: '20px Arial',
+				width: 320,
+				height: 96,
+			}),
+			roughness: 0.65,
+		})
+	)
+	blackLabel.rotation.y = Math.PI
+	blackLabel.position.set(0.04, -H / 2 + 0.016, z - 0.0052)
+	rear.add(blackLabel)
 	return rear
 }
 
@@ -627,6 +700,20 @@ function buildR730(): {
 		lbl.position.set(bayX0 + lx, H / 2 - bandH / 2, 0.005)
 		slide.add(lbl)
 	}
+	// model name printed on the info band right side, as on the real chassis
+	const chassisModel = label('PowerEdge R730', 0.056, 0.0062, {
+		fg: '#1c1d20',
+		font: 'bold 54px Arial',
+		width: 512,
+		height: 64,
+	})
+	const chassisModelMap = (chassisModel.material as MeshStandardMaterial).map
+	if (chassisModelMap) {
+		chassisModelMap.minFilter = LinearFilter
+		chassisModelMap.generateMipmaps = false
+	}
+	chassisModel.position.set(bayX0 + bayAreaW - 0.045, H / 2 - bandH / 2, 0.0056)
+	slide.add(chassisModel)
 
 	// rack ears: cast metal with rounded caps, Dell badge on the left ear
 	const earMat = paintedSteel('#26272b', 0.5)
@@ -775,11 +862,11 @@ function buildR730(): {
 	lcdWin.position.set(-bezW / 4, 0.0015, 0.0048)
 	bezel.add(lcdWin)
 	const bezLcdMat = new MeshBasicMaterial({
-		map: labelTexture('R730', {
+		map: labelTexture('ST 7Y2K3B2', {
 			bg: '#1266e3',
 			fg: '#eaf3ff',
-			font: 'bold 40px Arial',
-			width: 160,
+			font: 'bold 30px Arial',
+			width: 192,
 			height: 56,
 		}),
 	})
@@ -787,9 +874,9 @@ function buildR730(): {
 	const bezLcd = new Mesh(new PlaneGeometry(0.036, 0.0138), bezLcdMat)
 	bezLcd.position.set(-bezW / 4, 0.0015, 0.0072)
 	bezel.add(bezLcd)
-	const modelTag = label('PowerEdge R730', 0.062, 0.0066, {
-		fg: '#e2e6ea',
-		font: 'bold 52px Arial',
+	const modelTag = label('PowerEdge R730', 0.08, 0.0085, {
+		fg: '#eef1f4',
+		font: 'bold 56px Arial',
 		width: 512,
 		height: 56,
 	})
