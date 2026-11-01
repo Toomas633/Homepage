@@ -332,11 +332,11 @@ function buildR730(): {
 	const bayX0 = -bodyW / 2 + 0.118
 	const bayAreaW = bodyW - 0.118 - 0.01
 	const pitch = bayAreaW / 16
-	const trayW = pitch - 0.0014
+	const trayW = pitch - 0.003
 	const trayH = 0.068
 	const trayY = -H / 2 + 0.0035 + trayH / 2
-	const trayFace = paintedSteel('#222327', 0.55)
-	const handleMat = paintedSteel('#292a2f', 0.5)
+	const trayFace = paintedSteel('#2b2c31', 0.52)
+	const handleMat = paintedSteel('#35373d', 0.48)
 	const vent = perforatedTexture('#28292d', '#0b0c0f', 80)
 	vent.minFilter = LinearFilter
 	vent.generateMipmaps = false
@@ -361,11 +361,11 @@ function buildR730(): {
 		tray.add(ventPlate)
 		// latch handle hinged at its lower edge, swings open on selection
 		const handle = new Group()
-		const latchBlock = box(trayW, 0.011, 0.0068, handleMat)
+		const latchBlock = box(trayW, 0.0135, 0.0075, handleMat)
 		latchBlock.position.set(0, 0.0075, 0.0004)
 		handle.add(latchBlock)
-		const release = box(trayW - 0.008, 0.0038, 0.0015, plastic('#b6bbc2', 0.4))
-		release.position.set(0, 0.0085, 0.0042)
+		const release = box(trayW - 0.006, 0.0048, 0.002, plastic('#c3c8cf', 0.38))
+		release.position.set(0, 0.009, 0.0048)
 		handle.add(release)
 		handle.position.set(0, trayH / 2 - 0.013, 0)
 		tray.add(handle)
@@ -451,7 +451,7 @@ function buildR730(): {
 	lidPlate.position.set(0, H / 2 - 0.002, -(DEPTH - 0.12) / 2 - 0.12)
 	lid.add(lidPlate)
 	const latchBody = box(0.055, 0.005, 0.075, plastic('#232428', 0.5))
-	latchBody.position.set(0.06, H / 2 + 0.0005, -0.2)
+	latchBody.position.set(0.06, H / 2 + 0.0015, -0.2)
 	lid.add(latchBody)
 	const latchDial = new Mesh(
 		new CylinderGeometry(0.013, 0.013, 0.004, 20),
@@ -477,15 +477,15 @@ function buildR730(): {
 	const rightCap = box(0.02, bezH, 0.012, bezFrame)
 	rightCap.position.set(bezW / 2 - 0.01, 0, 0)
 	bezel.add(rightCap)
-	const grilleTex = perforatedTexture('#1a1b1f', '#050607', 44)
+	const grilleTex = perforatedTexture('#27282d', '#0a0b0e', 36)
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
 	const grille = new Mesh(
 		new PlaneGeometry(bezW - 0.088, bezH - 0.016),
 		new MeshStandardMaterial({
 			map: grilleTex,
-			metalness: 0.15,
-			roughness: 0.68,
+			metalness: 0.2,
+			roughness: 0.6,
 		})
 	)
 	grille.position.set(0.003, 0, 0.0052)
@@ -515,18 +515,21 @@ function buildR730(): {
 	})
 	badgeText.position.set(-bezW / 2 + 0.031, 0.012, 0.0074)
 	bezel.add(badgeText)
-	const modelTag = label('PowerEdge R730', 0.052, 0.006, {
-		fg: '#8d9299',
-		font: '24px Arial',
+	const modelPlate = box(0.044, 0.008, 0.0015, steel('#b4b9c0', 0.35))
+	modelPlate.position.set(bezW / 2 - 0.052, -bezH / 2 + 0.0105, 0.0062)
+	bezel.add(modelPlate)
+	const modelTag = label('PowerEdge R730', 0.04, 0.0055, {
+		fg: '#1c1d21',
+		font: 'bold 28px Arial',
 		width: 512,
-		height: 56,
+		height: 72,
 	})
-	modelTag.position.set(bezW / 2 - 0.058, -bezH / 2 + 0.0085, 0.0064)
+	modelTag.position.set(bezW / 2 - 0.052, -bezH / 2 + 0.0105, 0.0072)
 	bezel.add(modelTag)
 	bezel.traverse((child) => {
 		if (child instanceof Mesh) {
 			const material = child.material as MeshStandardMaterial
-			material.transparent = true
+			if (material.transparent) material.userData.keepTransparent = true
 		}
 	})
 	bezel.position.set(0, 0, 0.0205)

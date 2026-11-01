@@ -46,6 +46,8 @@ function setOpacity(root: Group, opacity: number) {
 		if (child instanceof Mesh) {
 			const material = child.material as MeshStandardMaterial
 			material.opacity = opacity
+			material.transparent =
+				opacity < 1 || material.userData.keepTransparent === true
 		}
 	})
 }
@@ -168,6 +170,7 @@ export function createHomelabScene(
 	const clock = new Clock()
 	let selectedId: string | undefined
 	let focusY = HOME_TARGET.y
+	let focusZ = HOME_TARGET.z
 
 	const raycaster = new Raycaster()
 	const pointer = new Vector2()
@@ -209,27 +212,28 @@ export function createHomelabScene(
 	// R730 opening sequence: slide fully out, lift the lid, remove the
 	// bezel, then pop the drive caddies. Runs in reverse on deselect.
 	const R730_SEQUENCE_SECONDS = 3.4
+	const bezelHome = devices.r730Bezel.position.clone()
 
 	function animateR730() {
 		const slideP = phase(r730T, 0, 0.36)
 		const lidP = phase(r730T, 0.34, 0.6)
 		const bezelP = phase(r730T, 0.56, 0.78)
-		devices.r730Slide.position.z = slideP * 0.44
+		devices.r730Slide.position.z = slideP * 0.56
 		devices.r730Lid.position.z = lidP * -0.24
 		devices.r730Lid.position.y = lidP * 0.06
 		devices.r730Lid.rotation.x = Math.sin(lidP * Math.PI) * 0.16
 		devices.r730Lid.visible = lidP < 0.98
-		devices.r730Bezel.position.z = bezelP * 0.1
-		devices.r730Bezel.position.y = bezelP * -0.12
+		devices.r730Bezel.position.z = bezelHome.z + bezelP * 0.1
+		devices.r730Bezel.position.y = bezelHome.y - bezelP * 0.12
 		devices.r730Bezel.rotation.x = bezelP * 0.35
 		const bezelFade = phase(r730T, 0.68, 0.8)
 		setOpacity(devices.r730Bezel, 1 - bezelFade)
 		devices.r730Bezel.visible = bezelFade < 0.98
 		devices.r730Caddies.forEach((tray, i) => {
 			const caddyP = phase(r730T, 0.76 + i * 0.0035, 0.93 + i * 0.0035)
-			tray.position.z = (tray.userData.baseZ as number) + caddyP * 0.026
+			tray.position.z = (tray.userData.baseZ as number) + caddyP * 0.034
 			const handle = tray.userData.handle as Group
-			handle.rotation.x = caddyP * 1.25
+			handle.rotation.x = caddyP * 1.4
 		})
 	}
 
@@ -246,6 +250,7 @@ export function createHomelabScene(
 		drawerPos = lerp(drawerPos, anim.drawerOut)
 		devices.drawerSlide.position.z = drawerPos * 0.26
 		controls.target.y += (focusY - controls.target.y) * 0.08
+		controls.target.z += (focusZ - controls.target.z) * 0.08
 		controls.update()
 		renderer.render(scene, camera)
 	}
@@ -266,7 +271,8 @@ export function createHomelabScene(
 			selectedId = id
 			anim.r730Open = id === 'r730'
 			anim.drawerOut = id === 'lipo-drawer' ? 1 : 0
-			focusY = id === 'r730' ? 0.42 : HOME_TARGET.y
+			focusY = id === 'r730' ? 0.4 : HOME_TARGET.y
+			focusZ = id === 'r730' ? 0.24 : HOME_TARGET.z
 			applyHighlight(devices, null, selectedId)
 		},
 		resetView() {
