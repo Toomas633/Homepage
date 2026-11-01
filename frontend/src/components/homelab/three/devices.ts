@@ -8,7 +8,6 @@ import {
 	MeshBasicMaterial,
 	MeshStandardMaterial,
 	PlaneGeometry,
-	RepeatWrapping,
 	TorusGeometry,
 } from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -19,6 +18,7 @@ import {
 	emissive,
 	led as ledMaterial,
 	glass,
+	hexMeshTexture,
 	labelTexture,
 	paintedSteel,
 	perforatedTexture,
@@ -85,104 +85,99 @@ function label(
 
 function buildR730ControlPanel(H: number, bodyW: number): Group {
 	const panel = new Group()
-	const cpW = 0.112
+	// narrow vertical control module on the far left of the 16x2.5 chassis
+	const cpW = 0.042
 	const cpX = -bodyW / 2 + 0.003 + cpW / 2
-	const backing = box(cpW, H - 0.003, 0.009, paintedSteel('#2b2c30', 0.5))
+	const backing = box(cpW, H - 0.003, 0.009, paintedSteel('#232428', 0.55))
 	backing.position.set(cpX, 0, -0.0005)
 	panel.add(backing)
 
-	// slim optical drive slot across the top of the control module
-	const optical = box(0.094, 0.009, 0.002, plastic('#1b1c1f', 0.55))
-	optical.position.set(cpX + 0.004, H / 2 - 0.0115, 0.0045)
-	panel.add(optical)
-	const opticalSlit = box(0.08, 0.0012, 0.0015, plastic('#060607', 0.8))
-	opticalSlit.position.set(cpX + 0.001, H / 2 - 0.0115, 0.0056)
-	panel.add(opticalSlit)
-	const eject = box(0.006, 0.004, 0.0018, plastic('#45474d', 0.5))
-	eject.position.set(cpX + 0.043, H / 2 - 0.0115, 0.0056)
-	panel.add(eject)
+	// top: small blue diagnostics LCD with bezel
+	const lcdBezel = box(0.034, 0.016, 0.003, plastic('#17181c', 0.4))
+	lcdBezel.position.set(cpX, H / 2 - 0.0135, 0.0045)
+	panel.add(lcdBezel)
+	const lcdMaterial = new MeshBasicMaterial({
+		map: labelTexture('R730', {
+			bg: '#1266e3',
+			fg: '#eaf3ff',
+			font: 'bold 34px Arial',
+			width: 160,
+			height: 56,
+		}),
+	})
+	lcdMaterial.toneMapped = false
+	const lcd = new Mesh(new PlaneGeometry(0.028, 0.0105), lcdMaterial)
+	lcd.position.set(cpX, H / 2 - 0.0135, 0.0062)
+	panel.add(lcd)
 
-	// left button column: power, ID, NMI pinhole
-	const colX = -bodyW / 2 + 0.013
+	// LCD menu buttons directly below the screen
+	for (let i = 0; i < 3; i++) {
+		const menuBtn = box(0.0048, 0.003, 0.0018, plastic('#3a3c42', 0.45))
+		menuBtn.position.set(cpX - 0.009 + i * 0.009, H / 2 - 0.0255, 0.0052)
+		panel.add(menuBtn)
+	}
+
+	// power button with LED ring
 	const powerRing = new Mesh(
 		new TorusGeometry(0.0042, 0.0012, 8, 24),
 		ledMaterial('#38d04a')
 	)
-	powerRing.position.set(colX, 0.013, 0.0048)
+	powerRing.position.set(cpX, H / 2 - 0.038, 0.0048)
 	panel.add(powerRing)
 	const powerCore = new Mesh(
 		new CylinderGeometry(0.0034, 0.0034, 0.002, 16),
 		plastic('#1a1b1e', 0.5)
 	)
 	powerCore.rotation.x = Math.PI / 2
-	powerCore.position.set(colX, 0.013, 0.0045)
+	powerCore.position.set(cpX, H / 2 - 0.038, 0.0045)
 	panel.add(powerCore)
+
+	// system ID button and NMI pinhole
 	const idBtn = new Mesh(
-		new CylinderGeometry(0.003, 0.003, 0.002, 16),
-		plastic('#33353a', 0.45)
+		new CylinderGeometry(0.0028, 0.0028, 0.002, 16),
+		plastic('#2456b0', 0.45)
 	)
 	idBtn.rotation.x = Math.PI / 2
-	idBtn.position.set(colX, 0.0005, 0.0048)
+	idBtn.position.set(cpX, H / 2 - 0.0485, 0.0048)
 	panel.add(idBtn)
 	const nmi = new Mesh(
 		new CylinderGeometry(0.0012, 0.0012, 0.002, 8),
 		plastic('#0a0a0c', 0.7)
 	)
 	nmi.rotation.x = Math.PI / 2
-	nmi.position.set(colX, -0.009, 0.0046)
+	nmi.position.set(cpX, H / 2 - 0.0565, 0.0046)
 	panel.add(nmi)
 
-	// blue backlit LCD diagnostics panel with bezel and menu buttons
-	const lcdBezel = box(0.064, 0.027, 0.003, plastic('#1d1e22', 0.4))
-	lcdBezel.position.set(cpX + 0.008, 0.004, 0.0045)
-	panel.add(lcdBezel)
-	const lcdMaterial = new MeshBasicMaterial({
-		map: labelTexture('PowerEdge R730', {
-			bg: '#1266e3',
-			fg: '#eaf3ff',
-			font: 'bold 22px Arial',
-			width: 256,
-			height: 80,
-		}),
-	})
-	lcdMaterial.toneMapped = false
-	const lcd = new Mesh(new PlaneGeometry(0.052, 0.017), lcdMaterial)
-	lcd.position.set(cpX + 0.008, 0.004, 0.0062)
-	panel.add(lcd)
-	for (let i = 0; i < 3; i++) {
-		const menuBtn = box(0.005, 0.0032, 0.0018, plastic('#3a3c42', 0.45))
-		menuBtn.position.set(cpX - 0.006 + i * 0.011, -0.0145, 0.0052)
-		panel.add(menuBtn)
-	}
+	// USB port (vertical)
+	const usbShell = box(0.0062, 0.0135, 0.003, steel('#9aa0a8', 0.4))
+	usbShell.position.set(cpX, -0.0035, 0.0045)
+	panel.add(usbShell)
+	const usbInner = box(0.0036, 0.011, 0.0015, plastic('#0a0a0c', 0.7))
+	usbInner.position.set(cpX, -0.0035, 0.006)
+	panel.add(usbInner)
+	const usbTongue = box(0.0014, 0.0095, 0.001, plastic('#16181c', 0.6))
+	usbTongue.position.set(cpX + 0.0011, -0.0035, 0.0065)
+	panel.add(usbTongue)
 
-	// bottom I/O row: VGA, dual USB, vFlash slot
-	const vgaShell = box(0.0165, 0.0085, 0.003, steel('#8d939c', 0.4))
-	vgaShell.position.set(cpX - 0.03, -0.0265, 0.0045)
+	// VGA port (vertical D-sub)
+	const vgaShell = box(0.009, 0.0175, 0.003, steel('#8d939c', 0.4))
+	vgaShell.position.set(cpX, -0.023, 0.0045)
 	panel.add(vgaShell)
-	const vgaInner = box(0.013, 0.0055, 0.0015, plastic('#15306e', 0.5))
-	vgaInner.position.set(cpX - 0.03, -0.0265, 0.006)
+	const vgaInner = box(0.006, 0.014, 0.0015, plastic('#15306e', 0.5))
+	vgaInner.position.set(cpX, -0.023, 0.006)
 	panel.add(vgaInner)
-	for (let i = 0; i < 2; i++) {
-		const usbShell = box(0.0125, 0.0055, 0.003, steel('#9aa0a8', 0.4))
-		usbShell.position.set(cpX - 0.002 + i * 0.017, -0.0265, 0.0045)
-		panel.add(usbShell)
-		const usbInner = box(0.01, 0.0032, 0.0015, plastic('#0a0a0c', 0.7))
-		usbInner.position.set(cpX - 0.002 + i * 0.017, -0.0265, 0.006)
-		panel.add(usbInner)
-		const usbTongue = box(0.009, 0.0012, 0.001, plastic('#16181c', 0.6))
-		usbTongue.position.set(cpX - 0.002 + i * 0.017, -0.0255, 0.0065)
-		panel.add(usbTongue)
-	}
-	const vflash = box(0.024, 0.0028, 0.0018, plastic('#0c0d10', 0.7))
-	vflash.position.set(cpX + 0.034, -0.0265, 0.0052)
+
+	// vFlash SD slot at the bottom
+	const vflash = box(0.0032, 0.021, 0.0018, plastic('#0c0d10', 0.7))
+	vflash.position.set(cpX - 0.011, -0.023, 0.0052)
 	panel.add(vflash)
 
-	// pull-out information tag (blue luggage tag)
-	const infoTag = box(0.014, 0.0135, 0.0045, plastic('#2f6fd6', 0.45))
-	infoTag.position.set(cpX + 0.047, -H / 2 + 0.0115, 0.0055)
+	// pull-out information tag (blue luggage tag) at the bottom
+	const infoTag = box(0.021, 0.0095, 0.0045, plastic('#2f6fd6', 0.45))
+	infoTag.position.set(cpX, -H / 2 + 0.008, 0.0055)
 	panel.add(infoTag)
-	const infoFace = box(0.011, 0.0105, 0.001, plastic('#dde2e8', 0.6))
-	infoFace.position.set(cpX + 0.047, -H / 2 + 0.0115, 0.008)
+	const infoFace = box(0.017, 0.007, 0.001, plastic('#dde2e8', 0.6))
+	infoFace.position.set(cpX, -H / 2 + 0.008, 0.008)
 	panel.add(infoFace)
 	return panel
 }
@@ -293,7 +288,163 @@ function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
 	const psuHandle = box(0.07, 0.006, 0.018, plastic('#1c1c1e', 0.55))
 	psuHandle.position.set(0.158, H / 2 - 0.006, -DEPTH + 0.03)
 	interior.add(psuHandle)
+
+	// SAS ribbon cables from the backplane along the left wall to the board
+	const sasMat = plastic('#101114', 0.7)
+	for (const [ox, oy] of [
+		[0, 0],
+		[0.012, 0.004],
+	]) {
+		const run = box(0.018, 0.0035, 0.21, sasMat)
+		run.position.set(-bodyW / 2 + 0.018 + ox, -H / 2 + 0.014 + oy, -0.215)
+		interior.add(run)
+		const drop = box(0.018, 0.028, 0.0035, sasMat)
+		drop.position.set(-bodyW / 2 + 0.018 + ox, -H / 2 + 0.028 + oy, -0.115)
+		interior.add(drop)
+	}
+	// power harness along the right wall
+	const harness = box(0.014, 0.012, 0.3, plastic('#1a1b1e', 0.6))
+	harness.position.set(bodyW / 2 - 0.014, -H / 2 + 0.012, -0.27)
+	interior.add(harness)
+	for (let i = 0; i < 4; i++) {
+		const wire = box(0.0025, 0.0025, 0.3, plastic(WIRE_COLORS[i], 0.5))
+		wire.position.set(bodyW / 2 - 0.021 + i * 0.0045, -H / 2 + 0.02, -0.27)
+		interior.add(wire)
+	}
+
+	// PERC RAID controller on the front-left of the board
+	const perc = box(0.065, 0.003, 0.16, pcbMat)
+	perc.position.set(-0.185, -H / 2 + 0.024, -0.27)
+	interior.add(perc)
+	const percHs = box(0.035, 0.012, 0.045, steel('#3a6b4a', 0.5))
+	percHs.position.set(-0.185, -H / 2 + 0.032, -0.25)
+	interior.add(percHs)
+	const percBattery = box(0.03, 0.008, 0.05, plastic('#111214', 0.6))
+	percBattery.position.set(-0.185, -H / 2 + 0.03, -0.33)
+	interior.add(percBattery)
+
+	// chipset heatsink and CMOS battery between the CPU sockets
+	const chipset = box(0.028, 0.01, 0.028, steel('#2f3136', 0.45))
+	chipset.position.set(-0.01, -H / 2 + 0.011, -0.395)
+	interior.add(chipset)
+	const coin = new Mesh(
+		new CylinderGeometry(0.01, 0.01, 0.0025, 18),
+		steel('#c8cdd3', 0.3)
+	)
+	coin.position.set(0.05, -H / 2 + 0.0075, -0.395)
+	interior.add(coin)
+
+	// network daughter card between the risers at the rear
+	const ndc = box(0.06, 0.016, 0.07, pcbMat)
+	ndc.position.set(-0.028, -H / 2 + 0.014, -DEPTH + 0.045)
+	interior.add(ndc)
 	return interior
+}
+
+const WIRE_COLORS = ['#c9b03c', '#b03c3c', '#2456b0', '#1a1b1e']
+
+/** Rear face: dual hot-swap PSUs, PCIe slot blanks and the port cluster. */
+function buildR730Rear(H: number, DEPTH: number, bodyW: number): Group {
+	const rear = new Group()
+	const z = -DEPTH + 0.0025
+	const plate = box(bodyW, H, 0.005, paintedSteel('#2c2d31', 0.6))
+	plate.position.set(0, 0, z)
+	rear.add(plate)
+
+	// dual hot-swap PSUs on the right, side by side
+	const psuVent = perforatedTexture('#2e2f34', '#0c0d10', 40)
+	psuVent.minFilter = LinearFilter
+	psuVent.generateMipmaps = false
+	const psuVentMat = new MeshStandardMaterial({
+		map: psuVent,
+		metalness: 0.4,
+		roughness: 0.55,
+	})
+	for (let p = 0; p < 2; p++) {
+		const px = bodyW / 2 - 0.0535 - p * 0.107
+		const shell = box(0.103, H - 0.014, 0.01, steel('#8f949b', 0.45))
+		shell.position.set(px, 0, z - 0.004)
+		rear.add(shell)
+		const fan = new Mesh(
+			new CylinderGeometry(0.0245, 0.0245, 0.002, 24),
+			psuVentMat
+		)
+		fan.rotation.x = Math.PI / 2
+		fan.position.set(px - 0.022, 0.003, z - 0.0095)
+		rear.add(fan)
+		const inlet = box(0.024, 0.017, 0.004, plastic('#0c0d10', 0.7))
+		inlet.position.set(px + 0.028, 0.003, z - 0.009)
+		rear.add(inlet)
+		const psuHandle = box(0.05, 0.0055, 0.006, plastic('#1c1c1e', 0.55))
+		psuHandle.position.set(px, -H / 2 + 0.011, z - 0.01)
+		rear.add(psuHandle)
+		const psuLed = new Mesh(
+			new CylinderGeometry(0.0018, 0.0018, 0.002, 8),
+			ledMaterial('#38d04a')
+		)
+		psuLed.rotation.x = Math.PI / 2
+		psuLed.position.set(px + 0.044, H / 2 - 0.012, z - 0.009)
+		rear.add(psuLed)
+	}
+
+	// PCIe slot blanks across the upper left (risers 1-3)
+	const blankMat = new MeshStandardMaterial({
+		map: psuVent,
+		metalness: 0.45,
+		roughness: 0.5,
+	})
+	for (let s = 0; s < 6; s++) {
+		const blank = new Mesh(new PlaneGeometry(0.108, 0.0105), blankMat)
+		blank.rotation.y = Math.PI
+		const col = s % 3
+		blank.position.set(
+			s < 3 ? -bodyW / 2 + 0.062 : -bodyW / 2 + 0.178,
+			H / 2 - 0.013 - col * 0.0125,
+			z - 0.0065
+		)
+		rear.add(blank)
+	}
+
+	// bottom port cluster: iDRAC, serial, VGA, 2x USB, 4x 1GbE and ID button
+	const portY = -H / 2 + 0.0135
+	const idrac = box(0.0135, 0.0105, 0.006, plastic('#101114', 0.55))
+	idrac.position.set(-bodyW / 2 + 0.03, portY, z - 0.006)
+	rear.add(idrac)
+	const serial = box(0.0165, 0.008, 0.005, steel('#8d939c', 0.4))
+	serial.position.set(-bodyW / 2 + 0.054, portY, z - 0.006)
+	rear.add(serial)
+	const vga = box(0.0165, 0.0085, 0.005, plastic('#15306e', 0.5))
+	vga.position.set(-bodyW / 2 + 0.078, portY, z - 0.006)
+	rear.add(vga)
+	for (let u = 0; u < 2; u++) {
+		const usb = box(0.0125, 0.0055, 0.005, steel('#9aa0a8', 0.4))
+		usb.position.set(-bodyW / 2 + 0.1 + u * 0.016, portY, z - 0.006)
+		rear.add(usb)
+	}
+	for (let n = 0; n < 4; n++) {
+		const nic = box(0.0135, 0.0105, 0.006, plastic('#101114', 0.55))
+		nic.position.set(-bodyW / 2 + 0.135 + n * 0.0175, portY, z - 0.006)
+		rear.add(nic)
+		const nicLed = new Mesh(
+			new CylinderGeometry(0.0009, 0.0009, 0.0015, 6),
+			ledMaterial(n < 2 ? '#38d04a' : '#1c221d')
+		)
+		nicLed.rotation.x = Math.PI / 2
+		nicLed.position.set(
+			-bodyW / 2 + 0.1305 + n * 0.0175,
+			portY + 0.0062,
+			z - 0.0062
+		)
+		rear.add(nicLed)
+	}
+	const idRear = new Mesh(
+		new CylinderGeometry(0.0028, 0.0028, 0.003, 12),
+		plastic('#2456b0', 0.45)
+	)
+	idRear.rotation.x = Math.PI / 2
+	idRear.position.set(-bodyW / 2 + 0.21, portY, z - 0.006)
+	rear.add(idRear)
+	return rear
 }
 
 function buildR730(): {
@@ -321,8 +472,7 @@ function buildR730(): {
 		wall.position.set((side * bodyW) / 2, 0, -DEPTH / 2)
 		slide.add(wall)
 	}
-	const rear = box(bodyW, H, 0.01, paintedSteel('#2c2d31', 0.6))
-	rear.position.set(0, 0, -DEPTH + 0.005)
+	const rear = buildR730Rear(H, DEPTH, bodyW)
 	slide.add(rear)
 	const topLip = box(bodyW, 0.004, 0.005, paintedSteel('#2b2c30', 0.5))
 	topLip.position.set(0, H / 2 - 0.002, 0.0025)
@@ -332,21 +482,21 @@ function buildR730(): {
 	slide.add(buildR730ControlPanel(H, bodyW))
 
 	// single row of 16 vertical 2.5" SFF hot-swap caddies
-	const bayX0 = -bodyW / 2 + 0.118
-	const bayAreaW = bodyW - 0.118 - 0.01
+	const bayX0 = -bodyW / 2 + 0.05
+	const bayAreaW = bodyW - 0.05 - 0.008
 	const pitch = bayAreaW / 16
 	const trayW = pitch - 0.003
 	const trayH = 0.068
 	const trayY = -H / 2 + 0.0035 + trayH / 2
-	const trayFace = paintedSteel('#3c3d44', 0.52)
-	const handleMat = paintedSteel('#42444b', 0.62)
+	const trayFace = paintedSteel('#232428', 0.6)
+	const handleMat = paintedSteel('#2b2c31', 0.58)
 	const caddyTex = caddyFaceTexture()
 	caddyTex.minFilter = LinearFilter
 	caddyTex.generateMipmaps = false
 	const caddyMat = new MeshStandardMaterial({
 		map: caddyTex,
-		metalness: 0.3,
-		roughness: 0.58,
+		metalness: 0.25,
+		roughness: 0.65,
 	})
 	const vent = perforatedTexture('#28292d', '#0b0c0f', 80)
 	vent.minFilter = LinearFilter
@@ -365,20 +515,31 @@ function buildR730(): {
 		body.position.set(0, 0, -0.048)
 		tray.add(body)
 		const ventPlate = new Mesh(
-			new PlaneGeometry(trayW - 0.003, trayH - 0.019),
+			new PlaneGeometry(trayW - 0.004, trayH - 0.024),
 			caddyMat
 		)
-		ventPlate.position.set(0, -0.0045, 0.0034)
+		ventPlate.position.set(0, -0.0065, 0.0034)
 		tray.add(ventPlate)
-		// latch handle hinged at its lower edge, swings open on selection
+		// fixed release button strip at the very top of the tray
+		const release = box(trayW - 0.004, 0.0052, 0.0025, plastic('#1b1c1f', 0.5))
+		release.position.set(0, trayH / 2 - 0.0045, 0.0035)
+		tray.add(release)
+		const releaseDot = box(0.0035, 0.0028, 0.0012, plastic('#2d8c96', 0.45))
+		releaseDot.position.set(0, trayH / 2 - 0.0045, 0.005)
+		tray.add(releaseDot)
+		// full-height handle lever hinged at the bottom of the face; the
+		// top end swings outward when the release button is pressed
 		const handle = new Group()
-		const latchBlock = box(trayW, 0.0135, 0.0075, handleMat)
-		latchBlock.position.set(0, 0.0075, 0.0004)
-		handle.add(latchBlock)
-		const release = box(trayW - 0.006, 0.0048, 0.002, plastic('#aab2ba', 0.58))
-		release.position.set(0, 0.009, 0.0048)
-		handle.add(release)
-		handle.position.set(0, trayH / 2 - 0.013, 0)
+		const leverH = trayH - 0.013
+		for (const sx of [-1, 1]) {
+			const rail = box(0.0022, leverH, 0.0045, handleMat)
+			rail.position.set(sx * (trayW / 2 - 0.0016), leverH / 2, 0.0028)
+			handle.add(rail)
+		}
+		const grip = box(trayW, 0.0075, 0.0045, handleMat)
+		grip.position.set(0, leverH - 0.00375, 0.0028)
+		handle.add(grip)
+		handle.position.set(0, -trayH / 2 + 0.0035, 0.0018)
 		tray.add(handle)
 		tray.userData.handle = handle
 		let ledColor = '#00e84a'
@@ -389,14 +550,14 @@ function buildR730(): {
 			ledMaterial(ledColor)
 		)
 		activity.rotation.x = Math.PI / 2
-		activity.position.set(-trayW / 2 + 0.003, trayH / 2 - 0.0145, 0.0035)
+		activity.position.set(-trayW / 2 + 0.004, trayH / 2 - 0.0115, 0.0052)
 		tray.add(activity)
 		const status = new Mesh(
 			new CylinderGeometry(0.0014, 0.0014, 0.002, 8),
 			ledMaterial(i >= 14 ? '#1c221d' : '#2fae38')
 		)
 		status.rotation.x = Math.PI / 2
-		status.position.set(-trayW / 2 + 0.003, trayH / 2 - 0.0205, 0.0035)
+		status.position.set(trayW / 2 - 0.004, trayH / 2 - 0.0115, 0.0052)
 		tray.add(status)
 		tray.position.set(bayX0 + pitch / 2 + i * pitch, trayY, 0.001)
 		tray.userData.baseZ = 0.001
@@ -442,18 +603,6 @@ function buildR730(): {
 			slide.add(screw)
 		}
 	}
-	const dellBadge = new Mesh(
-		new PlaneGeometry(0.013, 0.013),
-		new MeshStandardMaterial({
-			map: dellBadgeTexture(),
-			transparent: true,
-			roughness: 0.4,
-			metalness: 0.2,
-		})
-	)
-	dellBadge.userData.keepTransparent = true
-	dellBadge.position.set(-(PANEL_W / 2 - 0.008), 0, 0.0142)
-	slide.add(dellBadge)
 
 	// ball-bearing slide rails: outer member fixed, inner member rides out
 	const railZinc = steel('#b8bcc0', 0.38)
@@ -495,57 +644,63 @@ function buildR730(): {
 	lid.add(latchDial)
 	slide.add(lid)
 
-	// Dell locking front bezel: black frame, perforated grille, keylock, badge
+	// Dell 13G locking bezel: full-width hex mesh, silver top trim,
+	// keylock on the left end, round Dell badge on the right
 	const bezel = new Group()
 	const bezW = PANEL_W - 0.004
 	const bezH = H - 0.002
-	const bezFrame = plastic('#16171b', 0.55)
-	for (const sy of [1, -1]) {
-		const rail = box(bezW, 0.0085, 0.012, bezFrame)
-		rail.position.set(0, sy * (bezH / 2 - 0.00425), 0)
-		bezel.add(rail)
-	}
-	const leftCap = box(0.062, bezH, 0.012, bezFrame)
-	leftCap.position.set(-bezW / 2 + 0.031, 0, 0)
+	const bezFrame = plastic('#141519', 0.58)
+	const bottomRail = box(bezW, 0.0075, 0.012, bezFrame)
+	bottomRail.position.set(0, -(bezH / 2 - 0.00375), 0)
+	bezel.add(bottomRail)
+	// brushed aluminium trim strip across the top edge
+	const trimMat = new MeshStandardMaterial({
+		map: brushedTexture('#b7bcc2', '#999ea5'),
+		metalness: 0.65,
+		roughness: 0.4,
+	})
+	const topTrim = box(bezW, 0.0095, 0.012, trimMat)
+	topTrim.position.set(0, bezH / 2 - 0.00475, 0)
+	bezel.add(topTrim)
+	const leftCap = box(0.034, bezH, 0.012, bezFrame)
+	leftCap.position.set(-bezW / 2 + 0.017, 0, 0)
 	bezel.add(leftCap)
-	const rightCap = box(0.02, bezH, 0.012, bezFrame)
-	rightCap.position.set(bezW / 2 - 0.01, 0, 0)
+	const rightCap = box(0.034, bezH, 0.012, bezFrame)
+	rightCap.position.set(bezW / 2 - 0.017, 0, 0)
 	bezel.add(rightCap)
-	const grilleTex = perforatedTexture('#34353c', '#0b0c10', 26)
+	const grilleTex = hexMeshTexture('#34353c', '#0a0b0e')
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
-	grilleTex.wrapS = RepeatWrapping
-	grilleTex.wrapT = RepeatWrapping
-	grilleTex.repeat.set(5, 2)
+	grilleTex.repeat.set(6, 1.2)
 	const grille = new Mesh(
-		new PlaneGeometry(bezW - 0.088, bezH - 0.016),
+		new PlaneGeometry(bezW - 0.068, bezH - 0.017),
 		new MeshStandardMaterial({
 			map: grilleTex,
 			metalness: 0.35,
 			roughness: 0.52,
 		})
 	)
-	grille.position.set(0.003, 0, 0.0052)
+	grille.position.set(0, -0.0012, 0.0052)
 	bezel.add(grille)
 	const keylock = new Mesh(
-		new CylinderGeometry(0.0045, 0.0045, 0.003, 16),
+		new CylinderGeometry(0.0052, 0.0052, 0.003, 16),
 		steel('#9aa0a8', 0.35)
 	)
 	keylock.rotation.x = Math.PI / 2
-	keylock.position.set(-bezW / 2 + 0.031, -0.014, 0.0062)
+	keylock.position.set(-bezW / 2 + 0.017, 0, 0.0062)
 	bezel.add(keylock)
-	const keySlot = box(0.0012, 0.005, 0.0015, plastic('#0a0a0c', 0.7))
-	keySlot.position.set(-bezW / 2 + 0.031, -0.014, 0.0078)
+	const keySlot = box(0.0014, 0.0058, 0.0015, plastic('#0a0a0c', 0.7))
+	keySlot.position.set(-bezW / 2 + 0.017, 0, 0.0078)
 	bezel.add(keySlot)
 	const badge = new Mesh(
-		new CylinderGeometry(0.011, 0.011, 0.002, 24),
+		new CylinderGeometry(0.0115, 0.0115, 0.002, 24),
 		steel('#b4b9c0', 0.3)
 	)
 	badge.rotation.x = Math.PI / 2
-	badge.position.set(-bezW / 2 + 0.031, 0.012, 0.0062)
+	badge.position.set(bezW / 2 - 0.017, -0.006, 0.0062)
 	bezel.add(badge)
 	const badgeFace = new Mesh(
-		new PlaneGeometry(0.02, 0.02),
+		new PlaneGeometry(0.021, 0.021),
 		new MeshStandardMaterial({
 			map: dellBadgeTexture(),
 			transparent: true,
@@ -554,18 +709,15 @@ function buildR730(): {
 		})
 	)
 	badgeFace.userData.keepTransparent = true
-	badgeFace.position.set(-bezW / 2 + 0.031, 0.012, 0.0074)
+	badgeFace.position.set(bezW / 2 - 0.017, -0.006, 0.0074)
 	bezel.add(badgeFace)
-	const modelPlate = box(0.044, 0.008, 0.0015, steel('#b4b9c0', 0.35))
-	modelPlate.position.set(bezW / 2 - 0.052, -bezH / 2 + 0.0105, 0.0062)
-	bezel.add(modelPlate)
-	const modelTag = label('PowerEdge R730', 0.04, 0.0055, {
-		fg: '#1c1d21',
+	const modelTag = label('PowerEdge R730', 0.038, 0.005, {
+		fg: '#2a2b2f',
 		font: 'bold 28px Arial',
 		width: 512,
 		height: 72,
 	})
-	modelTag.position.set(bezW / 2 - 0.052, -bezH / 2 + 0.0105, 0.0072)
+	modelTag.position.set(-bezW / 2 + 0.062, bezH / 2 - 0.00475, 0.0062)
 	bezel.add(modelTag)
 	bezel.traverse((child) => {
 		if (child instanceof Mesh) {
@@ -576,7 +728,8 @@ function buildR730(): {
 	bezel.position.set(0, 0, 0.0205)
 	slide.add(bezel)
 
-	group.position.set(0, slotY(1) + U, 0.004)
+	// mounted so the ears sit proud of the rack posts (front face z=0.02)
+	group.position.set(0, slotY(1) + U, 0.021)
 	tag(group, 'r730')
 	shadows(group)
 	return { group, slide, lid, bezel, caddies }

@@ -128,6 +128,43 @@ export function labelTexture(
 	return texture
 }
 
+/** Hexagonal honeycomb mesh texture for Dell 13G front bezels. */
+export function hexMeshTexture(bg: string, hole: string): CanvasTexture {
+	const size = 256
+	const canvas = makeCanvas(size, size)
+	const ctx = canvas.getContext('2d')
+	if (ctx) {
+		ctx.fillStyle = bg
+		ctx.fillRect(0, 0, size, size)
+		const r = 7
+		const stepX = r * 1.9
+		const stepY = r * 1.65
+		ctx.fillStyle = hole
+		for (let row = 0; row * stepY < size + stepY; row++) {
+			const offset = (row % 2) * (stepX / 2)
+			for (let col = 0; col * stepX < size + stepX; col++) {
+				const cx = col * stepX + offset
+				const cy = row * stepY
+				ctx.beginPath()
+				for (let k = 0; k < 6; k++) {
+					const a = (Math.PI / 3) * k + Math.PI / 6
+					const px = cx + Math.cos(a) * r * 0.78
+					const py = cy + Math.sin(a) * r * 0.78
+					if (k === 0) ctx.moveTo(px, py)
+					else ctx.lineTo(px, py)
+				}
+				ctx.closePath()
+				ctx.fill()
+			}
+		}
+	}
+	const texture = new CanvasTexture(canvas)
+	texture.wrapS = RepeatWrapping
+	texture.wrapT = RepeatWrapping
+	texture.colorSpace = SRGBColorSpace
+	return texture
+}
+
 /** Dell 2.5" caddy face: grid of square vent holes in a framed tray front. */
 export function caddyFaceTexture(): CanvasTexture {
 	const w = 160
@@ -135,10 +172,10 @@ export function caddyFaceTexture(): CanvasTexture {
 	const canvas = makeCanvas(w, h)
 	const ctx = canvas.getContext('2d')
 	if (ctx) {
-		ctx.fillStyle = '#44454c'
+		ctx.fillStyle = '#26272b'
 		ctx.fillRect(0, 0, w, h)
 		// recessed inner panel
-		ctx.fillStyle = '#3a3b42'
+		ctx.fillStyle = '#1f2024'
 		ctx.fillRect(14, 14, w - 28, h - 28)
 		// grid of square vent holes with a lower highlight edge for depth
 		const cols = 4
