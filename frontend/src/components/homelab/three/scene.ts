@@ -56,7 +56,7 @@ function applyHighlight(
 				child.userData.sharedMaterial = material
 				const clone = material.clone()
 				clone.emissive = HIGHLIGHT.clone()
-				clone.emissiveIntensity = 0.12
+				clone.emissiveIntensity = 0.08
 				child.userData.highlightMaterial = clone
 			}
 			if (selected) {

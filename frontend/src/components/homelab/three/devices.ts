@@ -427,9 +427,9 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 		new PlaneGeometry(0.15, 0.1),
 		new MeshStandardMaterial({
 			map: labelTexture('SERVICE INFORMATION', {
-				bg: '#dce0e5',
-				fg: '#1f2328',
-				font: 'bold 56px Arial',
+				bg: '#e4e8ec',
+				fg: '#000000',
+				font: 'bold 64px Arial',
 				width: 512,
 				height: 320,
 			}),
