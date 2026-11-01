@@ -4,6 +4,7 @@ import {
 	Group,
 	Material,
 	Mesh,
+	MeshBasicMaterial,
 	MeshStandardMaterial,
 	PlaneGeometry,
 	TorusGeometry,
@@ -71,8 +72,210 @@ function label(
 }
 
 /* ------------------------------------------------------------------ */
-/* Dell PowerEdge R730, slots 1-2, 16 SFF bays                         */
+/* Dell PowerEdge R730, slots 1-2, 16x 2.5" SFF vertical bays          */
 /* ------------------------------------------------------------------ */
+
+function buildR730ControlPanel(H: number, bodyW: number): Group {
+	const panel = new Group()
+	const cpW = 0.112
+	const cpX = -bodyW / 2 + 0.003 + cpW / 2
+	const backing = box(cpW, H - 0.003, 0.009, paintedSteel('#2b2c30', 0.5))
+	backing.position.set(cpX, 0, -0.0005)
+	panel.add(backing)
+
+	// slim optical drive slot across the top of the control module
+	const optical = box(0.094, 0.009, 0.002, plastic('#1b1c1f', 0.55))
+	optical.position.set(cpX + 0.004, H / 2 - 0.0115, 0.0045)
+	panel.add(optical)
+	const opticalSlit = box(0.08, 0.0012, 0.0015, plastic('#060607', 0.8))
+	opticalSlit.position.set(cpX + 0.001, H / 2 - 0.0115, 0.0056)
+	panel.add(opticalSlit)
+	const eject = box(0.006, 0.004, 0.0018, plastic('#45474d', 0.5))
+	eject.position.set(cpX + 0.043, H / 2 - 0.0115, 0.0056)
+	panel.add(eject)
+
+	// left button column: power, ID, NMI pinhole
+	const colX = -bodyW / 2 + 0.013
+	const powerRing = new Mesh(
+		new TorusGeometry(0.0042, 0.0012, 8, 24),
+		ledMaterial('#38d04a')
+	)
+	powerRing.position.set(colX, 0.013, 0.0048)
+	panel.add(powerRing)
+	const powerCore = new Mesh(
+		new CylinderGeometry(0.0034, 0.0034, 0.002, 16),
+		plastic('#1a1b1e', 0.5)
+	)
+	powerCore.rotation.x = Math.PI / 2
+	powerCore.position.set(colX, 0.013, 0.0045)
+	panel.add(powerCore)
+	const idBtn = new Mesh(
+		new CylinderGeometry(0.003, 0.003, 0.002, 16),
+		plastic('#33353a', 0.45)
+	)
+	idBtn.rotation.x = Math.PI / 2
+	idBtn.position.set(colX, 0.0005, 0.0048)
+	panel.add(idBtn)
+	const nmi = new Mesh(
+		new CylinderGeometry(0.0012, 0.0012, 0.002, 8),
+		plastic('#0a0a0c', 0.7)
+	)
+	nmi.rotation.x = Math.PI / 2
+	nmi.position.set(colX, -0.009, 0.0046)
+	panel.add(nmi)
+
+	// blue backlit LCD diagnostics panel with bezel and menu buttons
+	const lcdBezel = box(0.064, 0.027, 0.003, plastic('#1d1e22', 0.4))
+	lcdBezel.position.set(cpX + 0.008, 0.004, 0.0045)
+	panel.add(lcdBezel)
+	const lcdMaterial = new MeshBasicMaterial({
+		map: labelTexture('PowerEdge R730', {
+			bg: '#1266e3',
+			fg: '#eaf3ff',
+			font: 'bold 22px Arial',
+			width: 256,
+			height: 80,
+		}),
+	})
+	lcdMaterial.toneMapped = false
+	const lcd = new Mesh(new PlaneGeometry(0.052, 0.017), lcdMaterial)
+	lcd.position.set(cpX + 0.008, 0.004, 0.0062)
+	panel.add(lcd)
+	for (let i = 0; i < 3; i++) {
+		const menuBtn = box(0.005, 0.0032, 0.0018, plastic('#3a3c42', 0.45))
+		menuBtn.position.set(cpX - 0.006 + i * 0.011, -0.0145, 0.0052)
+		panel.add(menuBtn)
+	}
+
+	// bottom I/O row: VGA, dual USB, vFlash slot
+	const vgaShell = box(0.0165, 0.0085, 0.003, steel('#8d939c', 0.4))
+	vgaShell.position.set(cpX - 0.03, -0.0265, 0.0045)
+	panel.add(vgaShell)
+	const vgaInner = box(0.013, 0.0055, 0.0015, plastic('#15306e', 0.5))
+	vgaInner.position.set(cpX - 0.03, -0.0265, 0.006)
+	panel.add(vgaInner)
+	for (let i = 0; i < 2; i++) {
+		const usbShell = box(0.0125, 0.0055, 0.003, steel('#9aa0a8', 0.4))
+		usbShell.position.set(cpX - 0.002 + i * 0.017, -0.0265, 0.0045)
+		panel.add(usbShell)
+		const usbInner = box(0.01, 0.0032, 0.0015, plastic('#0a0a0c', 0.7))
+		usbInner.position.set(cpX - 0.002 + i * 0.017, -0.0265, 0.006)
+		panel.add(usbInner)
+		const usbTongue = box(0.009, 0.0012, 0.001, plastic('#16181c', 0.6))
+		usbTongue.position.set(cpX - 0.002 + i * 0.017, -0.0255, 0.0065)
+		panel.add(usbTongue)
+	}
+	const vflash = box(0.024, 0.0028, 0.0018, plastic('#0c0d10', 0.7))
+	vflash.position.set(cpX + 0.034, -0.0265, 0.0052)
+	panel.add(vflash)
+
+	// pull-out information tag (blue luggage tag)
+	const infoTag = box(0.014, 0.0135, 0.0045, plastic('#2f6fd6', 0.45))
+	infoTag.position.set(cpX + 0.047, -H / 2 + 0.0115, 0.0055)
+	panel.add(infoTag)
+	const infoFace = box(0.011, 0.0105, 0.001, plastic('#dde2e8', 0.6))
+	infoFace.position.set(cpX + 0.047, -H / 2 + 0.0115, 0.008)
+	panel.add(infoFace)
+	return panel
+}
+
+function buildR730Interior(H: number, DEPTH: number, bodyW: number): Group {
+	const interior = new Group()
+	const zinc = steel('#9299a1', 0.48)
+	const pcbMat = plastic('#113318', 0.75)
+
+	// drive block + backplane directly behind the bays
+	const driveBlock = box(
+		bodyW - 0.03,
+		H - 0.016,
+		0.098,
+		plastic('#1d1e22', 0.6)
+	)
+	driveBlock.position.set(0.012, 0, -0.055)
+	interior.add(driveBlock)
+	const backplane = box(bodyW - 0.028, H - 0.014, 0.004, pcbMat)
+	backplane.position.set(0.012, 0, -0.108)
+	interior.add(backplane)
+
+	// bank of six hot-swap fan modules
+	for (let i = 0; i < 6; i++) {
+		const fx = -0.17 + i * 0.068
+		const fan = box(0.054, H - 0.012, 0.04, plastic('#141518', 0.68))
+		fan.position.set(fx, 0, -0.14)
+		interior.add(fan)
+		const hub = new Mesh(
+			new CylinderGeometry(0.016, 0.016, 0.006, 20),
+			plastic('#26272c', 0.5)
+		)
+		hub.rotation.x = Math.PI / 2
+		hub.position.set(fx, 0.004, -0.118)
+		interior.add(hub)
+		const handle = box(0.03, 0.0025, 0.008, plastic('#2f6fd6', 0.45))
+		handle.position.set(fx, H / 2 - 0.009, -0.14)
+		interior.add(handle)
+	}
+
+	// motherboard
+	const mobo = new Mesh(new PlaneGeometry(bodyW - 0.04, 0.34), pcbMat)
+	mobo.rotation.x = -Math.PI / 2
+	mobo.position.set(-0.02, -H / 2 + 0.005, -0.34)
+	interior.add(mobo)
+
+	// twin CPU heatsinks with airflow-aligned fins
+	const finMat = steel('#aeb3ba', 0.32)
+	for (const cx of [-0.095, 0.075]) {
+		const base = box(0.062, 0.004, 0.092, steel('#8f949b', 0.4))
+		base.position.set(cx, -H / 2 + 0.008, -0.3)
+		interior.add(base)
+		for (let fin = 0; fin < 10; fin++) {
+			const plate = box(0.0022, 0.03, 0.092, finMat)
+			plate.position.set(cx - 0.0275 + fin * 0.0061, -H / 2 + 0.025, -0.3)
+			interior.add(plate)
+		}
+	}
+
+	// 24 DIMM slots in four banks flanking the CPUs, 4x16GB populated
+	const slotMat = plastic('#0d0d10', 0.6)
+	const dimmMat = plastic('#15471f', 0.55)
+	const banks = [-0.17, -0.048, 0.012, 0.13]
+	const populated = new Set(['0:2', '1:3', '2:1', '3:2'])
+	banks.forEach((bx, bankIndex) => {
+		for (let i = 0; i < 6; i++) {
+			const filled = populated.has(`${bankIndex}:${i}`)
+			const stick = box(
+				filled ? 0.004 : 0.0045,
+				filled ? 0.028 : 0.006,
+				0.11,
+				filled ? dimmMat : slotMat
+			)
+			stick.position.set(
+				bx + i * 0.0068,
+				-H / 2 + (filled ? 0.019 : 0.008),
+				-0.3
+			)
+			interior.add(stick)
+		}
+	})
+
+	// rear PCIe riser assemblies with blue release latches
+	for (const rx of [-0.1, 0.035]) {
+		const riser = box(0.115, H - 0.02, 0.055, plastic('#17181b', 0.6))
+		riser.position.set(rx, 0, -DEPTH + 0.05)
+		interior.add(riser)
+		const latch = box(0.028, 0.004, 0.04, plastic('#2f6fd6', 0.45))
+		latch.position.set(rx, H / 2 - 0.012, -DEPTH + 0.05)
+		interior.add(latch)
+	}
+
+	// dual PSU cage at the rear right
+	const psu = box(0.11, H - 0.012, 0.1, zinc)
+	psu.position.set(0.158, 0, -DEPTH + 0.07)
+	interior.add(psu)
+	const psuSplit = box(0.112, 0.0015, 0.1, plastic('#3a3c40', 0.6))
+	psuSplit.position.set(0.158, 0, -DEPTH + 0.07)
+	interior.add(psuSplit)
+	return interior
+}
 
 function buildR730(): { group: Group; slide: Group; lid: Group } {
 	const group = new Group()
@@ -82,148 +285,141 @@ function buildR730(): { group: Group; slide: Group; lid: Group } {
 	const H = 2 * U - 0.004
 	const DEPTH = 0.6
 	const bodyW = OPENING_W - 0.006
-	const body = paintedSteel('#2e2f33', 0.55)
+	const zinc = steel('#9299a1', 0.48)
 
-	// chassis shell (open top, lid separate)
-	const floor = box(bodyW, 0.003, DEPTH, body)
+	// chassis shell: galvanized zinc steel, open top (lid separate)
+	const floor = box(bodyW, 0.003, DEPTH, zinc)
 	floor.position.set(0, -H / 2, -DEPTH / 2)
 	slide.add(floor)
 	for (const side of [-1, 1]) {
-		const wall = box(0.003, H, DEPTH, body)
+		const wall = box(0.003, H, DEPTH, zinc)
 		wall.position.set((side * bodyW) / 2, 0, -DEPTH / 2)
 		slide.add(wall)
 	}
-	const rear = box(bodyW, H, 0.01, paintedSteel('#232428', 0.6))
+	const rear = box(bodyW, H, 0.01, paintedSteel('#2c2d31', 0.6))
 	rear.position.set(0, 0, -DEPTH + 0.005)
 	slide.add(rear)
+	const topLip = box(bodyW, 0.004, 0.005, paintedSteel('#2b2c30', 0.5))
+	topLip.position.set(0, H / 2 - 0.002, 0.0025)
+	slide.add(topLip)
 
-	// front drive cage: 2 rows x 8 SFF trays
-	const trayW = 0.0504
-	const trayH = H / 2 - 0.004
-	const trayFace = paintedSteel('#303136', 0.5)
-	const handleMat = steel('#8d939c', 0.35)
-	const vent = perforatedTexture('#26272b', '#0a0a0c', 10)
+	// left control module: optical, power, LCD, VGA/USB, info tag
+	slide.add(buildR730ControlPanel(H, bodyW))
+
+	// single row of 16 vertical 2.5" SFF trays
+	const bayX0 = -bodyW / 2 + 0.118
+	const bayAreaW = bodyW - 0.118 - 0.01
+	const pitch = bayAreaW / 16
+	const trayW = pitch - 0.0014
+	const trayH = 0.068
+	const trayY = -H / 2 + 0.0035 + trayH / 2
+	const trayFace = paintedSteel('#2c2d31', 0.5)
+	const latchMat = paintedSteel('#36383d', 0.45)
+	const vent = perforatedTexture('#27282c', '#09090b', 7)
 	const ventMat = new MeshStandardMaterial({
 		map: vent,
 		metalness: 0.4,
 		roughness: 0.6,
 	})
-	for (let row = 0; row < 2; row++) {
-		for (let col = 0; col < 8; col++) {
-			const tray = new Group()
-			const faceplate = box(trayW - 0.002, trayH - 0.002, 0.008, trayFace)
-			tray.add(faceplate)
-			const ventPlate = new Mesh(
-				new PlaneGeometry(trayW - 0.012, trayH - 0.014),
-				ventMat
-			)
-			ventPlate.position.set(0.002, -0.003, 0.0045)
-			tray.add(ventPlate)
-			const handle = box(trayW - 0.006, 0.0048, 0.0045, handleMat)
-			handle.position.set(0, trayH / 2 - 0.005, 0.004)
-			tray.add(handle)
-			const latch = box(0.008, 0.0035, 0.005, plastic('#b8bdc4', 0.4))
-			latch.position.set(-trayW / 2 + 0.007, trayH / 2 - 0.005, 0.0042)
-			tray.add(latch)
-			const index = row * 8 + col
-			let ledColor = '#00e84a'
-			if ([0, 2, 5, 9, 12].includes(index)) ledColor = '#ffaa00'
-			if (index % 5 === 3) ledColor = '#1c221d'
-			const led = new Mesh(
-				new CylinderGeometry(0.004, 0.004, 0.002, 8),
-				ledMaterial(ledColor)
-			)
-			led.rotation.x = Math.PI / 2
-			led.position.set(-trayW / 2 + 0.004, 0.008, 0.0045)
-			tray.add(led)
-			tray.position.set(
-				-bodyW / 2 + 0.024 + col * (trayW + 0.0016),
-				-H / 2 + trayH / 2 + 0.003 + row * (trayH + 0.003),
-				-0.004
-			)
-			slide.add(tray)
-		}
+	for (let i = 0; i < 16; i++) {
+		const tray = new Group()
+		const faceplate = box(trayW, trayH, 0.006, trayFace)
+		tray.add(faceplate)
+		const ventPlate = new Mesh(
+			new PlaneGeometry(trayW - 0.004, trayH - 0.02),
+			ventMat
+		)
+		ventPlate.position.set(0, -0.0045, 0.0032)
+		tray.add(ventPlate)
+		const latchBlock = box(trayW, 0.011, 0.0068, latchMat)
+		latchBlock.position.set(0, trayH / 2 - 0.0055, 0.0004)
+		tray.add(latchBlock)
+		const release = box(trayW - 0.008, 0.0038, 0.0015, plastic('#9aa0a8', 0.4))
+		release.position.set(0, trayH / 2 - 0.0045, 0.0042)
+		tray.add(release)
+		let ledColor = '#00e84a'
+		if (i === 6 || i === 11) ledColor = '#ffaa00'
+		if (i >= 14) ledColor = '#1c221d'
+		const activity = new Mesh(
+			new CylinderGeometry(0.0018, 0.0018, 0.002, 8),
+			ledMaterial(ledColor)
+		)
+		activity.rotation.x = Math.PI / 2
+		activity.position.set(-trayW / 2 + 0.003, trayH / 2 - 0.0145, 0.0035)
+		tray.add(activity)
+		const status = new Mesh(
+			new CylinderGeometry(0.0014, 0.0014, 0.002, 8),
+			ledMaterial(i >= 14 ? '#1c221d' : '#2fae38')
+		)
+		status.rotation.x = Math.PI / 2
+		status.position.set(-trayW / 2 + 0.003, trayH / 2 - 0.0205, 0.0035)
+		tray.add(status)
+		tray.position.set(bayX0 + pitch / 2 + i * pitch, trayY, 0.001)
+		slide.add(tray)
 	}
+	// perforated vent strip above the bay row
+	const bayVent = new Mesh(
+		new PlaneGeometry(bayAreaW, H - trayH - 0.011),
+		ventMat
+	)
+	bayVent.position.set(
+		bayX0 + bayAreaW / 2,
+		H / 2 - (H - trayH - 0.011) / 2 - 0.0045,
+		0.004
+	)
+	slide.add(bayVent)
 
-	// rack ears with control panel
+	// rack ears with torx screw detail
 	const earMat = paintedSteel('#26272b', 0.5)
 	for (const side of [-1, 1]) {
 		const ear = box(0.016, H, 0.012, earMat)
 		ear.position.set(side * (PANEL_W / 2 - 0.008), 0, 0.002)
 		slide.add(ear)
-	}
-	const powerBtn = new Mesh(
-		new CylinderGeometry(0.004, 0.004, 0.003, 16),
-		ledMaterial('#2fae38')
-	)
-	powerBtn.rotation.x = Math.PI / 2
-	powerBtn.position.set(-(PANEL_W / 2 - 0.008), H / 4, 0.0095)
-	slide.add(powerBtn)
-
-	// front badge
-	const badge = label('DELL', 0.02, 0.008, {
-		fg: '#dfe3e8',
-		font: 'bold 26px Arial',
-		width: 128,
-		height: 48,
-	})
-	badge.position.set(PANEL_W / 2 - 0.008, -H / 4, 0.0085)
-	slide.add(badge)
-
-	// interior, visible when the lid is off
-	const interior = new Group()
-	const pcb = new Mesh(
-		new PlaneGeometry(bodyW - 0.02, DEPTH * 0.55),
-		plastic('#0f3d1e', 0.8)
-	)
-	pcb.rotation.x = -Math.PI / 2
-	pcb.position.set(0, -H / 2 + 0.006, -DEPTH * 0.6)
-	interior.add(pcb)
-	for (const x of [-0.07, 0.07]) {
-		const heatsink = box(0.06, 0.028, 0.06, steel('#9aa0a8', 0.35))
-		heatsink.position.set(x, -H / 2 + 0.02, -DEPTH * 0.62)
-		interior.add(heatsink)
-		for (let fin = 0; fin < 5; fin++) {
-			const gap = box(0.062, 0.002, 0.004, paintedSteel('#56585e', 0.4))
-			gap.position.set(x, -H / 2 + 0.032, -DEPTH * 0.62 - 0.024 + fin * 0.012)
-			interior.add(gap)
+		for (const sy of [H / 4, -H / 4]) {
+			const screw = new Mesh(
+				new CylinderGeometry(0.003, 0.003, 0.0015, 12),
+				steel('#6a6e75', 0.4)
+			)
+			screw.rotation.x = Math.PI / 2
+			screw.position.set(side * (PANEL_W / 2 - 0.008), sy, 0.0085)
+			slide.add(screw)
 		}
 	}
-	const ramMat = plastic('#1a6b2f', 0.6)
-	for (let i = 0; i < 8; i++) {
-		const stick = box(0.003, 0.02, 0.1, ramMat)
-		stick.position.set(-0.15 + i * 0.009, -H / 2 + 0.014, -DEPTH * 0.62)
-		interior.add(stick)
-	}
-	const fanMat = plastic('#17171a', 0.7)
-	for (let i = 0; i < 6; i++) {
-		const fan = new Mesh(new CylinderGeometry(0.018, 0.018, 0.03, 16), fanMat)
-		fan.rotation.x = Math.PI / 2
-		fan.position.set(-0.17 + i * 0.068, -H / 2 + 0.022, -DEPTH * 0.38)
-		interior.add(fan)
-	}
-	slide.add(interior)
 
-	// removable lid
+	// interior, visible when the lid is off
+	slide.add(buildR730Interior(H, DEPTH, bodyW))
+
+	// fixed front cover strip over the drive cage (stays when lid is off)
+	const frontCover = box(bodyW, 0.0035, 0.115, zinc)
+	frontCover.position.set(0, H / 2 - 0.002, -0.0575)
+	slide.add(frontCover)
+
+	// removable galvanized lid with info label and release latch
 	const lid = new Group()
-	const lidPlate = box(
-		bodyW,
-		0.0035,
-		DEPTH - 0.09,
-		paintedSteel('#3a3b40', 0.45)
-	)
-	lidPlate.position.set(0, H / 2 - 0.002, -(DEPTH - 0.09) / 2 - 0.09)
+	const lidMat = new MeshStandardMaterial({
+		map: brushedTexture('#aab0b6', '#878d94'),
+		metalness: 0.7,
+		roughness: 0.42,
+	})
+	const lidPlate = box(bodyW, 0.0035, DEPTH - 0.12, lidMat)
+	lidPlate.position.set(0, H / 2 - 0.002, -(DEPTH - 0.12) / 2 - 0.12)
 	lid.add(lidPlate)
-	const serviceTag = new Mesh(
-		new PlaneGeometry(0.12, 0.07),
-		new MeshStandardMaterial({ color: '#a8abb0', roughness: 0.75 })
+	const infoLabel = new Mesh(
+		new PlaneGeometry(0.15, 0.1),
+		new MeshStandardMaterial({ color: '#dce0e5', roughness: 0.8 })
 	)
-	serviceTag.rotation.x = -Math.PI / 2
-	serviceTag.position.set(-0.08, H / 2, -DEPTH * 0.5)
-	lid.add(serviceTag)
-	const latchBox = box(0.05, 0.004, 0.07, paintedSteel('#45474d', 0.45))
-	latchBox.position.set(0.07, H / 2, -DEPTH * 0.3)
-	lid.add(latchBox)
+	infoLabel.rotation.x = -Math.PI / 2
+	infoLabel.position.set(-0.1, H / 2, -DEPTH * 0.55)
+	lid.add(infoLabel)
+	const latchBody = box(0.055, 0.005, 0.075, plastic('#232428', 0.5))
+	latchBody.position.set(0.06, H / 2 + 0.0005, -0.2)
+	lid.add(latchBody)
+	const latchDial = new Mesh(
+		new CylinderGeometry(0.013, 0.013, 0.004, 20),
+		plastic('#2c2d31', 0.45)
+	)
+	latchDial.position.set(0.06, H / 2 + 0.003, -0.2)
+	lid.add(latchDial)
 	slide.add(lid)
 
 	group.position.set(0, slotY(1) + U, 0.004)
