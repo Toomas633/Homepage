@@ -13,6 +13,8 @@ import {
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import {
 	brushedTexture,
+	caddyFaceTexture,
+	dellBadgeTexture,
 	emissive,
 	led as ledMaterial,
 	glass,
@@ -337,6 +339,14 @@ function buildR730(): {
 	const trayY = -H / 2 + 0.0035 + trayH / 2
 	const trayFace = paintedSteel('#2b2c31', 0.52)
 	const handleMat = paintedSteel('#35373d', 0.48)
+	const caddyTex = caddyFaceTexture()
+	caddyTex.minFilter = LinearFilter
+	caddyTex.generateMipmaps = false
+	const caddyMat = new MeshStandardMaterial({
+		map: caddyTex,
+		metalness: 0.3,
+		roughness: 0.58,
+	})
 	const vent = perforatedTexture('#28292d', '#0b0c0f', 80)
 	vent.minFilter = LinearFilter
 	vent.generateMipmaps = false
@@ -354,8 +364,8 @@ function buildR730(): {
 		body.position.set(0, 0, -0.048)
 		tray.add(body)
 		const ventPlate = new Mesh(
-			new PlaneGeometry(trayW - 0.004, trayH - 0.02),
-			ventMat
+			new PlaneGeometry(trayW - 0.003, trayH - 0.019),
+			caddyMat
 		)
 		ventPlate.position.set(0, -0.0045, 0.0034)
 		tray.add(ventPlate)
@@ -404,12 +414,15 @@ function buildR730(): {
 	)
 	slide.add(bayVent)
 
-	// rack ears with torx screw detail
+	// rack ears: cast metal with rounded caps, Dell badge on the left ear
 	const earMat = paintedSteel('#26272b', 0.5)
 	for (const side of [-1, 1]) {
 		const ear = box(0.02, H, 0.014, earMat)
 		ear.position.set(side * (PANEL_W / 2 - 0.008), 0, 0.006)
 		slide.add(ear)
+		const cap = new Mesh(new CylinderGeometry(0.0072, 0.0072, H, 14), earMat)
+		cap.position.set(side * (PANEL_W / 2 - 0.002), 0, 0.0105)
+		slide.add(cap)
 		for (const sy of [H / 4, -H / 4]) {
 			const screw = new Mesh(
 				new CylinderGeometry(0.0035, 0.0035, 0.0015, 12),
@@ -420,6 +433,18 @@ function buildR730(): {
 			slide.add(screw)
 		}
 	}
+	const dellBadge = new Mesh(
+		new PlaneGeometry(0.013, 0.013),
+		new MeshStandardMaterial({
+			map: dellBadgeTexture(),
+			transparent: true,
+			roughness: 0.4,
+			metalness: 0.2,
+		})
+	)
+	dellBadge.userData.keepTransparent = true
+	dellBadge.position.set(-(PANEL_W / 2 - 0.008), 0, 0.0142)
+	slide.add(dellBadge)
 
 	// ball-bearing slide rails: outer member fixed, inner member rides out
 	const railZinc = steel('#b8bcc0', 0.38)
@@ -477,15 +502,15 @@ function buildR730(): {
 	const rightCap = box(0.02, bezH, 0.012, bezFrame)
 	rightCap.position.set(bezW / 2 - 0.01, 0, 0)
 	bezel.add(rightCap)
-	const grilleTex = perforatedTexture('#27282d', '#0a0b0e', 36)
+	const grilleTex = perforatedTexture('#2c2d33', '#08090c', 26)
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
 	const grille = new Mesh(
 		new PlaneGeometry(bezW - 0.088, bezH - 0.016),
 		new MeshStandardMaterial({
 			map: grilleTex,
-			metalness: 0.2,
-			roughness: 0.6,
+			metalness: 0.35,
+			roughness: 0.52,
 		})
 	)
 	grille.position.set(0.003, 0, 0.0052)
@@ -507,14 +532,18 @@ function buildR730(): {
 	badge.rotation.x = Math.PI / 2
 	badge.position.set(-bezW / 2 + 0.031, 0.012, 0.0062)
 	bezel.add(badge)
-	const badgeText = label('DELL', 0.015, 0.006, {
-		fg: '#15161a',
-		font: 'bold 30px Arial',
-		width: 128,
-		height: 48,
-	})
-	badgeText.position.set(-bezW / 2 + 0.031, 0.012, 0.0074)
-	bezel.add(badgeText)
+	const badgeFace = new Mesh(
+		new PlaneGeometry(0.017, 0.017),
+		new MeshStandardMaterial({
+			map: dellBadgeTexture(),
+			transparent: true,
+			roughness: 0.35,
+			metalness: 0.25,
+		})
+	)
+	badgeFace.userData.keepTransparent = true
+	badgeFace.position.set(-bezW / 2 + 0.031, 0.012, 0.0074)
+	bezel.add(badgeFace)
 	const modelPlate = box(0.044, 0.008, 0.0015, steel('#b4b9c0', 0.35))
 	modelPlate.position.set(bezW / 2 - 0.052, -bezH / 2 + 0.0105, 0.0062)
 	bezel.add(modelPlate)

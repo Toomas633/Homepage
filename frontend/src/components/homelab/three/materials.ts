@@ -128,6 +128,69 @@ export function labelTexture(
 	return texture
 }
 
+/** Dell 2.5" caddy face: grid of square vent holes in a framed tray front. */
+export function caddyFaceTexture(): CanvasTexture {
+	const w = 160
+	const h = 480
+	const canvas = makeCanvas(w, h)
+	const ctx = canvas.getContext('2d')
+	if (ctx) {
+		ctx.fillStyle = '#313238'
+		ctx.fillRect(0, 0, w, h)
+		// recessed inner panel
+		ctx.fillStyle = '#2a2b30'
+		ctx.fillRect(14, 14, w - 28, h - 28)
+		// grid of square vent holes with a lower highlight edge for depth
+		const cols = 4
+		const rows = 12
+		const cellW = (w - 36) / cols
+		const cellH = (h - 44) / rows
+		for (let r = 0; r < rows; r++) {
+			for (let c = 0; c < cols; c++) {
+				const x = 18 + c * cellW + cellW * 0.14
+				const y = 22 + r * cellH + cellH * 0.14
+				const hw = cellW * 0.72
+				const hh = cellH * 0.62
+				ctx.fillStyle = '#08090b'
+				ctx.fillRect(x, y, hw, hh)
+				ctx.fillStyle = 'rgba(255,255,255,0.14)'
+				ctx.fillRect(x, y + hh, hw, 2.5)
+			}
+		}
+		// subtle frame highlight
+		ctx.strokeStyle = 'rgba(255,255,255,0.1)'
+		ctx.lineWidth = 2
+		ctx.strokeRect(3, 3, w - 6, h - 6)
+	}
+	const texture = new CanvasTexture(canvas)
+	texture.colorSpace = SRGBColorSpace
+	return texture
+}
+
+/** Round Dell-style badge: blue disc with white wordmark. */
+export function dellBadgeTexture(): CanvasTexture {
+	const canvas = makeCanvas(128, 128)
+	const ctx = canvas.getContext('2d')
+	if (ctx) {
+		ctx.clearRect(0, 0, 128, 128)
+		ctx.fillStyle = '#0e6fbe'
+		ctx.beginPath()
+		ctx.arc(64, 64, 60, 0, Math.PI * 2)
+		ctx.fill()
+		ctx.strokeStyle = '#d7dce2'
+		ctx.lineWidth = 6
+		ctx.stroke()
+		ctx.fillStyle = '#f2f6fa'
+		ctx.font = 'bold 42px Arial'
+		ctx.textAlign = 'center'
+		ctx.textBaseline = 'middle'
+		ctx.fillText('DELL', 64, 66)
+	}
+	const texture = new CanvasTexture(canvas)
+	texture.colorSpace = SRGBColorSpace
+	return texture
+}
+
 /** Radial black blob with transparent falloff for contact shadows. */
 export function contactShadowTexture(): CanvasTexture {
 	const canvas = makeCanvas(128, 128)
