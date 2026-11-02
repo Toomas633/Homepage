@@ -1,6 +1,7 @@
 import {
 	BoxGeometry,
 	CylinderGeometry,
+	DoubleSide,
 	Group,
 	LinearFilter,
 	Material,
@@ -8,6 +9,7 @@ import {
 	MeshBasicMaterial,
 	MeshStandardMaterial,
 	PlaneGeometry,
+	RingGeometry,
 	TorusGeometry,
 } from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
@@ -630,9 +632,19 @@ function buildR730(): {
 		const latchBar = box(trayW - 0.0025, 0.0062, 0.0032, handleMat)
 		latchBar.position.set(0, leverH - 0.0031, 0.0032)
 		handle.add(latchBar)
-		const releaseBtn = box(0.0042, 0.0038, 0.0014, plastic('#2aa7b5', 0.45))
+		// Gen13 release button: black square with orange ring, as on real trays
+		const releaseBtn = box(0.0048, 0.0044, 0.0016, plastic('#0c0d10', 0.5))
 		releaseBtn.position.set(-trayW / 2 + 0.0045, leverH - 0.0031, 0.005)
 		handle.add(releaseBtn)
+		const btnRing = new Mesh(
+			new TorusGeometry(0.0013, 0.00045, 8, 20),
+			plastic('#b14a1e', 0.45)
+		)
+		btnRing.position.set(-trayW / 2 + 0.0045, leverH - 0.0031, 0.0059)
+		handle.add(btnRing)
+		const padlock = box(0.0014, 0.0018, 0.0008, plastic('#c8cdd2', 0.6))
+		padlock.position.set(-trayW / 2 + 0.0085, leverH - 0.0031, 0.0052)
+		handle.add(padlock)
 		for (const sx of [-1, 1]) {
 			const rail = box(0.0018, leverH, 0.004, handleMat)
 			rail.position.set(sx * (trayW / 2 - 0.0014), leverH / 2, 0.0026)
@@ -790,87 +802,108 @@ function buildR730(): {
 	lid.add(latchDial)
 	slide.add(lid)
 
-	// Dell 13G locking bezel: matte black frame, solid end caps, hex mesh
-	// centre, round Dell badge near centre, LCD window right of the badge,
-	// keylock + release latch on the LEFT end cap (per Dell install docs)
+	// Dell 12G/13G 2U locking bezel (DD0W1): swept convex face that bows
+	// outward in the middle, solid ribbed section with the keylock on the
+	// LEFT, LCD window immediately right of the ribs, then dark honeycomb
+	// mesh with the round Dell badge centred in the mesh zone
 	const bezel = new Group()
 	const bezW = PANEL_W - 0.004
 	const bezH = H - 0.002
-	const bezFrame = plastic('#141519', 0.58)
-	const bottomRail = box(bezW, 0.0075, 0.012, bezFrame)
-	bottomRail.position.set(0, -(bezH / 2 - 0.00375), 0)
-	bezel.add(bottomRail)
-	const topRail = box(bezW, 0.0075, 0.012, bezFrame)
-	topRail.position.set(0, bezH / 2 - 0.00375, 0)
-	bezel.add(topRail)
-	// top return lip closing the gap back to the chassis face
-	const bezTopLip = box(bezW, 0.0028, 0.016, bezFrame)
-	bezTopLip.position.set(0, bezH / 2 - 0.0014, -0.012)
-	bezel.add(bezTopLip)
-	const leftCap = box(0.044, bezH, 0.013, bezFrame)
-	leftCap.position.set(-bezW / 2 + 0.022, 0, 0)
-	bezel.add(leftCap)
-	const rightCap = box(0.044, bezH, 0.013, bezFrame)
-	rightCap.position.set(bezW / 2 - 0.022, 0, 0)
-	bezel.add(rightCap)
-	const grilleTex = hexMeshTexture('#34353c', '#0a0b0e')
+	const bow = 0.022
+	const bezR = (bezW * bezW) / (8 * bow) + bow / 2
+	const bezFrame = plastic('#17181c', 0.55)
+	const arcT = (x: number): number => Math.asin(x / bezR)
+	const shell = (
+		x0: number,
+		x1: number,
+		y: number,
+		h: number,
+		mat: Material,
+		lift = 0
+	): Mesh => {
+		const t0 = arcT(x0)
+		const t1 = arcT(x1)
+		const m = new Mesh(
+			new CylinderGeometry(
+				bezR + lift,
+				bezR + lift,
+				h,
+				40,
+				1,
+				true,
+				t0,
+				t1 - t0
+			),
+			mat
+		)
+		m.position.set(0, y, bow - bezR)
+		return m
+	}
+	const onArc = (x: number, lift: number): Group => {
+		const t = arcT(x)
+		const g = new Group()
+		g.position.set(
+			(bezR + lift) * Math.sin(t),
+			0,
+			bow - bezR + (bezR + lift) * Math.cos(t)
+		)
+		g.rotation.y = t
+		bezel.add(g)
+		return g
+	}
+	const xL = -bezW / 2
+	const ribZoneR = xL + 0.085
+	const lcdZoneR = ribZoneR + 0.062
+	const meshR = bezW / 2 - 0.02
+	// curved top/bottom edge rails
+	bezel.add(shell(xL, bezW / 2, bezH / 2 - 0.0035, 0.007, bezFrame, 0.0008))
+	bezel.add(shell(xL, bezW / 2, -(bezH / 2 - 0.0035), 0.007, bezFrame, 0.0008))
+	// solid left section (ribbed, carries the keylock) and LCD backing
+	bezel.add(shell(xL, lcdZoneR, 0, bezH - 0.013, bezFrame))
+	for (let rx = xL + 0.007; rx < ribZoneR - 0.005; rx += 0.0085) {
+		const rib = onArc(rx, 0.003)
+		rib.add(box(0.0036, bezH - 0.02, 0.006, plastic('#2c2d33', 0.45)))
+	}
+	// right solid border
+	bezel.add(shell(meshR, bezW / 2, 0, bezH - 0.013, bezFrame))
+	// dark honeycomb mesh across the centre
+	const grilleTex = hexMeshTexture('#2e2f36', '#08090c')
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
-	grilleTex.repeat.set(3, 0.7)
-	const grille = new Mesh(
-		new PlaneGeometry(bezW - 0.088, bezH - 0.015),
-		new MeshStandardMaterial({
-			map: grilleTex,
-			metalness: 0.35,
-			roughness: 0.52,
-		})
+	grilleTex.repeat.set(2.2, 0.7)
+	bezel.add(
+		shell(
+			lcdZoneR,
+			meshR,
+			0,
+			bezH - 0.013,
+			new MeshStandardMaterial({
+				map: grilleTex,
+				metalness: 0.3,
+				roughness: 0.55,
+			}),
+			0.0004
+		)
 	)
-	grille.position.set(0, 0, 0.0052)
-	bezel.add(grille)
-	// keylock and release latch on the LEFT end cap
+	// keylock in the ribbed section
+	const lockMount = onArc(xL + 0.037, 0.0016)
 	const keylock = new Mesh(
-		new CylinderGeometry(0.0052, 0.0052, 0.003, 16),
+		new CylinderGeometry(0.0052, 0.0052, 0.0032, 16),
 		steel('#9aa0a8', 0.35)
 	)
 	keylock.rotation.x = Math.PI / 2
-	keylock.position.set(-bezW / 2 + 0.022, 0.008, 0.0065)
-	bezel.add(keylock)
-	const keySlot = box(0.0014, 0.0058, 0.0015, plastic('#0a0a0c', 0.7))
-	keySlot.position.set(-bezW / 2 + 0.022, 0.008, 0.0081)
-	bezel.add(keySlot)
-	const releaseLatch = box(0.016, 0.0065, 0.0025, plastic('#26272c', 0.5))
-	releaseLatch.position.set(-bezW / 2 + 0.022, -0.012, 0.0068)
-	bezel.add(releaseLatch)
-	// round Dell badge slightly left of the bezel centre
-	const badgeX = -0.022
-	const badge = new Mesh(
-		new CylinderGeometry(0.0115, 0.0115, 0.002, 24),
-		steel('#b4b9c0', 0.3)
-	)
-	badge.rotation.x = Math.PI / 2
-	badge.position.set(badgeX, 0, 0.0062)
-	bezel.add(badge)
-	const badgeFace = new Mesh(
-		new PlaneGeometry(0.021, 0.021),
-		new MeshStandardMaterial({
-			map: dellBadgeTexture(),
-			transparent: true,
-			roughness: 0.35,
-			metalness: 0.25,
-		})
-	)
-	badgeFace.userData.keepTransparent = true
-	badgeFace.position.set(badgeX, 0, 0.0074)
-	bezel.add(badgeFace)
-	// blue status LCD recessed in a raised window frame RIGHT of the badge
-	const lcdX = badgeX + 0.052
-	const lcdFrameMat = plastic('#26272c', 0.48)
-	const lcdWin = box(0.052, 0.025, 0.008, lcdFrameMat)
-	lcdWin.position.set(lcdX, 0, 0.0045)
-	bezel.add(lcdWin)
-	const lcdRecess = box(0.043, 0.017, 0.0016, plastic('#06070a', 0.6))
-	lcdRecess.position.set(lcdX, 0, 0.0078)
-	bezel.add(lcdRecess)
+	lockMount.add(keylock)
+	const keySlot = box(0.0014, 0.0058, 0.0014, plastic('#0a0a0c', 0.7))
+	keySlot.position.set(0, 0, 0.0018)
+	lockMount.add(keySlot)
+	// LCD window immediately right of the ribbed section
+	const lcdMount = onArc(ribZoneR + 0.028, 0)
+	const lcdWin = box(0.05, 0.024, 0.006, plastic('#232429', 0.48))
+	lcdWin.position.set(0, 0, 0.0016)
+	lcdMount.add(lcdWin)
+	const lcdRecess = box(0.042, 0.0165, 0.0016, plastic('#06070a', 0.6))
+	lcdRecess.position.set(0, 0, 0.0044)
+	lcdMount.add(lcdRecess)
 	const bezLcdMat = new MeshBasicMaterial({
 		map: labelTexture('ST 7Y2K3B2', {
 			bg: '#2b8cff',
@@ -881,9 +914,53 @@ function buildR730(): {
 		}),
 	})
 	bezLcdMat.toneMapped = false
-	const bezLcd = new Mesh(new PlaneGeometry(0.0385, 0.0138), bezLcdMat)
-	bezLcd.position.set(lcdX, 0, 0.0087)
-	bezel.add(bezLcd)
+	const bezLcd = new Mesh(new PlaneGeometry(0.038, 0.0135), bezLcdMat)
+	bezLcd.position.set(0, 0, 0.0053)
+	lcdMount.add(bezLcd)
+	// round Dell badge centred in the mesh zone
+	const badgeMount = onArc((lcdZoneR + meshR) / 2, 0.0012)
+	const badge = new Mesh(
+		new CylinderGeometry(0.0115, 0.0115, 0.002, 24),
+		steel('#b4b9c0', 0.3)
+	)
+	badge.rotation.x = Math.PI / 2
+	badgeMount.add(badge)
+	const badgeFace = new Mesh(
+		new PlaneGeometry(0.021, 0.021),
+		new MeshStandardMaterial({
+			map: dellBadgeTexture(),
+			transparent: true,
+			roughness: 0.35,
+			metalness: 0.25,
+		})
+	)
+	badgeFace.userData.keepTransparent = true
+	badgeFace.position.set(0, 0, 0.0012)
+	badgeMount.add(badgeFace)
+	// side returns closing the arc ends back to the chassis face
+	for (const side of [-1, 1]) {
+		const ret = box(0.004, bezH, 0.012, bezFrame)
+		ret.position.set(side * (bezW / 2 - 0.002), 0, -0.005)
+		bezel.add(ret)
+	}
+	// curved top cap following the arc, closing the gap to the chassis
+	const capMat = plastic('#17181c', 0.55)
+	capMat.side = DoubleSide
+	const tEdge = arcT(bezW / 2)
+	const topCap = new Mesh(
+		new RingGeometry(
+			bezR - bow - 0.016,
+			bezR + 0.0012,
+			40,
+			1,
+			-Math.PI / 2 - tEdge,
+			2 * tEdge
+		),
+		capMat
+	)
+	topCap.rotation.x = -Math.PI / 2
+	topCap.position.set(0, bezH / 2 - 0.0008, bow - bezR)
+	bezel.add(topCap)
 	bezel.traverse((child) => {
 		if (child instanceof Mesh) {
 			const material = child.material as MeshStandardMaterial
