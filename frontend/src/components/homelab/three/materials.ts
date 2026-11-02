@@ -68,6 +68,31 @@ export function perforatedTexture(
 	return texture
 }
 
+/** Vertical slot vent texture, staggered columns, for Dell bezel grilles. */
+export function slotVentTexture(bg: string, slot: string): CanvasTexture {
+	const canvas = makeCanvas(256, 128)
+	const ctx = canvas.getContext('2d')
+	if (ctx) {
+		ctx.fillStyle = bg
+		ctx.fillRect(0, 0, 256, 128)
+		ctx.fillStyle = slot
+		for (let row = 0; row < 2; row++) {
+			const y = 10 + row * 64
+			const offset = row % 2 === 1 ? 16 : 0
+			for (let x = 6 + offset; x < 256; x += 32) {
+				ctx.beginPath()
+				ctx.roundRect(x, y, 11, 44, 5)
+				ctx.fill()
+			}
+		}
+	}
+	const texture = new CanvasTexture(canvas)
+	texture.wrapS = RepeatWrapping
+	texture.wrapT = RepeatWrapping
+	texture.colorSpace = SRGBColorSpace
+	return texture
+}
+
 /** Vertical strip of square rack-rail mounting holes, three per U. */
 export function railHoleTexture(units: number): CanvasTexture {
 	const holeSize = 18
@@ -210,14 +235,14 @@ export function dellBadgeTexture(): CanvasTexture {
 	const ctx = canvas.getContext('2d')
 	if (ctx) {
 		ctx.clearRect(0, 0, 128, 128)
-		ctx.fillStyle = '#8d939c'
+		ctx.fillStyle = '#2b2d31'
 		ctx.beginPath()
 		ctx.arc(64, 64, 60, 0, Math.PI * 2)
 		ctx.fill()
-		ctx.strokeStyle = '#c5cad1'
+		ctx.strokeStyle = '#9ba0a8'
 		ctx.lineWidth = 6
 		ctx.stroke()
-		ctx.fillStyle = '#3a3d42'
+		ctx.fillStyle = '#c5cad1'
 		ctx.font = 'bold 42px Arial'
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
