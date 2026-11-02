@@ -6,6 +6,7 @@ const DonateView = () => import('@/views/DonateView.vue')
 const ToS = () => import('@/views/ToS.vue')
 const PrivacyPolicy = () => import('@/views/PrivacyPolicy.vue')
 const NotFound = () => import('@/views/NotFound.vue')
+const HomelabView = () => import('@/views/HomelabView.vue')
 
 export const mainRoutes: Array<RouteRecord> = [
 	{
@@ -42,6 +43,19 @@ export const mainRoutes: Array<RouteRecord> = [
 				'Support my student projects with any amount you choose. Explore ways to contribute through Amazon, PayPal, or Bitcoin. Every donation helps fund my ongoing projects and future endeavors.',
 			keywords:
 				'donate, support, PayPal, Bitcoin, cryptocurrency, funding, contributions, student projects',
+		},
+	},
+	{
+		path: '/homelab',
+		component: HomelabView,
+		meta: {
+			title: 'Homelab',
+			canonical: '/homelab',
+			description:
+				'An interactive 3D overview of my homelab rack. Explore the VEVOR 15U open frame rack with a Dell PowerEdge R730, UniFi networking gear, a LiPo charging drawer, a Bambu Lab P2S printer with AMS 2 Pro and more.',
+			icon: 'mdi-server',
+			keywords:
+				'homelab, server rack, Dell R730, UniFi, home server, networking, 3D visualisation, Bambu Lab, self-hosting',
 		},
 	},
 	{

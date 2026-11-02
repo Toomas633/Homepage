@@ -20,6 +20,7 @@ declare module 'vue' {
     CookieConsent: typeof import('./src/components/CookieConsent.vue')['default']
     CookieDialog: typeof import('./src/components/cookies/CookieDialog.vue')['default']
     CopyButton: typeof import('./src/components/CopyButton.vue')['default']
+    HomelabRack: typeof import('./src/components/homelab/HomelabRack.vue')['default']
     IconList: typeof import('./src/components/IconList.vue')['default']
     ImageCarousel: typeof import('./src/components/ImageCarousel.vue')['default']
     InlineCode: typeof import('./src/components/InlineCode.vue')['default']
