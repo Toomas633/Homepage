@@ -152,6 +152,38 @@ export function buildR730Interior(
 		interior.add(cardEdge)
 	}
 
+	// double-width GPU on riser 1, mounted horizontally as in the real
+	// chassis: PCB lying flat off the riser slot, shrouded cooler with twin
+	// fans on top, gold edge connector into the riser
+	const gpuY = H / 2 - 0.0235
+	const gpuEdge = box(0.07, 0.003, 0.0035, plastic('#c9a84c', 0.4))
+	gpuEdge.position.set(0.02, gpuY - 0.0025, -DEPTH + 0.0835)
+	interior.add(gpuEdge)
+	const gpuPcb = box(0.105, 0.0022, 0.24, pcbMat)
+	gpuPcb.position.set(0.02, gpuY, -DEPTH + 0.2)
+	interior.add(gpuPcb)
+	const gpuShroud = box(0.1, 0.015, 0.225, plastic('#141518', 0.5))
+	gpuShroud.position.set(0.02, gpuY + 0.0085, -DEPTH + 0.1975)
+	interior.add(gpuShroud)
+	for (const fz of [-DEPTH + 0.13, -DEPTH + 0.26]) {
+		const fanRim = new Mesh(
+			new CylinderGeometry(0.03, 0.03, 0.0022, 24),
+			plastic('#0c0d10', 0.6)
+		)
+		fanRim.position.set(0.02, gpuY + 0.0161, fz)
+		interior.add(fanRim)
+		const fanHub = new Mesh(
+			new CylinderGeometry(0.009, 0.009, 0.0026, 16),
+			plastic('#2c2d31', 0.5)
+		)
+		fanHub.position.set(0.02, gpuY + 0.0163, fz)
+		interior.add(fanHub)
+	}
+	// 8-pin power pigtail from the card into the right-wall harness
+	const gpuPlug = box(0.016, 0.007, 0.01, plastic('#0a0a0c', 0.6))
+	gpuPlug.position.set(0.075, gpuY + 0.006, -DEPTH + 0.3)
+	interior.add(gpuPlug)
+
 	// dual PSU cage at the rear left, bays side by side
 	const psu = box(0.214, H - 0.012, 0.1, zinc)
 	psu.position.set(-0.1155, 0, -DEPTH + 0.07)

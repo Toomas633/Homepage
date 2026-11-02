@@ -58,13 +58,13 @@ export function buildR730(): {
 	// left control module: optical, power, LCD, VGA/USB, info tag
 	slide.add(buildR730ControlPanel(H, bodyW))
 
-	// 16 vertical 2.5" SFF hot-swap caddies in two groups of 8, drives on
-	// the left and the control/IO module to their right
-	const bayX0 = -bodyW / 2 + 0.005
+	// 16 vertical 2.5" SFF hot-swap caddies in two groups of 8, with the
+	// control/IO module on their left and the drives spanning to the right
+	const bayX0 = -bodyW / 2 + 0.08
 	const bayAreaW = bodyW - 0.08 - 0.005
 	const dividerW = 0.007
 	const pitch = (bayAreaW - dividerW) / 16
-	const trayW = pitch - 0.0022
+	const trayW = pitch - 0.0048
 	const trayH = 0.066
 	const trayY = -H / 2 + 0.0035 + trayH / 2
 	const trayFace = paintedSteel('#26272b', 0.6)

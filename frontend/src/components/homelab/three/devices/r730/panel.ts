@@ -12,19 +12,30 @@ import {
 	plastic,
 	steel,
 } from '../../materials'
-import { box } from '../shared'
+import { box, label } from '../shared'
 
 export function buildR730ControlPanel(H: number, bodyW: number): Group {
 	const panel = new Group()
-	// control/IO module on the far RIGHT of the 16x2.5" chassis (no Dell
-	// logo here): power/ID/NMI and vFlash on top, diagnostics LCD, USB and
-	// VGA ports, slim optical disk bay and pull-out info tag at the bottom
+	// control/IO module on the far LEFT of the 16x2.5" chassis, as on the
+	// real R730: DELL mark top-left, power/ID/NMI and vFlash on top,
+	// diagnostics LCD, USB and VGA ports, slim optical disk bay and
+	// pull-out info tag at the bottom
 	const cpW = 0.075
-	const x0 = bodyW / 2 - cpW - 0.003
+	const x0 = -bodyW / 2 + 0.003
 	const cpX = x0 + cpW / 2
 	const backing = box(cpW, H - 0.003, 0.009, plastic('#1b1c20', 0.55))
 	backing.position.set(cpX, 0, -0.0005)
 	panel.add(backing)
+
+	// DELL wordmark printed top-left on the module
+	const dellMark = label('DELL', 0.0135, 0.0042, {
+		fg: '#c9ccd2',
+		font: 'bold 56px Arial',
+		width: 192,
+		height: 64,
+	})
+	dellMark.position.set(x0 + 0.0115, H / 2 - 0.0035, 0.0062)
+	panel.add(dellMark)
 
 	// power button with LED ring, system ID button and NMI pinhole on top
 	const powerRing = new Mesh(

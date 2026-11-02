@@ -124,6 +124,9 @@ export function createHomelabScene(
 	controls.minDistance = 0.6
 	controls.maxDistance = 4.5
 	controls.maxPolarAngle = Math.PI * 0.53
+	// limit horizontal orbit to roughly 45 degrees either side of the front
+	controls.minAzimuthAngle = -Math.PI / 4
+	controls.maxAzimuthAngle = Math.PI / 4
 	controls.update()
 
 	// lighting
