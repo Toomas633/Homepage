@@ -83,7 +83,7 @@ export function buildR730Bezel(H: number): Group {
 	const grilleTex = slotVentTexture('#84888e', '#15161a')
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
-	grilleTex.repeat.set(6.5, 1)
+	grilleTex.repeat.set(16, 2)
 	bezel.add(
 		shell(
 			faceL,
