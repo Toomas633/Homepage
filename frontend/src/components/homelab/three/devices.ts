@@ -790,8 +790,9 @@ function buildR730(): {
 	lid.add(latchDial)
 	slide.add(lid)
 
-	// Dell 13G locking bezel: full-width hex mesh, silver top trim,
-	// round Dell badge on the left end, LCD window, keylock on the right
+	// Dell 13G locking bezel: matte black frame, solid end caps, hex mesh
+	// centre, round Dell badge near centre, LCD window right of the badge,
+	// keylock + release latch on the LEFT end cap (per Dell install docs)
 	const bezel = new Group()
 	const bezW = PANEL_W - 0.004
 	const bezH = H - 0.002
@@ -799,51 +800,55 @@ function buildR730(): {
 	const bottomRail = box(bezW, 0.0075, 0.012, bezFrame)
 	bottomRail.position.set(0, -(bezH / 2 - 0.00375), 0)
 	bezel.add(bottomRail)
-	// brushed aluminium trim strip across the top edge
-	const trimMat = new MeshStandardMaterial({
-		map: brushedTexture('#b7bcc2', '#999ea5'),
-		metalness: 0.65,
-		roughness: 0.4,
-	})
-	const topTrim = box(bezW, 0.0095, 0.012, trimMat)
-	topTrim.position.set(0, bezH / 2 - 0.00475, 0)
-	bezel.add(topTrim)
-	const leftCap = box(0.034, bezH, 0.012, bezFrame)
-	leftCap.position.set(-bezW / 2 + 0.017, 0, 0)
+	const topRail = box(bezW, 0.0075, 0.012, bezFrame)
+	topRail.position.set(0, bezH / 2 - 0.00375, 0)
+	bezel.add(topRail)
+	// top return lip closing the gap back to the chassis face
+	const bezTopLip = box(bezW, 0.0028, 0.016, bezFrame)
+	bezTopLip.position.set(0, bezH / 2 - 0.0014, -0.012)
+	bezel.add(bezTopLip)
+	const leftCap = box(0.044, bezH, 0.013, bezFrame)
+	leftCap.position.set(-bezW / 2 + 0.022, 0, 0)
 	bezel.add(leftCap)
-	const rightCap = box(0.034, bezH, 0.012, bezFrame)
-	rightCap.position.set(bezW / 2 - 0.017, 0, 0)
+	const rightCap = box(0.044, bezH, 0.013, bezFrame)
+	rightCap.position.set(bezW / 2 - 0.022, 0, 0)
 	bezel.add(rightCap)
 	const grilleTex = hexMeshTexture('#34353c', '#0a0b0e')
 	grilleTex.minFilter = LinearFilter
 	grilleTex.generateMipmaps = false
 	grilleTex.repeat.set(3, 0.7)
 	const grille = new Mesh(
-		new PlaneGeometry(bezW - 0.068, bezH - 0.017),
+		new PlaneGeometry(bezW - 0.088, bezH - 0.015),
 		new MeshStandardMaterial({
 			map: grilleTex,
 			metalness: 0.35,
 			roughness: 0.52,
 		})
 	)
-	grille.position.set(0, -0.0012, 0.0052)
+	grille.position.set(0, 0, 0.0052)
 	bezel.add(grille)
+	// keylock and release latch on the LEFT end cap
 	const keylock = new Mesh(
 		new CylinderGeometry(0.0052, 0.0052, 0.003, 16),
 		steel('#9aa0a8', 0.35)
 	)
 	keylock.rotation.x = Math.PI / 2
-	keylock.position.set(bezW / 2 - 0.017, 0, 0.0062)
+	keylock.position.set(-bezW / 2 + 0.022, 0.008, 0.0065)
 	bezel.add(keylock)
 	const keySlot = box(0.0014, 0.0058, 0.0015, plastic('#0a0a0c', 0.7))
-	keySlot.position.set(bezW / 2 - 0.017, 0, 0.0078)
+	keySlot.position.set(-bezW / 2 + 0.022, 0.008, 0.0081)
 	bezel.add(keySlot)
+	const releaseLatch = box(0.016, 0.0065, 0.0025, plastic('#26272c', 0.5))
+	releaseLatch.position.set(-bezW / 2 + 0.022, -0.012, 0.0068)
+	bezel.add(releaseLatch)
+	// round Dell badge slightly left of the bezel centre
+	const badgeX = -0.022
 	const badge = new Mesh(
 		new CylinderGeometry(0.0115, 0.0115, 0.002, 24),
 		steel('#b4b9c0', 0.3)
 	)
 	badge.rotation.x = Math.PI / 2
-	badge.position.set(-bezW / 2 + 0.017, -0.006, 0.0062)
+	badge.position.set(badgeX, 0, 0.0062)
 	bezel.add(badge)
 	const badgeFace = new Mesh(
 		new PlaneGeometry(0.021, 0.021),
@@ -855,38 +860,30 @@ function buildR730(): {
 		})
 	)
 	badgeFace.userData.keepTransparent = true
-	badgeFace.position.set(-bezW / 2 + 0.017, -0.006, 0.0074)
+	badgeFace.position.set(badgeX, 0, 0.0074)
 	bezel.add(badgeFace)
-	// blue status LCD visible through a window left of centre
-	const lcdWin = box(0.042, 0.018, 0.004, plastic('#101114', 0.45))
-	lcdWin.position.set(-bezW / 4, 0.0015, 0.0048)
+	// blue status LCD recessed in a raised window frame RIGHT of the badge
+	const lcdX = badgeX + 0.052
+	const lcdFrameMat = plastic('#26272c', 0.48)
+	const lcdWin = box(0.052, 0.025, 0.008, lcdFrameMat)
+	lcdWin.position.set(lcdX, 0, 0.0045)
 	bezel.add(lcdWin)
+	const lcdRecess = box(0.043, 0.017, 0.0016, plastic('#06070a', 0.6))
+	lcdRecess.position.set(lcdX, 0, 0.0078)
+	bezel.add(lcdRecess)
 	const bezLcdMat = new MeshBasicMaterial({
 		map: labelTexture('ST 7Y2K3B2', {
-			bg: '#1266e3',
-			fg: '#eaf3ff',
+			bg: '#2b8cff',
+			fg: '#f2f8ff',
 			font: 'bold 30px Arial',
 			width: 192,
 			height: 56,
 		}),
 	})
 	bezLcdMat.toneMapped = false
-	const bezLcd = new Mesh(new PlaneGeometry(0.036, 0.0138), bezLcdMat)
-	bezLcd.position.set(-bezW / 4, 0.0015, 0.0072)
+	const bezLcd = new Mesh(new PlaneGeometry(0.0385, 0.0138), bezLcdMat)
+	bezLcd.position.set(lcdX, 0, 0.0087)
 	bezel.add(bezLcd)
-	const modelTag = label('PowerEdge R730', 0.08, 0.0085, {
-		fg: '#eef1f4',
-		font: 'bold 56px Arial',
-		width: 512,
-		height: 56,
-	})
-	const modelTagMap = (modelTag.material as MeshStandardMaterial).map
-	if (modelTagMap) {
-		modelTagMap.minFilter = LinearFilter
-		modelTagMap.generateMipmaps = false
-	}
-	modelTag.position.set(bezW / 2 - 0.066, bezH / 2 - 0.0055, 0.0062)
-	bezel.add(modelTag)
 	bezel.traverse((child) => {
 		if (child instanceof Mesh) {
 			const material = child.material as MeshStandardMaterial
