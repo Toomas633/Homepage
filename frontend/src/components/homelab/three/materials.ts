@@ -210,14 +210,14 @@ export function dellBadgeTexture(): CanvasTexture {
 	const ctx = canvas.getContext('2d')
 	if (ctx) {
 		ctx.clearRect(0, 0, 128, 128)
-		ctx.fillStyle = '#0e6fbe'
+		ctx.fillStyle = '#8d939c'
 		ctx.beginPath()
 		ctx.arc(64, 64, 60, 0, Math.PI * 2)
 		ctx.fill()
-		ctx.strokeStyle = '#d7dce2'
+		ctx.strokeStyle = '#c5cad1'
 		ctx.lineWidth = 6
 		ctx.stroke()
-		ctx.fillStyle = '#f2f6fa'
+		ctx.fillStyle = '#3a3d42'
 		ctx.font = 'bold 42px Arial'
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
