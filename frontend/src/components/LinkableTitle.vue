@@ -1,13 +1,20 @@
 <template>
 	<v-divider
 		v-if="!hideDivider"
-		class="mt-4 mb-2 border-opacity-100"
-		thickness="2"
+		class="mt-8 mb-4"
 		:color="h1 ? 'primary' : ''" />
-	<h1 v-if="h1" :id="tag" :class="centered ? 'text-center' : ''">
+	<h1
+		v-if="h1"
+		:id="tag"
+		class="section-title"
+		:class="centered ? 'text-center' : ''">
 		<v-icon icon="mdi-link-variant" size="24" @click="setTag" />{{ title }}
 	</h1>
-	<h2 v-if="h2" :id="tag" :class="centered ? 'text-center' : ''">
+	<h2
+		v-if="h2"
+		:id="tag"
+		class="section-title section-title-sub"
+		:class="centered ? 'text-center' : ''">
 		<v-icon icon="mdi-link-variant" size="24" @click="setTag" />{{ title }}
 	</h2>
 </template>
@@ -33,8 +40,20 @@ const setTag = () => {
 }
 </script>
 <style scoped lang="scss">
+.section-title {
+	scroll-margin-top: 1.5rem;
+}
+
+.section-title-sub {
+	color: rgb(var(--v-theme-on-surface));
+	opacity: 0.92;
+}
+
 .v-icon {
 	visibility: hidden;
+	opacity: 0;
+	cursor: pointer;
+	color: rgb(var(--v-theme-primary));
 	transition:
 		opacity 0.15s ease-in-out,
 		visibility 0.15s ease-in-out;

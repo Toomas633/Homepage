@@ -50,7 +50,7 @@ app.use(
 	}
 )
 
-export const startServer = async (): Promise<void> => {
+export const startServer = (): void => {
 	if (config.email.host) {
 		logWithTimestamp('info', 'Verifying email server connection...')
 		// Opens the single pooled connection that is kept alive for the whole app

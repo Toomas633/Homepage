@@ -1,5 +1,5 @@
 <template>
-	<div ref="containerRef" class="position-relative">
+	<div ref="containerRef" class="carousel-shell position-relative">
 		<v-carousel
 			v-model="currentSlide"
 			:hide-delimiters="autoScroll"
@@ -12,13 +12,14 @@
 			style="cursor: zoom-in">
 			<div
 				v-if="autoScroll"
-				class="position-absolute top-0 left-0 right-0"
+				class="carousel-progress position-absolute top-0 left-0 right-0"
 				style="pointer-events: none; z-index: 2">
 				<v-progress-linear
 					:model-value="progress"
-					height="5"
+					height="4"
 					color="primary"
-					class="cursor-pointer bg-background"
+					bg-color="transparent"
+					class="cursor-pointer"
 					aria-label="Image carousel progress bar"
 					style="pointer-events: auto"
 					@click="navigateToImage" />
@@ -29,10 +30,9 @@
 						v-for="(_, index) in images.slice(1)"
 						:key="index"
 						:style="{
-							left: `calc(${((index + 1) * 100) / images.length}% - 0.25rem)`,
+							left: `calc(${((index + 1) * 100) / images.length}% - 0.125rem)`,
 						}"
-						class="position-absolute bg-background top-0 bottom-0"
-						style="width: 0.5rem" />
+						class="carousel-progress-tick position-absolute top-0 bottom-0" />
 				</div>
 			</div>
 			<v-carousel-item
@@ -42,13 +42,14 @@
 				:src="image.src"
 				:alt="image.alt"
 				@click="openImageInNewTab(image.src)">
-				<h1
+				<div
 					v-if="image.title"
-					class="w-100 text-center position-absolute"
-					style="background-color: rgb(var(--v-theme-background), 0.7)"
-					:class="autoScroll ? 'bottom-0' : 'top-0'">
-					{{ image.title }}
-				</h1>
+					class="carousel-caption w-100 position-absolute"
+					:class="autoScroll ? 'bottom-0 is-bottom' : 'top-0 is-top'">
+					<h1 class="carousel-caption-text text-center">
+						{{ image.title }}
+					</h1>
+				</div>
 			</v-carousel-item>
 		</v-carousel>
 	</div>
@@ -156,3 +157,43 @@ onUnmounted(() => {
 	if (parentResizeObserver) parentResizeObserver.disconnect()
 })
 </script>
+<style scoped lang="scss">
+.carousel-shell {
+	border-radius: var(--radius-lg);
+	overflow: hidden;
+}
+
+.carousel-progress {
+	background-color: rgb(0 0 0 / 35%);
+	backdrop-filter: blur(0.25rem);
+}
+
+.carousel-progress-tick {
+	width: 0.25rem;
+	background-color: rgb(0 0 0 / 55%);
+}
+
+.carousel-caption {
+	pointer-events: none;
+	padding: 1.25rem 1rem;
+}
+
+.carousel-caption.is-bottom {
+	background: linear-gradient(0deg, rgb(0 0 0 / 78%) 0%, transparent 100%);
+	padding-top: 3rem;
+}
+
+.carousel-caption.is-top {
+	background: linear-gradient(180deg, rgb(0 0 0 / 78%) 0%, transparent 100%);
+	padding-bottom: 3rem;
+}
+
+.carousel-caption-text {
+	margin: 0;
+	color: #fff;
+	font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.75rem);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	text-shadow: 0 0.125rem 0.75rem rgb(0 0 0 / 60%);
+}
+</style>

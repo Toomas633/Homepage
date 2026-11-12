@@ -1,0 +1,20 @@
+// Shared design tokens for the modernised UI.
+// Exposed as CSS custom properties so components can consume them directly.
+
+:root {
+	--radius-sm: 0.5rem;
+	--radius-md: 0.875rem;
+	--radius-lg: 1.25rem;
+	--radius-xl: 1.75rem;
+	--radius-pill: 999rem;
+	--shadow-sm: 0 0.125rem 0.5rem rgb(0 0 0 / 12%);
+	--shadow-md: 0 0.5rem 1.5rem rgb(0 0 0 / 18%);
+	--shadow-lg: 0 1rem 2.75rem rgb(0 0 0 / 26%);
+	--shadow-glow: 0 0.5rem 1.75rem rgb(244 67 54 / 28%);
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--speed-fast: 0.16s;
+	--speed-base: 0.26s;
+	--surface-line: rgba(var(--v-border-color), var(--v-border-opacity));
+	--surface-glass: rgba(var(--v-theme-surface), 0.72);
+	--content-gap: 1.5rem;
+}

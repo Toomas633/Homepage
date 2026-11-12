@@ -33,12 +33,15 @@ const buttonClass = computed(() => {
 </script>
 <style scoped lang="scss">
 .top-right {
-	top: 0.313rem;
-	right: 0.313rem;
+	top: 0.5rem;
+	right: 0.5rem;
+	border-radius: var(--radius-sm);
+	backdrop-filter: blur(0.25rem);
 }
 
 .hover {
-	background-color: black;
+	background-color: rgb(var(--v-theme-surface));
+	border-radius: var(--radius-sm);
 	top: -0.219rem;
 	right: -1.75rem;
 }

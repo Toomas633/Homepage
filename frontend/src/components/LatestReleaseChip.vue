@@ -1,24 +1,29 @@
 <template>
 	<v-chip
-		class="font-weight-bold"
-		prepend-icon="mdi-update"
-		:variant="isDark ? 'outlined' : 'elevated'"
-		elevation="4"
+		class="stat-chip font-weight-bold"
+		prepend-icon="mdi-tag-outline"
+		variant="tonal"
 		size="large"
+		border
 		color="light-green">
 		<v-icon v-if="loading" icon="mdi-loading" class="mdi-spin" />
-		<p v-else>
+		<span v-else class="stat-chip-value">
 			{{ release }}
-		</p>
+		</span>
 	</v-chip>
 </template>
 <script setup lang="ts">
-import useThemeMixin from '@/helpers/themeMixin'
-
 defineProps<{
 	release: string
 	loading: boolean
 }>()
-
-const { isDark } = useThemeMixin()
 </script>
+<style scoped lang="scss">
+.stat-chip {
+	letter-spacing: 0.02em;
+}
+
+.stat-chip-value {
+	margin: 0;
+}
+</style>

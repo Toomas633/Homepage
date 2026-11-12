@@ -1,25 +1,31 @@
 <template>
 	<v-chip
-		class="font-weight-bold"
+		class="stat-chip font-weight-bold"
 		prepend-icon="mdi-license"
-		:variant="isDark ? 'outlined' : 'elevated'"
-		elevation="4"
+		variant="tonal"
 		size="large"
+		border
 		color="orange">
 		<v-icon v-if="loading" icon="mdi-loading" class="mdi-spin" />
-		<p v-else>
+		<span v-else class="stat-chip-value">
 			{{ license?.spdx_id.replace(/-/g, ' ') }}
-		</p>
+		</span>
 	</v-chip>
 </template>
 <script setup lang="ts">
-import useThemeMixin from '@/helpers/themeMixin'
 import { License } from '@/types/github'
 
 defineProps<{
 	loading: boolean
 	license?: License
 }>()
-
-const { isDark } = useThemeMixin()
 </script>
+<style scoped lang="scss">
+.stat-chip {
+	letter-spacing: 0.02em;
+}
+
+.stat-chip-value {
+	margin: 0;
+}
+</style>

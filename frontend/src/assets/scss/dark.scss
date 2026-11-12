@@ -1,8 +1,43 @@
+// Dark-theme specific refinements. Loaded from style.scss under
+// `.v-theme--darkTheme`, so every selector here is already theme scoped.
+
 .v-card,
+.v-sheet.v-card {
+	background-image: linear-gradient(
+		160deg,
+		rgb(255 255 255 / 5%) 0%,
+		rgb(255 255 255 / 0%) 45%
+	);
+}
+
 .v-tabs {
-	background-color: black;
+	background-color: rgb(var(--v-theme-surface));
 }
 
 .v-divider {
-	color: white;
+	border-color: rgb(255 255 255 / 12%);
+}
+
+pre,
+.v-table {
+	border-color: rgb(255 255 255 / 8%);
+}
+
+/* stylelint-disable selector-class-pattern */
+.v-data-table .v-table__wrapper > table > thead > tr > th,
+.v-data-table .v-table__wrapper > table > thead > tr > td {
+	background-color: rgb(255 255 255 / 4%) !important;
+}
+
+.v-navigation-drawer .v-list-item--active {
+	background-color: rgb(244 67 54 / 16%);
+}
+/* stylelint-enable selector-class-pattern */
+
+::-webkit-scrollbar-thumb {
+	background-color: rgb(255 255 255 / 14%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgb(255 255 255 / 26%);
 }

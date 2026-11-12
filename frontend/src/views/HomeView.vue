@@ -63,26 +63,40 @@
 				</v-row>
 			</v-col>
 		</v-row>
-		<div
-			v-for="item in items"
-			:key="item.title"
-			class="d-flex flex-wrap align-center pa-1">
-			<h1 class="mr-2">{{ item.title }}:</h1>
-			<a
-				v-for="icon in item.icons"
-				:key="icon.alt"
-				:href="icon.href"
-				target="_blank"
-				rel="noopener">
-				<v-img
-					class="ma-2"
-					:src="isDark && icon.srcDark ? icon.srcDark : icon.src"
-					:alt="icon.alt"
-					:height="icon.height ?? 45"
-					:width="icon.width ?? 45" />
-			</a>
-			<v-divider color="primary" class="border-opacity-100" />
-		</div>
+		<h2 class="text-center stack-title">Tech stack</h2>
+		<v-row>
+			<v-col
+				v-for="item in items"
+				:key="item.title"
+				cols="12"
+				md="6"
+				lg="4"
+				class="d-flex">
+				<v-card class="stack-card" variant="flat">
+					<div class="stack-head">
+						<v-icon :icon="item.icon" size="18" class="stack-head-icon" />
+						<h3 class="stack-head-title">{{ item.title }}</h3>
+						<span class="stack-count">{{ item.icons.length }}</span>
+					</div>
+					<div class="stack-items">
+						<a
+							v-for="icon in item.icons"
+							:key="icon.alt"
+							class="stack-item"
+							:href="icon.href"
+							target="_blank"
+							rel="noopener">
+							<img
+								class="stack-item-logo"
+								:src="isDark && icon.srcDark ? icon.srcDark : icon.src"
+								:alt="icon.alt"
+								loading="lazy" />
+							<span class="stack-item-label">{{ icon.alt }}</span>
+						</a>
+					</div>
+				</v-card>
+			</v-col>
+		</v-row>
 	</v-container>
 </template>
 <script setup lang="ts">
@@ -130,9 +144,10 @@ import { isMobile } from '@basitcodeenv/vue3-device-detect'
 
 const { isDark } = useThemeMixin()
 
-const items: { title: string; icons: LinkImage[] }[] = [
+const items: { title: string; icon: string; icons: LinkImage[] }[] = [
 	{
 		title: 'Programming',
+		icon: 'mdi-code-braces',
 		icons: [
 			{ href: 'https://www.cprogramming.com/', src: C, alt: 'C' },
 			{ href: 'https://www.java.com/', src: Java, alt: 'Java' },
@@ -144,13 +159,13 @@ const items: { title: string; icons: LinkImage[] }[] = [
 	},
 	{
 		title: 'Backend',
+		icon: 'mdi-server',
 		icons: [
 			{
 				href: 'https://www.nginx.com/',
 				src: Nginx,
 				srcDark: NginxDark,
 				alt: 'Nginx',
-				width: '113',
 			},
 			{ href: 'https://spring.io/', src: Spring, alt: 'Spring' },
 			{
@@ -158,12 +173,12 @@ const items: { title: string; icons: LinkImage[] }[] = [
 				src: NodeJS,
 				srcDark: NodeJsDark,
 				alt: 'Node.js',
-				width: '73',
 			},
 		],
 	},
 	{
 		title: 'Frontend',
+		icon: 'mdi-monitor-dashboard',
 		icons: [
 			{ href: 'https://vuejs.org/', src: Vue, alt: 'Vue' },
 			{ href: 'https://vuetifyjs.com/', src: Vuetify, alt: 'Vuetify' },
@@ -174,6 +189,7 @@ const items: { title: string; icons: LinkImage[] }[] = [
 	},
 	{
 		title: 'Devops',
+		icon: 'mdi-infinity',
 		icons: [
 			{
 				href: 'https://www.gnu.org/software/bash/',
@@ -187,6 +203,7 @@ const items: { title: string; icons: LinkImage[] }[] = [
 	},
 	{
 		title: '3D',
+		icon: 'mdi-cube-outline',
 		icons: [
 			{ href: 'https://www.blender.org/', src: Blender, alt: 'Blender' },
 			{ href: 'https://www.sketchup.com/', src: SketchUp, alt: 'SketchUp' },
@@ -204,6 +221,7 @@ const items: { title: string; icons: LinkImage[] }[] = [
 	},
 	{
 		title: 'Databases',
+		icon: 'mdi-database',
 		icons: [
 			{ href: 'https://www.mysql.com/', src: MySQL, alt: 'MySQL' },
 			{ href: 'https://sqlite.org/index.html', src: SQLite, alt: 'SQLite3' },
@@ -217,22 +235,24 @@ const items: { title: string; icons: LinkImage[] }[] = [
 	},
 	{
 		title: 'Cloud',
+		icon: 'mdi-cloud-outline',
 		icons: [
-			{ href: 'https://aws.amazon.com/', src: AWS, alt: 'AWS', width: '74' },
+			{ href: 'https://aws.amazon.com/', src: AWS, alt: 'AWS' },
 			{
 				href: 'https://www.oracle.com/cloud/',
 				src: OracleCloud,
 				alt: 'Oracle Cloud',
-				width: '85',
 			},
 		],
 	},
 	{
 		title: 'Visualization',
+		icon: 'mdi-chart-line',
 		icons: [{ href: 'https://grafana.com/', src: Grafana, alt: 'Grafana' }],
 	},
 	{
 		title: 'Hardware',
+		icon: 'mdi-chip',
 		icons: [
 			{
 				href: 'https://www.raspberrypi.org/',
@@ -244,6 +264,7 @@ const items: { title: string; icons: LinkImage[] }[] = [
 	},
 	{
 		title: 'Op systems',
+		icon: 'mdi-laptop',
 		icons: [
 			{
 				href: 'https://www.microsoft.com/en-us/windows',
@@ -255,6 +276,7 @@ const items: { title: string; icons: LinkImage[] }[] = [
 	},
 	{
 		title: 'Version control',
+		icon: 'mdi-source-branch',
 		icons: [
 			{ href: 'https://git-scm.com/', src: Git, alt: 'Git' },
 			{ href: 'https://maven.apache.org/', src: Maven, alt: 'Maven' },
@@ -280,5 +302,101 @@ const items: { title: string; icons: LinkImage[] }[] = [
 
 .mdi-license {
 	color: orange;
+}
+
+/* --------------------------------------------------------------------------
+   Tech stack
+   -------------------------------------------------------------------------- */
+
+.stack-title {
+	margin-block: 2rem 1.25rem;
+}
+
+.stack-card {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 1rem;
+	border-radius: var(--radius-lg);
+	background-color: rgba(var(--v-theme-on-surface), 0.03);
+	border: 0.0625rem solid var(--surface-line);
+}
+
+.stack-head {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding-bottom: 0.75rem;
+	margin-bottom: 0.875rem;
+	border-bottom: 0.0625rem solid var(--surface-line);
+}
+
+.stack-head-icon {
+	color: rgb(var(--v-theme-primary));
+}
+
+.stack-head-title {
+	flex: 1 1 auto;
+	margin: 0;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.stack-count {
+	padding: 0.0625rem 0.4375rem;
+	border-radius: var(--radius-pill);
+	background-color: rgba(var(--v-theme-primary), 0.12);
+	color: rgb(var(--v-theme-primary));
+	font-size: 0.6875rem;
+	font-weight: 700;
+}
+
+.stack-items {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(5.25rem, 1fr));
+	gap: 0.5rem;
+}
+
+.stack-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.625rem 0.375rem;
+	border-radius: var(--radius-md);
+	background-color: rgba(var(--v-theme-on-surface), 0.04);
+	border: 0.0625rem solid transparent;
+	color: inherit;
+	text-decoration: none;
+	transition:
+		background-color var(--speed-fast) var(--ease-out),
+		border-color var(--speed-fast) var(--ease-out),
+		translate var(--speed-fast) var(--ease-out);
+}
+
+.stack-item:hover {
+	background-color: rgba(var(--v-theme-primary), 0.1);
+	border-color: rgba(var(--v-theme-primary), 0.35);
+	translate: 0 -0.125rem;
+}
+
+.stack-item-logo {
+	width: 100%;
+	height: 2rem;
+	object-fit: contain;
+}
+
+.stack-item-label {
+	font-size: 0.6875rem;
+	line-height: 1.2;
+	text-align: center;
+	opacity: 0.7;
+	transition: opacity var(--speed-fast) var(--ease-out);
+}
+
+.stack-item:hover .stack-item-label {
+	opacity: 1;
 }
 </style>
